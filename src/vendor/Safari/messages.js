@@ -3,7 +3,11 @@
 
   var safariMsg = {
     cbList: [],
-    mkResponse: function(source) {
+    mkResponse: !mono.isSafariBgPage ? function() {
+      return function(message) {
+        safariMsg.send(message);
+      }
+    } : function(source) {
       return function(message) {
         safariMsg.sendTo(message, source);
       }

@@ -37,7 +37,7 @@
         emit: function(to, message) {
           var list = subscribServerList[to];
           if (list === undefined) {
-            return console.log('Drop message to', to);
+            return;
           }
           for (var i = 0, item; item = list[i]; i++) {
             item(message);
@@ -54,7 +54,7 @@
         emit: function(to, message) {
           var list = subscribClientList[to];
           if (list === undefined) {
-            return console.log('Drop message to', to);
+            return;
           }
           for (var i = 0, item; item = list[i]; i++) {
             item(message);

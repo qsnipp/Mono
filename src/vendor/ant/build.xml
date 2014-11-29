@@ -4,10 +4,12 @@
 
 	<loadfile property="chMsg" srcFile="src/vendor/Chrome/messages.js"/>
 	<loadfile property="ffMsg" srcFile="src/vendor/Firefox/messages.js"/>
-	<loadfile property="safariMsg" srcFile="src/vendor/Safari/messages.js"/>
+	<loadfile property="sfMsg" srcFile="src/vendor/Safari/messages.js"/>
+	<loadfile property="opMsg" srcFile="src/vendor/Opera/messages.js"/>
 
 	<replace file="test/js/mono.js" token="//@ChromeMsg" value="${chMsg}"/>
 	<replace file="test/js/mono.js" token="//@FirefoxMsg" value="${ffMsg}"/>
-	<replace file="test/js/mono.js" token="//@SafariMsg" value="${safariMsg}"/>
+	<replace file="test/js/mono.js" token="//@SafariMsg" value="${sfMsg}"/>
+	<replace file="test/js/mono.js" token="//@OperaMsg" value="${opMsg}"/>
 
 </project>

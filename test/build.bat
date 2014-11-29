@@ -32,11 +32,10 @@ xcopy .\vendor\safari\* .\build_safari.safariextension\. /E /Y
 
 :: opera
 
-xcopy .\build .\build_opera\build\ /E
-del .\build_opera\build\manifest.json
-del .\build_opera\build\js\background.js
+xcopy .\build .\build_opera\ /E
+del .\build_opera\manifest.json
 xcopy .\vendor\opera\* .\build_opera\. /E
 
 :: building
 
-7za a -tzip .\build_opera.oex .\build_opera\*
+..\..\7za a -tzip .\build_opera.oex .\build_opera\*

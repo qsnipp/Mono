@@ -91,6 +91,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 //@ChromeMsg
 //@FirefoxMsg
 //@SafariMsg
+//@OperaMsg
 
   return mono;
 }));

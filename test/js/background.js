@@ -37,6 +37,17 @@ var init = function(addon) {
         console.log(arguments);
         // response('BG! '+Date.now());
     });
+
+    if (mono.isSafariBgPage) {
+        safari.extension.settings.addEventListener('change', function(event){
+            if (event.key === 'open_options') {
+                var sWindow = safari.application.activeBrowserWindow;
+                var tab = sWindow.openTab();
+                tab.url = safari.extension.baseURI + 'options.html';
+                tab.activate();
+            }
+        });
+    }
 };
 
 if (window.isModule) {
