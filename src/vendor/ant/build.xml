@@ -1,4 +1,4 @@
-<project name="Mono" default="dist" basedir="C:\Users\Anton\Documents\GitHub\Mono">
+<project name="Mono" default="dist" basedir="../../Mono">
 
 	<copy file="src/mono.js" tofile="test/js/mono.js" overwrite="true"/>
 
