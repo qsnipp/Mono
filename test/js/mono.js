@@ -81,11 +81,11 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   })();
 
   mono.sendMessage = function(message, cb) {
-    mono.sendMessage.send(message);
+    mono.sendMessage.send.call(this, message);
   };
 
   mono.onMessage = function(cb) {
-    mono.onMessage.on(cb);
+    mono.onMessage.on.call(this, cb);
   };
 
 (function() {
@@ -317,6 +317,31 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   mono.onMessage.on = operaMsg.on;
   mono.sendMessage.send = operaMsg.send;
   mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
+})();
+(function() {
+  if (!mono.isGM) return;
+
+  var gmMsg = {
+    cbList: [],
+    onMessage: function(message) {
+      var response = gmMsg.onMessage;
+      for (var i = 0, cb; cb = gmMsg.cbList[i]; i++) {
+        if (this.isBg === cb.isBg) {
+          continue;
+        }
+        cb(message, response.bind({isBg: cb.isBg}));
+      }
+    },
+    on: function(cb) {
+      cb.isBg = this.isBg;
+      gmMsg.cbList.push(cb);
+    }
+  };
+  gmMsg.send = gmMsg.onMessage;
+
+  mono.onMessage.on = gmMsg.on;
+  mono.sendMessage.send = gmMsg.send;
+  mono.sendMessage.sendToActiveTab = gmMsg.send;
 })();
 
   return mono;
