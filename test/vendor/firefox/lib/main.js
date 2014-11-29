@@ -29,6 +29,9 @@
             'https://ya.ru/*'
         ],
         contentScript: '('+monoLib.virtualPort.toString()+')()',
+        contentScriptFile: [
+          self.data.url("js/inject.js")
+        ],
         contentScriptWhen: 'start',
         onAttach: function(tab) {
             monoLib.addPage(tab);
@@ -53,8 +56,8 @@
 
     var popup = (function() {
         var popup = panels.Panel({
-            width: 642,
-            height: 70,
+            width: 400,
+            height: 200,
             contentURL: self.data.url("popup.html"),
             onHide: function () {
                 button.state('window', {checked: false});
@@ -68,9 +71,9 @@
     })();
 
 
-    var bg = require("./background.js");
-    var bgAddon = monoLib.virtualAddon('bg');
-    monoLib.addPage(bgAddon);
+    var backgroundPage = require("./background.js");
+    var backgroundPageAddon = monoLib.virtualAddon();
+    monoLib.addPage(backgroundPageAddon);
 
-    bg.init(bgAddon);
+    backgroundPage.init(backgroundPageAddon);
 })();

@@ -1,0 +1,11 @@
+<project name="Mono" default="dist" basedir="C:\Users\Anton\Documents\GitHub\Mono">
+	
+	<copy file="src/mono.js" tofile="test/js/mono.js" overwrite="true"/>
+
+	<loadfile property="chMsg" srcFile="src/vendor/Chrome/messages.js"/>
+	<loadfile property="ffMsg" srcFile="src/vendor/Firefox/messages.js"/>
+
+	<replace file="test/js/mono.js" token="//@ChromeMsg" value="${chMsg}"/>
+	<replace file="test/js/mono.js" token="//@FirefoxMsg" value="${ffMsg}"/>
+
+</project>
