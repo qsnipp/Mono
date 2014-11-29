@@ -35,7 +35,7 @@ var init = function(addon) {
     mono.onMessage(function(message, response){
         r = response;
         console.log(arguments);
-        response('BG! '+Date.now());
+        // response('BG! '+Date.now());
     });
 };
 

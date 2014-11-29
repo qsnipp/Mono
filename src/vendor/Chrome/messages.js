@@ -1,5 +1,5 @@
 (function() {
-  if (typeof mono === 'undefined' || !mono.isChrome) return;
+  if (!mono.isChrome) return;
 
   var chromeMsg = {
     cbList: [],
@@ -20,7 +20,7 @@
     },
     on: function(cb) {
       chromeMsg.cbList.push(cb);
-      if (chromeMsg.cbList.length > 1) {
+      if (chromeMsg.cbList.length !== 1) {
         return;
       }
       chrome.runtime.onMessage.addListener(function(message, sender) {

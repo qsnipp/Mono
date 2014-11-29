@@ -1,5 +1,5 @@
 (function() {
-  if (typeof mono === 'undefined' || !mono.isFF) return;
+  if (!mono.isFF) return;
 
   (function() {
     if (!mono.noAddon) return;
