@@ -80,12 +80,54 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     }
   })();
 
+  mono.messageStack = 50;
+
+  var msgTools = {
+    cbObj: {},
+    cbStack: [],
+    id: 0,
+    idPrefix: Math.floor(Math.random()*1000)+'_',
+    addCb: function(message, cb) {
+      if (msgTools.cbStack.length > mono.messageStack) {
+        delete msgTools.cbObj[msgTools.cbStack.shift()];
+      }
+      var id = message.callbackId = msgTools.idPrefix+(++msgTools.id);
+      msgTools.cbObj[id] = cb;
+      msgTools.cbStack.push(id);
+    },
+    callCb: function(message) {
+      var cb = msgTools.cbObj[message.responseId];
+      if (cb === undefined) return;
+      delete msgTools.cbObj[message.responseId];
+      msgTools.cbStack.splice(msgTools.cbStack.indexOf(message.responseId), 1);
+      cb(message.data);
+    }
+  };
+
   mono.sendMessage = function(message, cb) {
+    message = {
+      data: message
+    };
+    if (cb !== undefined) {
+      msgTools.addCb(message, cb.bind(this));
+    }
     mono.sendMessage.send.call(this, message);
   };
 
   mono.onMessage = function(cb) {
-    mono.onMessage.on.call(this, cb);
+    var _this = this;
+    mono.onMessage.on.call(_this, function(message, response) {
+      if (message && message.responseId !== undefined) {
+        return msgTools.callCb(message);
+      }
+      cb.call(_this, message.data, function(_message) {
+        _message = {
+          data: _message
+        };
+        _message.responseId = message.callbackId;
+        response.call(_this, _message);
+      });
+    });
   };
 
 (function() {

@@ -121,6 +121,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
         return msgTools.callCb(message);
       }
       cb.call(_this, message.data, function(_message) {
+        _message = {
+          data: _message
+        };
         _message.responseId = message.callbackId;
         response.call(_this, _message);
       });
