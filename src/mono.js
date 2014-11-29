@@ -88,9 +88,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     mono.onMessage.on(cb);
   };
 
-  //@ChromeMsg
-  //@FirefoxMsg
-  //@SafariMsg
+//@ChromeMsg
+//@FirefoxMsg
+//@SafariMsg
 
   return mono;
 }));
