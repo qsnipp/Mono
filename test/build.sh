@@ -20,7 +20,7 @@ cp ./*.json ./build/
 # need create folder symbol link to addon-sdk/bin and run cfx xpi
 
 mkdir ./build_firefox_sdk/data
-cp -r ./build ./build_firefox_sdk/data
+cp -r ./build/ ./build_firefox_sdk/data
 rm ./build_firefox_sdk/data/manifest.json
 cp -r ./vendor/firefox/* ./build_firefox_sdk/
 cp -r ./js/background.js ./build_firefox_sdk/lib/
@@ -28,13 +28,13 @@ rm ./build_firefox_sdk/data/js/background.js
 
 # Safari
 
-cp -r ./build ./build_safari.safariextension
+cp -r ./build/ ./build_safari.safariextension
 rm ./build_safari.safariextension/manifest.json
 cp -r ./vendor/safari/* ./build_safari.safariextension/
 
 # Opera
 
-cp -r ./build ./build_opera
+cp -r ./build/ ./build_opera
 rm ./build_opera/manifest.json
 cp -r ./vendor/opera/* ./build_opera/
 
