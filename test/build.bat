@@ -2,6 +2,7 @@ rd /S /Q .\build
 rd /S /Q .\build_opera
 rd /S /Q .\build_firefox_sdk
 rd /S /Q .\build_safari.safariextension
+
 mkdir .\build
 mkdir .\build_opera
 mkdir .\build_firefox_sdk
