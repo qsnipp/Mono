@@ -1,8 +1,10 @@
 /**
+ *
  * Created by Anton on 21.06.2014.
  *
  * Mono cross-browser engine.
- */
+ *
+ **/
 
 var mono = (typeof mono === 'undefined') ? undefined : mono;
 
