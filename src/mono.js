@@ -81,17 +81,18 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   })();
 
   mono.sendMessage = function(message, cb) {
-    mono.sendMessage.send(message);
+    mono.sendMessage.send.call(this, message);
   };
 
   mono.onMessage = function(cb) {
-    mono.onMessage.on(cb);
+    mono.onMessage.on.call(this, cb);
   };
 
 //@ChromeMsg
 //@FirefoxMsg
 //@SafariMsg
 //@OperaMsg
+//@GmMsg
 
   return mono;
 }));

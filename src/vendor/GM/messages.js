@@ -3,28 +3,23 @@
 
   var gmMsg = {
     cbList: [],
-    mkResponse: function(source) {
-      return function(message) {
-        // do..
-      }
-    },
     onMessage: function(message) {
-      var response = gmMsg.mkResponse(this.isBg);
+      var response = gmMsg.onMessage;
       for (var i = 0, cb; cb = gmMsg.cbList[i]; i++) {
-        cb(message, response);
+        if (this.isBg === cb.isBg) {
+          continue;
+        }
+        cb(message, response.bind({isBg: cb.isBg}));
       }
     },
     on: function(cb) {
+      cb.isBg = this.isBg;
       gmMsg.cbList.push(cb);
-    },
-    send: function(message) {
-      gmMsg.onMessage(message);
     }
   };
-
-  gmMsg.sendToActiveTab = gmMsg.send;
+  gmMsg.send = gmMsg.onMessage;
 
   mono.onMessage.on = gmMsg.on;
   mono.sendMessage.send = gmMsg.send;
-  mono.sendMessage.sendToActiveTab = gmMsg.sendToActiveTab;
+  mono.sendMessage.sendToActiveTab = gmMsg.send;
 })();
