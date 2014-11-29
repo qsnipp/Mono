@@ -1,8 +1,10 @@
 /**
+ *
  * Created by Anton on 21.06.2014.
  *
  * Mono cross-browser engine.
- */
+ *
+ **/
 
 var mono = (typeof mono === 'undefined') ? undefined : mono;
 
@@ -86,7 +88,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     mono.onMessage.on(cb);
   };
 
-  (function() {
+(function() {
   if (!mono.isChrome) return;
 
   var chromeMsg = {
@@ -135,7 +137,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   mono.sendMessage.send = chromeMsg.send;
   mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
 })();
-  (function() {
+(function() {
   if (!mono.isFF) return;
 
   (function() {
@@ -203,7 +205,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   mono.sendMessage.send = firefoxMsg.send;
   mono.sendMessage.sendToActiveTab = firefoxMsg.sendToActiveTab;
 })();
-  (function() {
+(function() {
   if (!mono.isSafari) return;
 
   var safariMsg = {
