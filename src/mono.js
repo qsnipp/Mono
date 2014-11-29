@@ -78,13 +78,13 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     }
   })();
 
-  mono.sendMessage = (function(message, cb) {
-    this.send(message);
-  }).bind(mono.sendMessage);
+  mono.sendMessage = function(message, cb) {
+    mono.sendMessage.send(message);
+  };
 
-  mono.onMessage = (function(cb) {
-    this.on(cb);
-  }).bind(mono.onMessage);
+  mono.onMessage = function(cb) {
+    mono.onMessage.on(cb);
+  };
 
   return mono;
 }));

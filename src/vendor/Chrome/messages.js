@@ -4,7 +4,7 @@
   var chromeMsg = {
     cbList: [],
     mkResponse: function(sender) {
-      if (sender.tabId) {
+      if (sender.tab) {
         // send to tab
         return function(message) {
           chrome.tabs.sendMessage(sender.tab.id, message);
@@ -24,6 +24,7 @@
         return;
       }
       chrome.runtime.onMessage.addListener(function(message, sender) {
+        console.log(arguments)
         var response = chromeMsg.mkResponse(sender);
         for (var i = 0, cb; cb = chromeMsg.cbList[i]; i++) {
           cb(message, response);

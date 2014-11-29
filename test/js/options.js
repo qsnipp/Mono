@@ -1,5 +1,6 @@
 console.log("Options page!");
-mono.on(function(message, response){
+mono.onMessage(function(message, response){
+  r = response;
   console.log(arguments);
 });
 

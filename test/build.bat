@@ -1,18 +1,20 @@
 rd /S /Q .\build
-rd /S /Q .\build_chrome_ext
 rd /S /Q .\build_opera
 rd /S /Q .\build_firefox_sdk
 rd /S /Q .\build_safari.safariextension
 mkdir .\build
-mkdir .\build_chrome_ext
 mkdir .\build_opera
 mkdir .\build_firefox_sdk
 mkdir .\build_safari.safariextension
 
-xcopy ..\src\mono.js .\js\
-type ..\src\vendor\Chrome\messages.js^
+del .\js\mono.js
+type ..\src\mono.js^
+ ..\src\vendor\Chrome\messages.js^
  ..\src\vendor\Firefox\messages.js^
  > .\js\mono.js
+
+del .\vendor\firefox\lib\monoLib.js
+xcopy ..\src\vendor\Firefox\lib\monoLib.js .\vendor\firefox\lib\
 
 xcopy .\js .\build\js\ /E
 copy .\*.html .\build\.

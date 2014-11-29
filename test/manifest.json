@@ -7,6 +7,12 @@
     "background": {
         "scripts": ["js/mono.js","js/background.js"]
     },
+    "content_scripts": [
+        {
+          "matches": ["*://ya.ru/*"],
+          "js": ["/js/mono.js", "/js/inject.js"]
+        }
+    ],
     "name": "Mono test!",
     "version": "0.1"
 }

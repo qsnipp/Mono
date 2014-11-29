@@ -1,0 +1,17 @@
+{
+    "preferences": [
+        {
+            "title": "", 
+            "type": "control", 
+            "name": "settingsBtn", 
+            "label": "Settings"
+        }
+    ], 
+    "license": "MPL 2.0", 
+    "author": "Anton V.", 
+    "title": "Mono test!", 
+    "name": "mono_test", 
+    "version": "0.1", 
+    "id": "jid1-FMEmmdEbaUBgig", 
+    "description": "Mono test desc"
+}
