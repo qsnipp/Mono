@@ -145,7 +145,7 @@
         return sendHook[message.to](message);
       }
       var mPage = map[message.to];
-      if (!mPage) {
+      if (!mPage || mPage.active === false) {
         return;
       }
       var type = (mPage.page.isVirtual !== undefined) ? 'lib' : 'port';
