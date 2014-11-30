@@ -108,9 +108,10 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     }
   };
 
-  mono.sendMessage = function(message, cb) {
+  mono.sendMessage = function(message, cb, hook) {
     message = {
-      data: message
+      data: message,
+      hook: hook
     };
     if (cb !== undefined) {
       msgTools.addCb(message, cb.bind(this));

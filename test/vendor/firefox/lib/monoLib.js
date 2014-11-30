@@ -140,6 +140,9 @@
   };
 
   var monoOnMessage = function(message) {
+    if (message.hook !== undefined && sendHook[message.hook] !== undefined) {
+      return sendHook[message.hook](message);
+    }
     if (message.to !== undefined) {
       if (sendHook[message.to] !== undefined) {
         return sendHook[message.to](message);

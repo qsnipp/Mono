@@ -35,7 +35,8 @@
     cbList: [],
     mkResponse: function(pageId) {
       return function(message) {
-        mono.addon.port.emit('mono', {message: message, to: pageId});
+        message.to = pageId;
+        mono.addon.port.emit('mono', message);
       }
     },
     on: function(cb) {
@@ -44,18 +45,18 @@
         return;
       }
       mono.addon.port.on('mono', function(msg) {
-        var message = msg.message;
         var response = firefoxMsg.mkResponse(msg.from);
         for (var i = 0, cb; cb = firefoxMsg.cbList[i]; i++) {
-          cb(message, response);
+          cb(msg, response);
         }
       });
     },
     send: function(message) {
-      mono.addon.port.emit('mono', {message: message});
+      mono.addon.port.emit('mono', message);
     },
     sendTo: function(message, to) {
-      mono.addon.port.emit('mono', {message: message, to: to});
+      message.to = to;
+      mono.addon.port.emit('mono', message);
     },
     sendToActiveTab: function(message) {
       firefoxMsg.sendTo(message, 'activeTab');
