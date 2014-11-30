@@ -39,5 +39,5 @@ rm ./build_opera/manifest.json
 cp -r ./vendor/opera/* ./build_opera/
 
 cd ./build_opera/
-zip -9 -r ../build_opera.zip ./
+zip -9 -r ../build_opera.oex ./
 cd ../
