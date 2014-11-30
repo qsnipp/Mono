@@ -135,10 +135,16 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     });
   };
 
+  mono.storage = {};
+
 //@ChromeMsg
+
 //@FirefoxMsg
+
 //@SafariMsg
+
 //@OperaMsg
+
 //@GmMsg
 
   return mono;
