@@ -117,15 +117,15 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   mono.onMessage = function(cb) {
     var _this = this;
     mono.onMessage.on.call(_this, function(message, response) {
-      if (message && message.responseId !== undefined) {
+      if (message.responseId !== undefined) {
         return msgTools.callCb(message);
       }
-      cb.call(_this, message.data, function(_message) {
-        _message = {
-          data: _message
+      cb.call(_this, message.data, function(responseMessage) {
+        responseMessage = {
+          data: responseMessage,
+          responseId: message.callbackId
         };
-        _message.responseId = message.callbackId;
-        response.call(_this, _message);
+        response.call(_this, responseMessage);
       });
     });
   };
