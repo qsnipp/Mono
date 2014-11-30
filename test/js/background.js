@@ -32,7 +32,7 @@ var init = function(addon) {
         mono = mono.init(addon);
     }
     console.log("Background page!");
-    mono.onMessage(function(message, response){
+    mono.onMessage.call({isBg: true}, function(message, response){
         r = function(message) {
             console.log('< '+message);
             response(message);
