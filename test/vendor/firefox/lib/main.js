@@ -30,6 +30,7 @@
         ],
         contentScript: '('+monoLib.virtualPort.toString()+')()',
         contentScriptFile: [
+          self.data.url("js/mono.js"),
           self.data.url("js/inject.js")
         ],
         contentScriptWhen: 'start',
@@ -57,16 +58,13 @@
     var popup = (function() {
         var popup = panels.Panel({
             width: 400,
-            height: 200,
+            height: 250,
             contentURL: self.data.url("popup.html"),
             onHide: function () {
                 button.state('window', {checked: false});
             }
         });
         monoLib.addPage(popup);
-        popup.show({
-            position: button
-        });
         return popup;
     })();
 

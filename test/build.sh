@@ -37,6 +37,8 @@ cp -r ./vendor/safari/* ./build_safari.safariextension/
 cp -r ./build/ ./build_opera
 rm ./build_opera/manifest.json
 cp -r ./vendor/opera/* ./build_opera/
+mv ./build_opera/js/inject.js ./build_opera/includes/
+cp ./build_opera/js/mono.js ./build_opera/includes/_mono.js
 
 cd ./build_opera/
 zip -9 -r ../build_opera.oex ./

@@ -36,6 +36,9 @@ xcopy .\vendor\safari\* .\build_safari.safariextension\. /E /Y
 xcopy .\build .\build_opera\ /E
 del .\build_opera\manifest.json
 xcopy .\vendor\opera\* .\build_opera\. /E
+move .\build_opera\js\inject.js .\build_opera\includes\.
+xcopy .\build_opera\js\mono.js .\build_opera\includes\.
+rename .\build_opera\includes\mono.js _mono.js
 
 :: building
 

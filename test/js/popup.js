@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   mono.onMessage(function(message, response){
     write('> ' + message);
-    r = response;
+
+    r = function(message) {
+      console.log('< '+message);
+      response(message);
+    };
+    console.log('> '+message);
   });
 });

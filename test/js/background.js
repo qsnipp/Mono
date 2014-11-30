@@ -33,9 +33,11 @@ var init = function(addon) {
     }
     console.log("Background page!");
     mono.onMessage(function(message, response){
-        r = response;
-        console.log(arguments);
-        // response('BG! '+Date.now());
+        r = function(message) {
+            console.log('< '+message);
+            response(message);
+        };
+        console.log('> '+message);
     });
 
     if (mono.isSafariBgPage) {

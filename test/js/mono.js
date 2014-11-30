@@ -1,3 +1,7 @@
+// ==UserScript==
+// @exclude     file://*
+// ==/UserScript==
+
 /**
  *
  * Created by Anton on 21.06.2014.
