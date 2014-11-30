@@ -8,6 +8,5 @@
   mono.onMessage(function(message, response){
     r = response;
     console.log(arguments);
-    r('<<hi!');
   });
 })();
