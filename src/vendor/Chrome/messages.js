@@ -10,6 +10,11 @@
           chromeMsg.sendTo(message, sender.tab.id);
         }
       }
+      if (sender.monoDirect) {
+        return function(message) {
+          sender(message, chromeMsg.onMessage);
+        };
+      }
       return function(message) {
         // send to extension
         chromeMsg.send(message);
@@ -48,19 +53,20 @@
     if (chrome.runtime.getBackgroundPage === undefined) return;
 
     chrome.runtime.getBackgroundPage(function(bgWin) {
-      var isPopup = true;
+      var isNotBgPage = true;
       if (bgWin === window) {
-        isPopup = false;
+        isNotBgPage = false;
       }
 
-      if (isPopup) {
+      if (isNotBgPage) {
+        chromeMsg.onMessage.monoDirect = true;
         chromeMsg.send = mono.sendMessage.send = function(message) {
-          bgWin.mono.chromeDirectOnMessage(message);
+          bgWin.mono.chromeDirectOnMessage(message, chromeMsg.onMessage);
         }
       } else
       if (mono.chromeDirectOnMessage === undefined ) {
-        mono.chromeDirectOnMessage = function(message) {
-          chromeMsg.onMessage(message, chrome.runtime.id);
+        mono.chromeDirectOnMessage = function(message, sender) {
+          chromeMsg.onMessage(message, sender);
         };
       }
     });
