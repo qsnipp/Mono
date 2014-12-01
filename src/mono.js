@@ -119,11 +119,16 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     mono.sendMessage.send.call(this, message);
   };
 
+  mono.sendHook = {};
+
   mono.onMessage = function(cb) {
     var _this = this;
     mono.onMessage.on.call(_this, function(message, response) {
       if (message.responseId !== undefined) {
         return msgTools.callCb(message);
+      }
+      if (mono.sendHook[message.hook] !== undefined) {
+        return mono.sendHook[message.hook](message, response);
       }
       cb.call(_this, message.data, function(responseMessage) {
         responseMessage = {
@@ -135,7 +140,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     });
   };
 
-  mono.storage = {};
+  mono.storage = undefined;
 
 //@ChromeMsg
 
