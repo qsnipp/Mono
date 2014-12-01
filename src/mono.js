@@ -152,5 +152,13 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
 //@GmMsg
 
+//@ChromeStorage
+
+//@FirefoxStorage
+
+//@GmStorage
+
+//@UniStorage
+
   return mono;
 }));

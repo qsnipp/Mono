@@ -8,10 +8,20 @@
 	<loadfile property="opMsg" srcFile="src/vendor/Opera/messages.js"/>
 	<loadfile property="gmMsg" srcFile="src/vendor/GM/messages.js"/>
 
+	<loadfile property="chStorage" srcFile="src/vendor/Chrome/storage.js"/>
+	<loadfile property="ffStorage" srcFile="src/vendor/Firefox/storage.js"/>
+	<loadfile property="gmStorage" srcFile="src/vendor/GM/storage.js"/>
+	<loadfile property="uniStorage" srcFile="src/vendor/Uni/storage.js"/>
+
 	<replace file="test/js/mono.js" token="//@ChromeMsg" value="${chMsg}"/>
 	<replace file="test/js/mono.js" token="//@FirefoxMsg" value="${ffMsg}"/>
 	<replace file="test/js/mono.js" token="//@SafariMsg" value="${sfMsg}"/>
 	<replace file="test/js/mono.js" token="//@OperaMsg" value="${opMsg}"/>
 	<replace file="test/js/mono.js" token="//@GmMsg" value="${gmMsg}"/>
+
+	<replace file="test/js/mono.js" token="//@ChromeStorage" value="${chStorage}"/>
+	<replace file="test/js/mono.js" token="//@FirefoxStorage" value="${ffStorage}"/>
+	<replace file="test/js/mono.js" token="//@GmStorage" value="${gmStorage}"/>
+	<replace file="test/js/mono.js" token="//@UniStorage" value="${uniStorage}"/>
 
 </project>
