@@ -53,7 +53,7 @@
         }
     });
 
-   var popup = panels.Panel({
+    var popup = panels.Panel({
         width: 400,
         height: 250,
         contentURL: self.data.url("popup.html"),
@@ -64,7 +64,6 @@
             monoLib.addPage(popup);
         }
     });
-
 
     var backgroundPageAddon = monoLib.virtualAddon();
     monoLib.addPage(backgroundPageAddon);

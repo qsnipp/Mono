@@ -115,13 +115,6 @@
     page.on('pagehide', onPageHide);
     page.on('attach', onAttach);
     page.on('detach', onDetach);
-
-    /*mPage.off = function() {
-      page.removeEventListener('detach', onDetach);
-      page.removeEventListener('pageshow', onPageShow);
-      page.removeEventListener('pagehide', onPageHide);
-      page.removeEventListener('attach', onAttach);
-    };*/
   };
 
   var sendHook = {
