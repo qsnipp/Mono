@@ -53,23 +53,22 @@
         }
     });
 
-    var popup = (function() {
-        var popup = panels.Panel({
-            width: 400,
-            height: 250,
-            contentURL: self.data.url("popup.html"),
-            onHide: function () {
-                button.state('window', {checked: false});
-            }
-        });
-        monoLib.addPage(popup);
-        return popup;
-    })();
+   var popup = panels.Panel({
+        width: 400,
+        height: 250,
+        contentURL: self.data.url("popup.html"),
+        onHide: function () {
+            button.state('window', {checked: false});
+        },
+        onAttach: function() {
+            monoLib.addPage(popup);
+        }
+    });
 
 
-    var backgroundPage = require("./background.js");
     var backgroundPageAddon = monoLib.virtualAddon();
     monoLib.addPage(backgroundPageAddon);
 
+    var backgroundPage = require("./background.js");
     backgroundPage.init(backgroundPageAddon);
 })();
