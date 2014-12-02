@@ -28,7 +28,6 @@
             'http://ya.ru/*',
             'https://ya.ru/*'
         ],
-        contentScript: '('+monoLib.virtualPort.toString()+')()',
         contentScriptFile: [
           self.data.url("js/mono.js"),
           self.data.url("js/inject.js")
@@ -43,7 +42,7 @@
         id: "monoTestBtn",
         label: "Mono test!",
         icon: {
-            "16": "./icons/icon-16.png",
+            "16": "./icons/icon-16.png"
         },
         onChange: function (state) {
             if (!state.checked) {
