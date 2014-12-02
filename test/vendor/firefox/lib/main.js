@@ -13,9 +13,8 @@
     var pageMod = require("sdk/page-mod");
     pageMod.PageMod({
         include: [
-            self.data.url()+'*'
+            self.data.url('options.html')
         ],
-        exclude: self.data.url("popup.html"),
         contentScript: '('+monoLib.virtualPort.toString()+')()',
         contentScriptWhen: 'start',
         onAttach: function(tab) {
