@@ -12,6 +12,10 @@
    * @namespace require
    */
 
+  /**
+   * type {function}
+   * @returns {number}
+   */
   var getPageId = function() {
     if (getPageId.value === undefined) {
       getPageId.value = -1;
@@ -178,5 +182,128 @@
       message.from = mPage.id;
       monoOnMessage(message);
     });
+  };
+
+var ffSimpleStorage = (function() {
+  var ss = require('sdk/simple-storage');
+  return {
+    get: function (src, cb) {
+      var key, obj = {};
+      if (src === undefined || src === null) {
+        for (key in ss.storage) {
+          if (!ss.storage.hasOwnProperty(key)) {
+            continue;
+          }
+          obj[key] = ss.storage[key];
+        }
+        return cb(obj);
+      }
+      if (typeof src === 'string') {
+        src = [src];
+      }
+      if (Array.isArray(src) === true) {
+        for (var i = 0, len = src.length; i < len; i++) {
+          key = src[i];
+          obj[key] = ss.storage[key];
+        }
+      } else {
+        for (key in src) {
+          obj[key] = ss.storage[key];
+        }
+      }
+      cb(obj);
+    },
+    set: function (obj, cb) {
+      for (var key in obj) {
+        ss.storage[key] = obj[key];
+      }
+      cb && cb();
+    },
+    remove: function (obj, cb) {
+      if (Array.isArray(obj)) {
+        for (var i = 0, len = obj.length; i < len; i++) {
+          var key = obj[i];
+          delete ss.storage[key];
+        }
+      } else {
+        delete ss.storage[obj];
+      }
+      cb && cb();
+    },
+    clear: function (cb) {
+      for (var key in ss.storage) {
+        delete ss.storage[key];
+      }
+      cb && cb();
+    }
   }
+})();
+exports.storage = ffSimpleStorage;
+
+sendHook.monoStorage = function(message) {
+  var msg = message.data || {};
+  var response = function(responseMessage) {
+    responseMessage = {
+      data: responseMessage,
+      to: message.from,
+      responseId: message.callbackId
+    };
+    monoOnMessage(responseMessage);
+  };
+  var func = ffSimpleStorage[msg.action];
+  if (func === undefined) return;
+  if (msg.action === 'clear') {
+    func(response);
+  } else {
+    func(msg.data, response);
+  }
+};
+
+/**
+ * @namespace sendHook {object}
+ * @namespace monoOnMessage {function}
+ * @namespace map {array}
+ */
+var serviceList = {
+  resize: function(message) {
+    var mPage = map[message.from];
+    if (!mPage || mPage.active === false) {
+      return;
+    }
+    var msg = message.data || {};
+
+    if (msg.width) {
+      mPage.page.width = msg.width;
+    }
+    if (msg.height) {
+      mPage.page.height = msg.height;
+    }
+  },
+  openTab: function(message) {
+    var msg = message.data || {};
+    var self = require("sdk/self");
+    var tabs = require("sdk/tabs");
+    tabs.open( (msg.dataUrl) ? self.data.url(msg.url) : msg.url );
+  }
+};
+
+//@ffOtherUtils
+
+sendHook.service = function(message) {
+  var msg = message.data || {};
+
+  var response = function(responseMessage) {
+    responseMessage = {
+      data: responseMessage,
+      to: message.from,
+      responseId: message.callbackId
+    };
+    monoOnMessage(responseMessage);
+  };
+  var service = serviceList[msg.action];
+  if (service !== undefined) {
+    service(message, response);
+  }
+};
+
 })();

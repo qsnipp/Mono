@@ -1,6 +1,7 @@
 <project name="Mono" default="dist" basedir="../../Mono">
 
-	<copy file="src/mono.js" tofile="test/js/mono.js" overwrite="true"/>
+	<property name="mono" value="test/js/mono.js"/>
+	<copy file="src/mono.js" tofile="${mono}" overwrite="true"/>
 
 	<loadfile property="chMsg" srcFile="src/vendor/Chrome/messages.js"/>
 	<loadfile property="ffMsg" srcFile="src/vendor/Firefox/messages.js"/>
@@ -13,15 +14,28 @@
 	<loadfile property="gmStorage" srcFile="src/vendor/GM/storage.js"/>
 	<loadfile property="uniStorage" srcFile="src/vendor/Uni/storage.js"/>
 
-	<replace file="test/js/mono.js" token="//@ChromeMsg" value="${chMsg}"/>
-	<replace file="test/js/mono.js" token="//@FirefoxMsg" value="${ffMsg}"/>
-	<replace file="test/js/mono.js" token="//@SafariMsg" value="${sfMsg}"/>
-	<replace file="test/js/mono.js" token="//@OperaMsg" value="${opMsg}"/>
-	<replace file="test/js/mono.js" token="//@GmMsg" value="${gmMsg}"/>
+	<replace file="${mono}" token="//@ChromeMsg" value="${chMsg}"/>
+	<replace file="${mono}" token="//@FirefoxMsg" value="${ffMsg}"/>
+	<replace file="${mono}" token="//@SafariMsg" value="${sfMsg}"/>
+	<replace file="${mono}" token="//@OperaMsg" value="${opMsg}"/>
+	<replace file="${mono}" token="//@GmMsg" value="${gmMsg}"/>
 
-	<replace file="test/js/mono.js" token="//@ChromeStorage" value="${chStorage}"/>
-	<replace file="test/js/mono.js" token="//@FirefoxStorage" value="${ffStorage}"/>
-	<replace file="test/js/mono.js" token="//@GmStorage" value="${gmStorage}"/>
-	<replace file="test/js/mono.js" token="//@UniStorage" value="${uniStorage}"/>
+	<replace file="${mono}" token="//@ChromeStorage" value="${chStorage}"/>
+	<replace file="${mono}" token="//@FirefoxStorage" value="${ffStorage}"/>
+	<replace file="${mono}" token="//@GmStorage" value="${gmStorage}"/>
+	<replace file="${mono}" token="//@UniStorage" value="${uniStorage}"/>
+
+	<!-- FF Lib -->
+
+	<property name="monoLib" value="test/vendor/firefox/lib/monoLib.js"/>
+	<copy file="src/vendor/Firefox/lib/monoLib.js" tofile="${monoLib}" overwrite="true"/>
+
+	<loadfile property="ffLibStorage" srcFile="src/vendor/Firefox/lib/storage.js"/>
+	<loadfile property="ffLibUtils" srcFile="src/vendor/Firefox/lib/utils.js"/>
+
+	<replace file="${monoLib}" token="//@FfStorage" value="${ffLibStorage}"/>
+	<replace file="${monoLib}" token="//@FfUtils" value="${ffLibUtils}"/>
+
+	<!-- /FF Lib -->
 
 </project>

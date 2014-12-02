@@ -12,6 +12,10 @@
    * @namespace require
    */
 
+  /**
+   * type {function}
+   * @returns {number}
+   */
   var getPageId = function() {
     if (getPageId.value === undefined) {
       getPageId.value = -1;
@@ -178,5 +182,10 @@
       message.from = mPage.id;
       monoOnMessage(message);
     });
-  }
+  };
+
+//@FfStorage
+
+//@FfUtils
+
 })();

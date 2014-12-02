@@ -8,9 +8,6 @@ mkdir .\build_opera
 mkdir .\build_firefox_sdk
 mkdir .\build_safari.safariextension
 
-del .\vendor\firefox\lib\monoLib.js
-xcopy ..\src\vendor\Firefox\lib\monoLib.js .\vendor\firefox\lib\
-
 xcopy .\js .\build\js\ /E
 copy .\*.html .\build\.
 copy .\*.json .\build\.
