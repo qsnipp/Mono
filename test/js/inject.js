@@ -11,6 +11,12 @@
   }
   console.log("Inject page!");
 
+  var panelCode = function(){/*
+   <h1>Inject</h1>
+   <textarea cols="30" rows="7" id="output"></textarea>
+   <p><input type="text" id="message" /><input type="button" id="send" value="Send" /></p>
+  */};
+
   var onReady = function() {
     var panel = document.createElement('div');
     panel.style.zIndex = 9999;
@@ -21,24 +27,12 @@
     panel.style.border = '1px solid #ccc';
     panel.style.padding = '5px';
 
-    var title = document.createElement('h1');
-    title.textContent = 'Inject';
-    panel.appendChild(title);
-    var output = document.createElement('textarea');
-    output.cols = 30;
-    output.rows = 7;
-    panel.appendChild(output);
-    var p = document.createElement('p');
-    var message = document.createElement('input');
-    message.type = 'text';
-    p.appendChild(message);
-    var send = document.createElement('input');
-    send.type = 'button';
-    send.value = 'Send';
-    p.appendChild(send);
-    panel.appendChild(p);
+    panel.innerHTML = panelCode.toString().slice(14, -3);
     document.body.appendChild(panel);
 
+    var message = panel.querySelector('#message');
+    var send = panel.querySelector('#send');
+    var output = panel.querySelector('#output');
     var write = function(message) {
       output.value += message+'\n';
     };
