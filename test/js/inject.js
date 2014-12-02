@@ -27,7 +27,7 @@
     panel.style.border = '1px solid #ccc';
     panel.style.padding = '5px';
 
-    panel.innerHTML = panelCode.toString().slice(14, -3);
+    panel.innerHTML = panelCode.toString().slice(15, -4);
     document.body.appendChild(panel);
 
     var message = panel.querySelector('#message');
