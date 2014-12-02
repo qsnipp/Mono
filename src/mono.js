@@ -81,6 +81,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     if (navigator.userAgent.indexOf('Firefox') !== -1) {
       mono.isFF = true;
       mono.noAddon = true;
+    } else
+    if (navigator.userAgent.indexOf('Safari/') !== -1) {
+      mono.isSafari = true;
     }
   })();
 
