@@ -35,8 +35,7 @@
     cbList: [],
     mkResponse: function(pageId) {
       return function(message) {
-        message.to = pageId;
-        mono.addon.port.emit('mono', message);
+        firefoxMsg.sendTo(message, pageId);
       }
     },
     on: function(cb) {

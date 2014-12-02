@@ -11,8 +11,8 @@
     };
     ToolbarUIItemProperties.popup = {
       href: 'popup.html',
-      width: 640,
-      height: 70
+      width: 400,
+      height: 250
     };
     var_cache.button = opera.contexts.toolbar.createItem(ToolbarUIItemProperties);
     opera.contexts.toolbar.addItem(var_cache.button);
