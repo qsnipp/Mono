@@ -42,6 +42,14 @@ var init = function(addon) {
             console.log('< ' + '_r: ' + message);
             response('_r: ' + message);
         }
+        if (message[0] === 'a') {
+            message = message.substr(1);
+            console.log('< ' + 'to active tab: ' + message);
+            mono.sendMessageToActiveTab(message, function(message) {
+                response(message);
+                console.log('> from active tab: ' + message);
+            });
+        }
     });
 
     if (mono.isSafariBgPage) {

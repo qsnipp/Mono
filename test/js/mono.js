@@ -119,6 +119,17 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     mono.sendMessage.send.call(this, message);
   };
 
+  mono.sendMessageToActiveTab = function(message, cb, hook) {
+    message = {
+      data: message,
+      hook: hook
+    };
+    if (cb !== undefined) {
+      msgTools.addCb(message, cb.bind(this));
+    }
+    mono.sendMessage.sendToActiveTab.call(this, message);
+  };
+
   mono.sendHook = {};
 
   mono.onMessage = function(cb) {

@@ -57,8 +57,9 @@
       };
       console.log('> '+message);
       if (message[0] === 'r') {
-        console.log('< ' + '_r: ' + message);
         response('_r: ' + message);
+        console.log('< ' + '_r: ' + message);
+        write('< ' + '_r: ' + message);
       }
     });
   };
