@@ -11,6 +11,18 @@
   }
   console.log("Inject page!");
 
+  var test = function() {
+    var from = 'Inject ';
+    mono.sendMessage({message: from + 'message'});
+    mono.sendMessage({message: from + 'message with response!', response: 1}, function(message) {
+      mono.sendMessage({inLog: 1, message: [from + 'get response', message]});
+    });
+    mono.sendMessage({message: from + 'message to active tab!', toActiveTab: 1});
+    mono.sendMessage({message: from + 'message to active tab with response!', toActiveTab: 1, response: 1}, function(message) {
+      mono.sendMessage({inLog: 1, message: [from + 'get response', message]});
+    });
+  };
+
   var panelCode = function(){/*
    <h1>Inject</h1>
    <textarea cols="30" rows="7" id="output"></textarea>
@@ -37,6 +49,10 @@
       output.value += message+'\n';
     };
     var onSubmit = function() {
+      if (message.value === 'test') {
+        message.value = '';
+        return test();
+      }
       mono.sendMessage(message.value);
       write('< ' + message.value);
       message.value = '';
@@ -49,17 +65,20 @@
     send.addEventListener('click', onSubmit);
 
     mono.onMessage(function(message, response){
-      write('> ' + message);
+      write('> ' + JSON.stringify(message));
 
-      r = function(message) {
-        console.log('< '+message);
-        response(message);
-      };
       console.log('> '+message);
+
+      mono.sendMessage({inLog: 1, message: ['Inject, input', message]});
+
+      if (message.response) {
+        return response({message: 'Inject, Response'});
+      }
+
       if (message[0] === 'r') {
         response('_r: ' + message);
         console.log('< ' + '_r: ' + message);
-        write('< ' + '_r: ' + message);
+        write('< ' + '_r: ' + JSON.stringify(message));
       }
     });
   };

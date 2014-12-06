@@ -81,6 +81,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     if (navigator.userAgent.indexOf('Firefox') !== -1) {
       mono.isFF = true;
       mono.noAddon = true;
+    } else
+    if (navigator.userAgent.indexOf('Safari/') !== -1) {
+      mono.isSafari = true;
     }
   })();
 
@@ -179,6 +182,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       chrome.tabs.sendMessage(tabId, message);
     },
     onMessage: function(message, sender) {
+      if (sender.tab && mono.isChromeBgPage !== 1) {
+        return;
+      }
       var response = chromeMsg.mkResponse(sender);
       for (var i = 0, cb; cb = chromeMsg.cbList[i]; i++) {
         cb(message, response);
@@ -207,13 +213,14 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   (function() {
     if (chrome.runtime.getBackgroundPage === undefined) return;
 
+    mono.isChromeBgPage = 1;
+
     chrome.runtime.getBackgroundPage(function(bgWin) {
-      var isNotBgPage = true;
-      if (bgWin === window) {
-        isNotBgPage = false;
+      if (bgWin !== window) {
+        delete  mono.isChromeBgPage;
       }
 
-      if (isNotBgPage) {
+      if (!mono.isChromeBgPage) {
         chromeMsg.onMessage.monoDirect = true;
         chromeMsg.send = mono.sendMessage.send = function(message) {
           bgWin.mono.chromeDirectOnMessage(message, chromeMsg.onMessage);
@@ -292,7 +299,8 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       mono.addon.port.emit('mono', message);
     },
     sendToActiveTab: function(message) {
-      firefoxMsg.sendTo(message, 'activeTab');
+      message.hook = 'activeTab';
+      firefoxMsg.sendTo(message);
     }
   };
 

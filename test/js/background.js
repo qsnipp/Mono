@@ -27,28 +27,60 @@
     }), "data/mono");
 })();
 
+var msgLog = [];
+var test = function() {
+    mono.sendMessageToActiveTab({message: 'BG, Just message'});
+    mono.sendMessageToActiveTab({message: 'BG, message with response!', response: 1}, function(message) {
+        msgLog.push(['BG, get response', message]);
+    });
+};
+
 var init = function(addon) {
     if (addon) {
         mono = mono.init(addon);
     }
     console.log("Background page!");
+
+    var _msgListPush = msgLog.push;
+    msgLog.push = function() {
+        _msgListPush.call(msgLog, arguments[0]);
+        console.error('inLog', JSON.stringify(arguments[0]));
+    };
+    var _sendMessage = mono.sendMessage;
+    var _sendMessageToActiveTab = mono.sendMessageToActiveTab;
+    mono.sendMessage = function() {
+        msgLog.push(['BG, send', arguments[0]]);
+        _sendMessage.apply(this, arguments);
+    };
+    mono.sendMessage.sendToActiveTab = _sendMessage.sendToActiveTab;
+    mono.sendMessageToActiveTab = function() {
+        msgLog.push(['BG, sendToActiveTab', arguments[0]]);
+        _sendMessageToActiveTab.apply(this, arguments);
+    };
+
     mono.onMessage.call({isBg: true}, function(message, response){
-        r = function(message) {
-            console.log('< '+message);
-            response(message);
-        };
-        console.log('> '+message);
-        if (message[0] === 'r') {
-            console.log('< ' + '_r: ' + message);
-            response('_r: ' + message);
+        if (message === 'bgTest') {
+            return test();
         }
-        if (message[0] === 'a') {
-            message = message.substr(1);
-            console.log('< ' + 'to active tab: ' + message);
-            mono.sendMessageToActiveTab(message, function(message) {
-                response(message);
-                console.log('> from active tab: ' + message);
+        if (message === 'getLog') {
+            return response(JSON.stringify(msgLog));
+        }
+        if (message.inLog) {
+            return msgLog.push(message.message);
+        }
+
+        msgLog.push(['BG, input', message]);
+
+        if (message.toActiveTab) {
+            delete message.toActiveTab;
+            mono.sendMessageToActiveTab(message, function() {
+                msgLog.push(['BG, get responseFromActiveTab', arguments[0]]);
+                response.apply(this, arguments);
             });
+        }
+
+        if (message.response) {
+            return response({message: 'BG, Response'});
         }
     });
 
