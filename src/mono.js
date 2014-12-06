@@ -95,6 +95,8 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     id: 0,
     idPrefix: Math.floor(Math.random()*1000)+'_',
     addCb: function(message, cb) {
+      !mono.onMessage.inited && mono.onMessage(function(){});
+
       if (msgTools.cbStack.length > mono.messageStack) {
         delete msgTools.cbObj[msgTools.cbStack.shift()];
       }
@@ -144,6 +146,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
   mono.onMessage = function(cb) {
     var _this = this;
+    mono.onMessage.inited = 1;
     mono.onMessage.on.call(_this, function(message, response) {
       if (message.responseId !== undefined) {
         return msgTools.callCb(message);
