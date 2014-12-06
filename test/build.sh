@@ -10,8 +10,6 @@ mkdir ./build_opera
 mkdir ./build_firefox_sdk
 mkdir ./build_safari.safariextension
 
-cp ../src/vendor/Firefox/lib/monoLib.js ./vendor/firefox/lib/
-
 cp -r ./js ./build/js
 cp ./*.html ./build/
 cp ./*.json ./build/
