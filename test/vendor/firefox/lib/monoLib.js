@@ -137,8 +137,12 @@
   };
 
   var monoOnMessage = function(message) {
-    if (message.hook !== undefined && sendHook[message.hook] !== undefined) {
-      return sendHook[message.hook](message);
+    if (message.hook !== undefined) {
+      var hookFunc = sendHook[message.hook];
+      if (hookFunc !== undefined) {
+        delete message.hook;
+        return hookFunc(message);
+      }
     }
     if (message.to !== undefined) {
       var mPage = map[message.to];
