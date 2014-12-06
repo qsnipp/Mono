@@ -156,7 +156,6 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     });
   };
 
-
   mono.storage = undefined;
 
 (function() {
