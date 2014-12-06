@@ -26,7 +26,7 @@ var serviceList = {
   }
 };
 
-//@ffOtherUtils
+//@ffLibOtherUtils
 
 sendHook.service = function(message) {
   var msg = message.data || {};

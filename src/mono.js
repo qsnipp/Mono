@@ -158,23 +158,23 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
   mono.storage = undefined;
 
-//@ChromeMsg
+//@chMsg
 
-//@FirefoxMsg
+//@ffMsg
 
-//@SafariMsg
+//@sfMsg
 
-//@OperaMsg
+//@oMsg
 
-//@GmMsg
+//@gmMsg
 
-//@ChromeStorage
+//@chStorage
 
-//@FirefoxStorage
+//@ffStorage
 
-//@GmStorage
+//@gmStorage
 
-//@UniStorage
+//@uniStorage
 
   return mono;
 }));
