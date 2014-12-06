@@ -108,6 +108,13 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       delete msgTools.cbObj[message.responseId];
       msgTools.cbStack.splice(msgTools.cbStack.indexOf(message.responseId), 1);
       cb(message.data);
+    },
+    mkResponse: function(response, callbackId, responseMessage) {
+      responseMessage = {
+        data: responseMessage,
+        responseId: callbackId
+      };
+      response.call(this, responseMessage);
     }
   };
 
@@ -141,16 +148,11 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       if (message.responseId !== undefined) {
         return msgTools.callCb(message);
       }
+      var mResponse = msgTools.mkResponse.bind(_this, response, message.callbackId);
       if (mono.sendHook[message.hook] !== undefined) {
-        return mono.sendHook[message.hook](message, response);
+        return mono.sendHook[message.hook](message.data, mResponse);
       }
-      cb.call(_this, message.data, function(responseMessage) {
-        responseMessage = {
-          data: responseMessage,
-          responseId: message.callbackId
-        };
-        response.call(_this, responseMessage);
-      });
+      cb.call(_this, message.data, mResponse);
     });
   };
 

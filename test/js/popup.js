@@ -10,6 +10,14 @@ var test = function() {
   mono.sendMessage({message: from + 'message to active tab with response#2!', toActiveTab: 1, response: 1}, function(message) {
     mono.sendMessage({inLog: 1, message: [from + 'get response#2', message]});
   });
+  mono.storage.get(['popupTest', 'popupObj', 'bgTest', 'bgObj'], function(data) {
+    mono.sendMessage({inLog: 1, message: [from + ' storage, old', data]});
+    mono.storage.set({popupTest: Date.now(), popupObj: {test: 1, test2: true, test3: 'yep'}}, function() {
+      mono.storage.get(['popupTest', 'popupObj'], function(data) {
+        mono.sendMessage({inLog: 1, message: [from + ' storage, new', data]});
+      });
+    });
+  });
 };
 
 document.addEventListener('DOMContentLoaded', function() {

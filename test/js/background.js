@@ -33,6 +33,14 @@ var test = function() {
     mono.sendMessageToActiveTab({message: 'BG, message with response!', response: 1}, function(message) {
         msgLog.push(['BG, get response', message]);
     });
+    mono.storage.get(['bgTest', 'bgObj'], function(data) {
+        msgLog.push(['BG, storage, old', data]);
+        mono.storage.set({bgTest: Date.now(), bgObj: {test: 1, test2: true, test3: 'yep'}}, function() {
+            mono.storage.get(['bgTest', 'bgObj'], function(data) {
+                msgLog.push(['BG, storage, new', data]);
+            });
+        });
+    });
 };
 
 var init = function(addon) {
