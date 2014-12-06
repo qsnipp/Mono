@@ -15,11 +15,11 @@
     var from = 'Inject ';
     mono.sendMessage({message: from + 'message'});
     mono.sendMessage({message: from + 'message with response!', response: 1}, function(message) {
-      mono.sendMessage({inLog: 1, message: [from + 'get response', message]});
+      mono.sendMessage({inLog: 1, message: [from + 'get response#1', message]});
     });
     mono.sendMessage({message: from + 'message to active tab!', toActiveTab: 1});
     mono.sendMessage({message: from + 'message to active tab with response!', toActiveTab: 1, response: 1}, function(message) {
-      mono.sendMessage({inLog: 1, message: [from + 'get response', message]});
+      mono.sendMessage({inLog: 1, message: [from + 'get response#2', message]});
     });
   };
 

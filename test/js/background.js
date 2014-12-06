@@ -77,6 +77,7 @@ var init = function(addon) {
                 msgLog.push(['BG, get responseFromActiveTab', arguments[0]]);
                 response.apply(this, arguments);
             });
+            return;
         }
 
         if (message.response) {
