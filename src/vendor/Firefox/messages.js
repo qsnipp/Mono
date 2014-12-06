@@ -58,7 +58,8 @@
       mono.addon.port.emit('mono', message);
     },
     sendToActiveTab: function(message) {
-      firefoxMsg.sendTo(message, 'activeTab');
+      message.hook = 'activeTab';
+      firefoxMsg.sendTo(message);
     }
   };
 

@@ -141,9 +141,6 @@
       return sendHook[message.hook](message);
     }
     if (message.to !== undefined) {
-      if (sendHook[message.to] !== undefined) {
-        return sendHook[message.to](message);
-      }
       var mPage = map[message.to];
       if (!mPage || mPage.active === false) {
         return;
