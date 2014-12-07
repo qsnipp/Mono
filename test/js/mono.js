@@ -152,8 +152,11 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
         return msgTools.callCb(message);
       }
       var mResponse = msgTools.mkResponse.bind(_this, response, message.callbackId);
-      if (mono.sendHook[message.hook] !== undefined) {
-        return mono.sendHook[message.hook](message.data, mResponse);
+      if (message.hook !== undefined) {
+        var hookFunc = mono.sendHook[message.hook];
+        if (hookFunc !== undefined) {
+          return mono.sendHook[message.hook](message.data, mResponse);
+        }
       }
       cb.call(_this, message.data, mResponse);
     });
