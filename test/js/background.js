@@ -8,7 +8,7 @@
             'data/': self.data.url('js/')
         },
         name: self.name,
-        prefixURI: 'resource://'+self.id.slice(1, -1)+'/',
+        prefixURI: self.data.url().match(/([^:]+:\/\/[^/]+\/)/)[1],
         globals: {
             console: console,
             _require: function(path) {

@@ -59,11 +59,9 @@
         contentURL: self.data.url("popup.html"),
         onHide: function () {
             button.state('window', {checked: false});
-        },
-        onAttach: function() {
-            monoLib.addPage(popup);
         }
     });
+    monoLib.addPage(popup);
 
     var backgroundPageAddon = monoLib.virtualAddon();
     monoLib.addPage(backgroundPageAddon);
