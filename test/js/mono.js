@@ -112,6 +112,8 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       cb(message.data);
     },
     mkResponse: function(response, callbackId, responseMessage) {
+      if (callbackId === undefined) return;
+
       responseMessage = {
         data: responseMessage,
         responseId: callbackId

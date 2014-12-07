@@ -57,6 +57,8 @@ exports.storage = ffSimpleStorage;
 sendHook.monoStorage = function(message) {
   var msg = message.data || {};
   var response = function(responseMessage) {
+    if (message.callbackId === undefined) return;
+
     responseMessage = {
       data: responseMessage,
       to: message.from,
