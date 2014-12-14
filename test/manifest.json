@@ -13,6 +13,9 @@
           "js": ["/js/mono.js", "/js/inject.js"]
         }
     ],
+    "permissions": [
+        "tabs"
+    ],
     "name": "Mono test!",
     "version": "0.1"
 }

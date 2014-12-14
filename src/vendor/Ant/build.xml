@@ -4,6 +4,7 @@
 	<copy file="src/mono.js" tofile="${mono}" overwrite="true"/>
 
 	<loadfile property="chMsg" srcFile="src/vendor/Chrome/messages.js"/>
+	<loadfile property="oldChMsg" srcFile="src/vendor/OldChrome/messages.js"/>
 	<loadfile property="ffMsg" srcFile="src/vendor/Firefox/messages.js"/>
 	<loadfile property="sfMsg" srcFile="src/vendor/Safari/messages.js"/>
 	<loadfile property="oMsg" srcFile="src/vendor/Opera/messages.js"/>
@@ -15,6 +16,7 @@
 	<loadfile property="uniStorage" srcFile="src/vendor/Uni/storage.js"/>
 
 	<replace file="${mono}" token="//@chMsg" value="${chMsg}"/>
+	<replace file="${mono}" token="//@oldChMsg" value="${oldChMsg}"/>
 	<replace file="${mono}" token="//@ffMsg" value="${ffMsg}"/>
 	<replace file="${mono}" token="//@sfMsg" value="${sfMsg}"/>
 	<replace file="${mono}" token="//@oMsg" value="${oMsg}"/>

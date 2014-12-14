@@ -1,5 +1,5 @@
 (function() {
-  if (!mono.isChrome) return;
+  if (!mono.isChrome || !(chrome.runtime && chrome.runtime.onMessage)) return;
 
   var chromeMsg = {
     cbList: [],
