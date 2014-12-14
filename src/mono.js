@@ -77,14 +77,20 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     mono.addon = window.addon || window.self;
     if (mono.addon !== undefined && mono.addon.port !== undefined) {
       mono.isFF = true;
-    } else
+      return;
+    }
     if (navigator.userAgent.indexOf('Firefox') !== -1) {
       mono.isFF = true;
       mono.noAddon = true;
-    } else
-    if (navigator.userAgent.indexOf('Safari/') !== -1) {
-      mono.isSafari = true;
+      return;
     }
+    if (navigator.userAgent.indexOf('Safari/') !== -1) {
+      // Safari bug!
+      mono.isSafari = true;
+      return;
+    }
+    
+    console.error('Mono: can\'t define browser!');
   })();
 
   mono.messageStack = 50;
