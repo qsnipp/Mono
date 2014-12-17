@@ -3,7 +3,8 @@
 
   var gmMsg = {
     cbList: [],
-    onMessage: function(message) {
+    onMessage: function(_message) {
+      var message = mono.cloneObj(_message);
       var response = gmMsg.onMessage;
       for (var i = 0, cb; cb = gmMsg.cbList[i]; i++) {
         if (this.isBg === cb.isBg) {

@@ -95,6 +95,10 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
   mono.messageStack = 50;
 
+  mono.cloneObj = function(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  };
+
   var msgTools = {
     cbObj: {},
     cbStack: [],

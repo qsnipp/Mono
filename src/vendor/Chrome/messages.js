@@ -12,7 +12,7 @@
       }
       if (sender.monoDirect) {
         return function(message) {
-          sender(message, chromeMsg.onMessage);
+          sender(mono.cloneObj(message), chromeMsg.onMessage);
         };
       }
       return function(message) {
@@ -65,7 +65,7 @@
       if (!mono.isChromeBgPage) {
         chromeMsg.onMessage.monoDirect = true;
         chromeMsg.send = mono.sendMessage.send = function(message) {
-          bgWin.mono.chromeDirectOnMessage(message, chromeMsg.onMessage);
+          bgWin.mono.chromeDirectOnMessage(mono.cloneObj(message), chromeMsg.onMessage);
         }
       } else
       if (mono.chromeDirectOnMessage === undefined ) {

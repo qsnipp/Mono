@@ -44,11 +44,11 @@
     },
     send: mono.isSafariPopup ? function(message) {
       safari.extension.globalPage.contentWindow.mono.safariDirectOnMessage({
-        message: message,
+        message: mono.cloneObj(message),
         target: {
           page: {
             dispatchMessage: function(name, message) {
-              mono.safariDirectOnMessage({message: message});
+              mono.safariDirectOnMessage({message: mono.cloneObj(message)});
             }
           }
         }
