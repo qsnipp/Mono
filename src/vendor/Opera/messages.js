@@ -1,6 +1,8 @@
 (function() {
   if (!mono.isOpera) return;
 
+  var inLocalScope = window.location && window.location.href && window.location.href.substr(0, 9) === 'widget://';
+
   var operaMsg = {
     cbList: [],
     mkResponse: function(source) {
@@ -20,6 +22,7 @@
       }
       opera.extension.onmessage = function(event) {
         var message = event.data;
+        if (message.toLocalScope === 1 && inLocalScope === false) return;
         var response = operaMsg.mkResponse(event.source);
         for (var i = 0, cb; cb = operaMsg.cbList[i]; i++) {
           cb(message, response);
@@ -33,6 +36,7 @@
     send: mono.isOperaInject ? function(message) {
       operaMsg.sendTo(message, opera.extension);
     } : function(message) {
+      message.toLocalScope = 1;
       opera.extension.broadcastMessage(message);
     }
   };

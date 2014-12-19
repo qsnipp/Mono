@@ -60,6 +60,7 @@ var init = function(addon) {
         msgLog.push(['BG, send', arguments[0]]);
         _sendMessage.apply(this, arguments);
     };
+    mono.sendMessage.send = _sendMessage.send;
     mono.sendMessage.sendToActiveTab = _sendMessage.sendToActiveTab;
     mono.sendMessageToActiveTab = function() {
         msgLog.push(['BG, sendToActiveTab', arguments[0]]);
@@ -69,6 +70,9 @@ var init = function(addon) {
     mono.onMessage.call({isBg: true}, function(message, response){
         if (message === 'bgTest') {
             return test();
+        }
+        if (message === 'sendAll') {
+            return mono.sendMessage("Hi all!");
         }
         if (message === 'getLog') {
             return response(JSON.stringify(msgLog));
