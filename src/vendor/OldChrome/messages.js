@@ -24,6 +24,15 @@
       });
     },
     onMessage: function(message, sender, _response) {
+      if (mono.isChromeBgPage === 1) {
+        if (message.fromBgPage === 1) {
+          // block msg's from bg page to bg page.
+          return;
+        }
+      } else if (message.toBgPage === 1) {
+        // block msg to bg page not in bg page.
+        return;
+      }
       var response = chromeMsg.mkResponse(sender, _response);
       for (var i = 0, cb; cb = chromeMsg.cbList[i]; i++) {
         cb(message, response);
@@ -45,6 +54,11 @@
       });
     },
     send: function(message) {
+      if (mono.isChromeBgPage) {
+        message.fromBgPage = 1;
+      } else {
+        message.toBgPage = 1;
+      }
       chrome.extension.sendRequest(message, function(message) {
         if (message.responseId !== undefined) {
           return msgTools.callCb(message);
@@ -52,6 +66,22 @@
       });
     }
   };
+
+  (function() {
+    try {
+      if (chrome.runtime.getBackgroundPage === undefined) return;
+    } catch (e) {
+      return;
+    }
+
+    mono.isChromeBgPage = 1;
+
+    chrome.runtime.getBackgroundPage(function(bgWin) {
+      if (bgWin !== window) {
+        delete  mono.isChromeBgPage;
+      }
+    });
+  })();
 
   mono.onMessage.on = chromeMsg.on;
   mono.sendMessage.send = chromeMsg.send;

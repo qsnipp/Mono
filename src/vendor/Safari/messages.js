@@ -1,6 +1,12 @@
 (function() {
   if (!mono.isSafari) return;
 
+  var localUrl, localUrlLen;
+  if (mono.isSafariBgPage && window.location && window.location.href) {
+    localUrl = window.location.href.substr(0, window.location.href.indexOf('/', 19));
+    localUrlLen = localUrl.length;
+  }
+
   var safariMsg = {
     cbList: [],
     mkResponse: !mono.isSafariBgPage ? function() {
@@ -68,7 +74,7 @@
       }
       for (var w = 0, window; window = safari.application.browserWindows[w]; w++) {
         for (var t = 0, tab; tab = window.tabs[t]; t++) {
-          if (tab.url && tab.url.substr(0, 19) === 'safari-extension://') {
+          if (tab.url && tab.url.substr(0, localUrlLen) === localUrl) {
             safariMsg.sendTo(message, tab);
           }
         }

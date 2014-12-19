@@ -24,7 +24,13 @@
       chrome.tabs.sendMessage(tabId, message);
     },
     onMessage: function(message, sender) {
-      if (sender.tab && mono.isChromeBgPage !== 1) {
+      if (mono.isChromeBgPage === 1) {
+        if (message.fromBgPage === 1) {
+          // block msg's from bg page to bg page.
+          return;
+        }
+      } else if (message.toBgPage === 1) {
+        // block msg to bg page not in bg page.
         return;
       }
       var response = chromeMsg.mkResponse(sender);
@@ -48,6 +54,11 @@
       });
     },
     send: function(message) {
+      if (mono.isChromeBgPage) {
+        message.fromBgPage = 1;
+      } else {
+        message.toBgPage = 1;
+      }
       chrome.runtime.sendMessage(message);
     }
   };
