@@ -3,7 +3,7 @@
  * @namespace monoOnMessage {function}
  * @namespace map {array}
  */
-var serviceList = {
+var serviceList = exports.serviceList = {
   resize: function(message) {
     var mPage = map[message.from];
     if (!mPage || mPage.active === false) {
