@@ -179,7 +179,7 @@
 
     var fmPage = map[message.from];
     for (var i = 0, item; item = virtualPageList[i]; i++) {
-      if (fmPage.page === item) {console.log('self skip!'); continue;}
+      if (fmPage.page === item) continue;
       item.lib.emit('mono', message);
     }
 
