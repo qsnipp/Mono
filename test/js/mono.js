@@ -137,7 +137,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       data: message,
       hook: hook
     };
-    if (cb !== undefined) {
+    if (cb) {
       msgTools.addCb(message, cb.bind(this));
     }
     mono.sendMessage.send.call(this, message);
@@ -148,7 +148,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       data: message,
       hook: hook
     };
-    if (cb !== undefined) {
+    if (cb) {
       msgTools.addCb(message, cb.bind(this));
     }
     mono.sendMessage.sendToActiveTab.call(this, message);
