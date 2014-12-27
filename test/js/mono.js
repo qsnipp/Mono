@@ -913,7 +913,8 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   var getLocalStorage = function(localStorage) {
     /**
      * localStorage mode
-     * @type {{getObj: Function, setObj: Function, rmObj: Function, readValue: Function, get: Function, set: Function, remove: Function, clear: Function}}
+     * @type {{getObj: Function, setObj: Function, rmObj: Function, readValue: Function
+     * get: Function, set: Function, remove: Function, clear: Function}}
      */
     var localStorageMode = {
       /**
