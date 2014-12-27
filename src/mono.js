@@ -129,8 +129,16 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
         responseId: callbackId
       };
       response.call(this, responseMessage);
+    },
+    clearCbStack: function() {
+      for (var item in msgTools.cbObj) {
+        delete msgTools.cbObj[item];
+      }
+      msgTools.cbStack.splice(0);
     }
   };
+
+  mono.clearCbStack = msgTools.clearCbStack;
 
   mono.sendMessage = function(message, cb, hook) {
     message = {
