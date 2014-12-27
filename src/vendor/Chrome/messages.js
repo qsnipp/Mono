@@ -1,6 +1,8 @@
 (function() {
   if (!mono.isChrome || !(chrome.runtime && chrome.runtime.onMessage)) return;
 
+  var lowLevelHook = {};
+
   var chromeMsg = {
     cbList: [],
     mkResponse: function(sender) {
@@ -23,7 +25,7 @@
     sendTo: function(message, tabId) {
       chrome.tabs.sendMessage(tabId, message);
     },
-    onMessage: function(message, sender) {
+    onMessage: function(message, sender, _response) {
       if (mono.isChromeBgPage === 1) {
         if (message.fromBgPage === 1) {
           // block msg's from bg page to bg page.
@@ -33,6 +35,14 @@
         // block msg to bg page not in bg page.
         return;
       }
+
+      if (message.hook !== undefined) {
+        var hookFunc = lowLevelHook[message.hook];
+        if (hookFunc !== undefined) {
+          return hookFunc(message, sender, _response);
+        }
+      }
+
       var response = chromeMsg.mkResponse(sender);
       for (var i = 0, cb; cb = chromeMsg.cbList[i]; i++) {
         cb(message, response);
@@ -62,6 +72,8 @@
       chrome.runtime.sendMessage(message);
     }
   };
+
+  chromeMsg.on.lowLevelHook = lowLevelHook;
 
   (function() {
     if (chrome.runtime.getBackgroundPage === undefined) return;

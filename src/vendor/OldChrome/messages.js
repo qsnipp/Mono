@@ -1,6 +1,8 @@
 (function() {
   if (!mono.isChrome || (chrome.runtime && chrome.runtime.onMessage)) return;
 
+  var lowLevelHook = {};
+
   var chromeMsg = {
     cbList: [],
     mkResponse: function(sender, _response) {
@@ -33,6 +35,14 @@
         // block msg to bg page not in bg page.
         return;
       }
+
+      if (message.hook !== undefined) {
+        var hookFunc = lowLevelHook[message.hook];
+        if (hookFunc !== undefined) {
+          return hookFunc(message, sender, _response);
+        }
+      }
+
       var response = chromeMsg.mkResponse(sender, _response);
       for (var i = 0, cb; cb = chromeMsg.cbList[i]; i++) {
         cb(message, response);
@@ -66,6 +76,8 @@
       });
     }
   };
+
+  chromeMsg.on.lowLevelHook = lowLevelHook;
 
   (function() {
     try {
