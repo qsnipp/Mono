@@ -115,6 +115,18 @@ var actionList = {
     },
     test2: function(message, response) {
         actionList.test2.count++;
+    },
+    hasInject: function() {
+        if (!mono.isChrome) return;
+
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            if (tabs[0] === undefined || tabs[0].id < 0) {
+                return;
+            }
+            chrome.tabs.sendMessage(tabs[0].id, {hook: 'hasInject'}, function(has) {
+                console.log('>', has);
+            });
+        });
     }
 };
 

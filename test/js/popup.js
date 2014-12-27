@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return mono.sendMessage({action: 'msgTest'});
     }
 
+    if (text === 'hasInject') {
+      return mono.sendMessage({action: 'hasInject'});
+    }
+
     write(['[s]', page, JSON.stringify(text)].join(' '));
     mono.sendMessage({inLog: 1, data: ['[s]', page, text]});
     mono.sendMessage(text);

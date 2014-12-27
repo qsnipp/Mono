@@ -10,6 +10,13 @@
     }
   }
 
+  if (mono.isChrome) {
+    mono.onMessage.on.lowLevelHook.hasInject = function(message, sender, response) {
+      var isFrame = window.top !== window.self;
+      response(!isFrame);
+    }
+  }
+
   var page;
   console.log(page = "Inject page!");
 
