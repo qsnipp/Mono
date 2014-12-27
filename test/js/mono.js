@@ -40,7 +40,6 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
    * isSafariInject: Boolean,
    * isOpera: Boolean,
    * isOperaInject: Boolean,
-   * isSafari: Boolean,
    * messageStack: number,
    * cloneObj: Function,
    * msgClearStack: Function,
