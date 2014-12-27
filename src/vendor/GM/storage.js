@@ -1,12 +1,22 @@
 (function() {
   if (!mono.isGM) return;
 
+  /**
+   * GM storage
+   * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+   */
   var storage = {
     /**
      * @namespace GM_listValues
      * @namespace GM_getValue
      * @namespace GM_setValue
      * @namespace GM_deleteValue
+     */
+
+    /**
+     * Get item from storage
+     * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+     * @param {function} cb - Callback function
      */
     get: function (src, cb) {
       var key, obj = {};
@@ -32,12 +42,22 @@
       }
       cb(obj);
     },
+    /**
+     * Set item in storage
+     * @param {Object} obj
+     * @param {function} [cb]
+     */
     set: function (obj, cb) {
       for (var key in obj) {
         GM_setValue(key, obj[key]);
       }
       cb && cb();
     },
+    /**
+     * Remove item from storage
+     * @param {Array|string} obj
+     * @param {function} [cb]
+     */
     remove: function (obj, cb) {
       if (Array.isArray(obj)) {
         for (var i = 0, len = obj.length; i < len; i++) {
@@ -49,6 +69,10 @@
       }
       cb && cb();
     },
+    /**
+     * Clear storage
+     * @param {function} [cb]
+     */
     clear: function (cb) {
       var nameList = GM_listValues();
       for (var key in nameList) {
@@ -58,6 +82,10 @@
     }
   };
 
+  /**
+   * GM Storage
+   * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+   */
   mono.storage = storage;
   mono.storage.local = mono.storage.sync = mono.storage;
 })();

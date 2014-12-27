@@ -1,8 +1,22 @@
 (function() {
   if (mono.storage) return;
 
+  /**
+   * localStorage mode
+   * @param {object} localStorage - Storage type
+   * @returns {{get: Function, set: Function, remove: Function, clear: Function}}
+   */
   var getLocalStorage = function(localStorage) {
+    /**
+     * localStorage mode
+     * @type {{getObj: Function, setObj: Function, rmObj: Function, readValue: Function, get: Function, set: Function, remove: Function, clear: Function}}
+     */
     var localStorageMode = {
+      /**
+       * Get object from localStorage
+       * @param {string} key
+       * @returns {*}
+       */
       getObj: function(key) {
         var index = 0;
         var keyPrefix = localStorageMode.chunkPrefix + key;
@@ -20,6 +34,11 @@
         }
         return value;
       },
+      /**
+       * Set object in localStorage
+       * @param {string} key
+       * @param {*} value
+       */
       setObj: function(key, value) {
         value = JSON.stringify(value);
         var keyPrefix = localStorageMode.chunkPrefix + key;
@@ -43,6 +62,11 @@
 
         localStorageMode.rmObj(key, dataListLen);
       },
+      /**
+       * Remove object from localStorage
+       * @param {string} key
+       * @param {number} index - Chunk index
+       */
       rmObj: function(key, index) {
         var keyPrefix = localStorageMode.chunkPrefix + key;
         if (index === undefined) {
@@ -55,6 +79,12 @@
           data = localStorage[keyPrefix + index];
         }
       },
+      /**
+       * Read value from localStorage
+       * @param key
+       * @param value
+       * @returns {*}
+       */
       readValue: function(key, value) {
         if (value === localStorageMode.chunkItem) {
           value = localStorageMode.getObj(key)
@@ -71,6 +101,11 @@
         }
         return value;
       },
+      /**
+       * Get item from storage
+       * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+       * @param {function} cb - Callback function
+       */
       get: function(src, cb) {
         var key, obj = {};
         if (src === undefined || src === null) {
@@ -100,6 +135,11 @@
         }
         cb(obj);
       },
+      /**
+       * Set item in storage
+       * @param {Object} obj
+       * @param {function} [cb]
+       */
       set: function(obj, cb) {
         var key;
         for (key in obj) {
@@ -122,6 +162,11 @@
         }
         cb && cb();
       },
+      /**
+       * Remove item from storage
+       * @param {Array|string} obj
+       * @param {function} [cb]
+       */
       remove: function(obj, cb) {
         if (Array.isArray(obj)) {
           for (var i = 0, len = obj.length; i < len; i++) {
@@ -139,6 +184,10 @@
         }
         cb && cb();
       },
+      /**
+       * Clear storage
+       * @param {function} [cb]
+       */
       clear: function(cb) {
         localStorage.clear();
         cb && cb();
@@ -150,21 +199,49 @@
     return localStorageMode;
   };
 
+  /**
+   * External storage mode
+   * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+   */
   var externalStorage = {
+    /**
+     * Get item from storage
+     * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
+     * @param {function} cb - Callback function
+     */
     get: function(obj, cb) {
       mono.sendMessage({action: 'get', data: obj}, cb, 'monoStorage');
     },
+    /**
+     * Set item in storage
+     * @param {Object} obj
+     * @param {function} [cb]
+     */
     set: function(obj, cb) {
       mono.sendMessage({action: 'set', data: obj}, cb, 'monoStorage');
     },
+    /**
+     * Remove item from storage
+     * @param {Array|string} obj
+     * @param {function} [cb]
+     */
     remove: function(obj, cb) {
       mono.sendMessage({action: 'remove', data: obj}, cb, 'monoStorage');
     },
+    /**
+     * Clear storage
+     * @param {function} [cb]
+     */
     clear: function(cb) {
       mono.sendMessage({action: 'clear'}, cb, 'monoStorage');
     }
   };
 
+  /**
+   *
+   * @param {object} message
+   * @param {function} [response]
+   */
   var externalStorageHook = function(message, response) {
     if (message.action === 'get') {
       return mono.storage.get(message.data, response);
@@ -182,16 +259,28 @@
 
   if (false && mono.isOpera && window.widget) {
     // remove false if need use prefs
+    /**
+     * Opera storage
+     * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+     */
     mono.storage = getLocalStorage(window.widget.preferences);
     mono.storage.local = mono.storage.sync = mono.storage;
     return;
   }
   if (mono.isFF || mono.isChromeInject || mono.isOperaInject || mono.isSafariInject) {
+    /**
+     * Firefox bridge storage
+     * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+     */
     mono.storage = externalStorage;
     mono.storage.local = mono.storage.sync = mono.storage;
     return;
   }
   if (window.localStorage) {
+    /**
+     * LocalStorage
+     * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+     */
     mono.storage = getLocalStorage(window.localStorage);
     mono.storage.local = mono.storage.sync = mono.storage;
     if (mono.isChrome || mono.isSafari || mono.isOpera) {

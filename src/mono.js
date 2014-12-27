@@ -95,6 +95,11 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
   mono.messageStack = 50;
 
+  /**
+   * Clone array or object via JSON
+   * @param {object|Array} obj
+   * @returns {object|Array}
+   */
   mono.cloneObj = function(obj) {
     return JSON.parse(JSON.stringify(obj));
   };
@@ -104,6 +109,11 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
     cbStack: [],
     id: 0,
     idPrefix: Math.floor(Math.random()*1000)+'_',
+    /**
+     * Add callback function in cbObj and cbStack
+     * @param {object} message - Message
+     * @param {function} cb - Callback function
+     */
     addCb: function(message, cb) {
       mono.onMessage.inited === undefined && mono.onMessage(function(){});
 
@@ -114,6 +124,10 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       msgTools.cbObj[id] = cb;
       msgTools.cbStack.push(id);
     },
+    /**
+     * Call function from callback list
+     * @param {object} message
+     */
     callCb: function(message) {
       var cb = msgTools.cbObj[message.responseId];
       if (cb === undefined) return;
@@ -121,6 +135,12 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       msgTools.cbStack.splice(msgTools.cbStack.indexOf(message.responseId), 1);
       cb(message.data);
     },
+    /**
+     * Response function
+     * @param {function} response
+     * @param {string} callbackId
+     * @param {*} responseMessage
+     */
     mkResponse: function(response, callbackId, responseMessage) {
       if (callbackId === undefined) return;
 
@@ -130,16 +150,37 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       };
       response.call(this, responseMessage);
     },
+    /**
+     * Clear callback stack
+     */
     clearCbStack: function() {
       for (var item in msgTools.cbObj) {
         delete msgTools.cbObj[item];
       }
       msgTools.cbStack.splice(0);
+    },
+    /**
+     * Remove item from cbObj and cbStack by cbId
+     * @param {string} cbId - Callback id
+     */
+    removeCb: function(cbId) {
+      var cb = msgTools.cbObj[cbId];
+      if (cb === undefined) return;
+      delete msgTools.cbObj[cbId];
+      msgTools.cbStack.splice(msgTools.cbStack.indexOf(cbId), 1);
     }
   };
 
-  mono.clearCbStack = msgTools.clearCbStack;
+  mono.msgClearStack = msgTools.clearCbStack;
+  mono.msgRemoveCbById = msgTools.removeCb;
 
+  /**
+   * Send message if background page - to local pages, or to background page
+   * @param {*} message - Message
+   * @param {function} [cb] - Callback function
+   * @param {string} [hook] - Hook string
+   * @returns {*|callbackId} - callback id
+   */
   mono.sendMessage = function(message, cb, hook) {
     message = {
       data: message,
@@ -149,8 +190,17 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       msgTools.addCb(message, cb.bind(this));
     }
     mono.sendMessage.send.call(this, message);
+
+    return message.callbackId;
   };
 
+  /**
+   * Send message to active page, background page only
+   * @param {*} message - Message
+   * @param {function} [cb] - Callback function
+   * @param {string} [hook] - Hook string
+   * @returns {*|callbackId} - callback id
+   */
   mono.sendMessageToActiveTab = function(message, cb, hook) {
     message = {
       data: message,
@@ -160,10 +210,20 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       msgTools.addCb(message, cb.bind(this));
     }
     mono.sendMessage.sendToActiveTab.call(this, message);
+
+    return message.callbackId;
   };
 
+  /**
+   * Mono message hooks
+   * @type {{}}
+   */
   mono.sendHook = {};
 
+  /**
+   * Listen messages and call callback function
+   * @param {function} cb - Callback function
+   */
   mono.onMessage = function(cb) {
     var _this = this;
     mono.onMessage.inited = 1;
