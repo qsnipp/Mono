@@ -23,6 +23,35 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 }(typeof window !== "undefined" ? window : undefined, function ( addon ) {
   var require;
 
+  /**
+   * Mono
+   * @type {{
+   * isModule: Boolean,
+   * isFF: Boolean,
+   * isGM: Boolean,
+   * isTM: Boolean,
+   * isChrome: Boolean,
+   * isChromeApp: Boolean,
+   * isChromeWebApp: Boolean,
+   * isChromeInject: Boolean,
+   * isSafari: Boolean,
+   * isSafariPopup: Boolean,
+   * isSafariBgPage: Boolean,
+   * isSafariInject: Boolean,
+   * isOpera: Boolean,
+   * isOperaInject: Boolean,
+   * isSafari: Boolean,
+   * messageStack: number,
+   * cloneObj: Function,
+   * msgClearStack: Function,
+   * msgRemoveCbById: Function,
+   * sendMessage: Function,
+   * sendMessageToActiveTab: Function,
+   * sendHook: Object,
+   * onMessage: Function
+   * storage: Object
+   * }}
+   */
   var mono = {};
 
   (function() {
