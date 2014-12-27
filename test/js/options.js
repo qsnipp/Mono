@@ -1,24 +1,5 @@
-console.log("Options page!");
-
-var test = function() {
-  var from = 'Options ';
-  mono.sendMessage({message: from + 'message'});
-  mono.sendMessage({message: from + 'message with response#1!', response: 1}, function(message) {
-    mono.sendMessage({inLog: 1, message: [from + 'get response#1', message]});
-  });
-  mono.sendMessage({message: from + 'message to active tab!', toActiveTab: 1});
-  mono.sendMessage({message: from + 'message to active tab with response#2!', toActiveTab: 1, response: 1}, function(message) {
-    mono.sendMessage({inLog: 1, message: [from + 'get response#2', message]});
-  });
-  mono.storage.get(['optTest', 'optObj', 'bgTest', 'bgObj'], function(data) {
-    mono.sendMessage({inLog: 1, message: [from + ' storage, old', data]});
-    mono.storage.set({optTest: Date.now(), optObj: {test: 1, test2: true, test3: 'yep'}}, function() {
-      mono.storage.get(['optTest', 'optObj'], function(data) {
-        mono.sendMessage({inLog: 1, message: [from + ' storage, new', data]});
-      });
-    });
-  });
-};
+var page;
+console.log(page = "Options page!");
 
 document.addEventListener('DOMContentLoaded', function() {
   var message = document.getElementById('message');
@@ -28,13 +9,22 @@ document.addEventListener('DOMContentLoaded', function() {
     output.value += message+'\n';
   };
   var onSubmit = function() {
-    if (message.value === 'test') {
-      message.value = '';
-      return test();
-    }
-    mono.sendMessage(message.value);
-    write('< ' + message.value);
+    var text = message.value;
     message.value = '';
+
+    if (text === 'bgTest') {
+      write('run bgPage test!');
+      return mono.sendMessage({action: 'bgTest'});
+    }
+
+    if (text === 'msgTest') {
+      write('run msgPage test!');
+      return mono.sendMessage({action: 'msgTest'});
+    }
+
+    write(['[s]', page, JSON.stringify(text)].join(' '));
+    mono.sendMessage({inLog: 1, data: ['[s]', page, text]});
+    mono.sendMessage(text);
   };
   message.addEventListener('keydown', function(e) {
     if (e.keyCode === 13) {
@@ -43,21 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   send.addEventListener('click', onSubmit);
 
-  mono.onMessage(function(message, response){
-    write('> ' + JSON.stringify(message));
+  mono.onMessage(function(message, _response) {
+    if (message.to && message.to !== 'options') return;
 
-    console.log('> '+message);
-
-    mono.sendMessage({inLog: 1, message: ['Options, input', message]});
-
+    write(['[i]', page, JSON.stringify(arguments[0])].join(' '));
+    mono.sendMessage({inLog: 1, data: ['[i]', page, arguments[0]]});
+    var response = function() {
+      write(['[sr]', page, JSON.stringify(arguments[0])].join(' '));
+      mono.sendMessage({inLog: 1, data: ['[sr]', page, arguments[0]]});
+      _response.apply(this, arguments);
+    };
     if (message.response) {
-      return response({message: 'Options, Response'});
+      return response({text: 'Response from '+page, input: message});
     }
-
-    if (message[0] === 'r') {
-      response('_r: ' + message);
-      console.log('< ' + '_r: ' + message);
-      write('< ' + '_r: ' + JSON.stringify(message));
+    if (message.reSend) {
+      return mono.sendMessage(message.message, response);
     }
   });
 });

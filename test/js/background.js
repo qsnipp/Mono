@@ -27,73 +27,110 @@
     }), "data/mono");
 })();
 
+var page;
 var msgLog = [];
-var test = function() {
-    mono.sendMessageToActiveTab({message: 'BG, Just message'});
-    mono.sendMessageToActiveTab({message: 'BG, message with response!', response: 1}, function(message) {
-        msgLog.push(['BG, get response', message]);
-    });
-    mono.storage.get(['bgTest', 'bgObj'], function(data) {
-        msgLog.push(['BG, storage, old', data]);
-        mono.storage.set({bgTest: Date.now(), bgObj: {test: 1, test2: true, test3: 'yep'}}, function() {
-            mono.storage.get(['bgTest', 'bgObj'], function(data) {
-                msgLog.push(['BG, storage, new', data]);
-            });
+var msgLogPush = msgLog.push;
+msgLog.push = function() {
+    console.error.apply(console, arguments);
+    msgLogPush.apply(msgLog, arguments);
+};
+
+var actionList = {
+    bgTest: function(message, response) {
+        var sendMessageToActiveTab = function() {
+            msgLog.push(['[sa]', page, arguments[0]]);
+            mono.sendMessageToActiveTab.apply(this, arguments);
+        };
+        var sendMessage = function() {
+            msgLog.push(['[s]', page, arguments[0]]);
+            mono.sendMessage.apply(this, arguments);
+        };
+
+        sendMessage({text: 'Hi all, from '+page});
+        sendMessage({text: 'Hi all, with response, from '+page, response: 1}, function() {
+            msgLog.push(['[gr]', page, arguments[0]]);
         });
-    });
+
+        sendMessageToActiveTab({text: 'Hi activeTab, from '+page});
+        sendMessageToActiveTab({text: 'Hi activeTab, with response, from '+page, response: 1}, function() {
+            msgLog.push(['[gr]', page, arguments[0]]);
+        });
+    },
+    msgTest: function(message, response) {
+        var sendMessageToActiveTab = function() {
+            msgLog.push(['[sa]', page, arguments[0]]);
+            mono.sendMessageToActiveTab.apply(this, arguments);
+        };
+        var sendMessage = function() {
+            msgLog.push(['[s]', page, arguments[0]]);
+            mono.sendMessage.apply(this, arguments);
+        };
+
+        var testTimer1 = setTimeout(function() {
+            console.error("[test#1]", '-', 'ERROR!');
+        }, 500);
+        sendMessageToActiveTab({reSend: 1, message: {action: 'test1'}}, function(response) {
+            if (response !== 'OK!') return;
+            console.error("[test#1]", '-', 'OK');
+            clearTimeout(testTimer1);
+        });
+
+        actionList.test2.count = 0;
+        setTimeout(function() {
+            if (actionList.test2.count !== 2) {
+                console.error("[test#2]", '-', 'ERROR!');
+            } else {
+                console.error("[test#2]", '-', 'OK');
+            }
+        }, 500);
+        sendMessage({reSend: 1, message: {action: 'test2'}});
+
+        var testTimer3 = setTimeout(function() {
+            console.error("[test#3]", '-', 'ERROR!');
+        }, 500);
+        sendMessage({reSend: 1, to: 'options', message: {action: 'test1'}}, function(response) {
+            if (response !== 'OK!') return;
+            console.error("[test#3]", '-', 'OK');
+            clearTimeout(testTimer3);
+        });
+
+        var testTimer4 = setTimeout(function() {
+            console.error("[test#4]", '-', 'ERROR!');
+        }, 500);
+        sendMessage({reSend: 1, to: 'popup', message: {action: 'test1'}}, function(response) {
+            if (response !== 'OK!') return;
+            console.error("[test#4]", '-', 'OK');
+            clearTimeout(testTimer4);
+        });
+    },
+    test1: function(message, response) {
+        response('OK!');
+    },
+    test2: function(message, response) {
+        actionList.test2.count++;
+    }
 };
 
 var init = function(addon) {
     if (addon) {
         mono = mono.init(addon);
     }
-    console.log("Background page!");
 
-    var _msgListPush = msgLog.push;
-    msgLog.push = function() {
-        _msgListPush.call(msgLog, arguments[0]);
-        console.error('inLog', JSON.stringify(arguments[0]));
-    };
-    var _sendMessage = mono.sendMessage;
-    var _sendMessageToActiveTab = mono.sendMessageToActiveTab;
-    mono.sendMessage = function() {
-        msgLog.push(['BG, send', arguments[0]]);
-        _sendMessage.apply(this, arguments);
-    };
-    mono.sendMessage.send = _sendMessage.send;
-    mono.sendMessage.sendToActiveTab = _sendMessage.sendToActiveTab;
-    mono.sendMessageToActiveTab = function() {
-        msgLog.push(['BG, sendToActiveTab', arguments[0]]);
-        _sendMessageToActiveTab.apply(this, arguments);
-    };
+    console.log(page = "Background page!");
 
-    mono.onMessage.call({isBg: true}, function(message, response){
-        if (message === 'bgTest') {
-            return test();
-        }
-        if (message === 'sendAll') {
-            return mono.sendMessage("Hi all!");
-        }
-        if (message === 'getLog') {
-            return response(JSON.stringify(msgLog));
-        }
+    mono.onMessage.call({isBg: true}, function(message, _response) {
         if (message.inLog) {
-            return msgLog.push(message.message);
+            return msgLog.push(message.data);
         }
+        msgLog.push(['[i]', page, arguments[0]]);
+        var response = function() {
+            msgLog.push(['[sr]', page, arguments[0]]);
+            _response.apply(this, arguments);
+        };
 
-        msgLog.push(['BG, input', message]);
-
-        if (message.toActiveTab) {
-            delete message.toActiveTab;
-            mono.sendMessageToActiveTab(message, function() {
-                msgLog.push(['BG, get responseFromActiveTab', arguments[0]]);
-                response.apply(this, arguments);
-            });
-            return;
-        }
-
-        if (message.response) {
-            return response({message: 'BG, Response'});
+        var fn = actionList[message.action];
+        if (fn) {
+            return fn(message, response);
         }
     });
 
