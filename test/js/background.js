@@ -34,7 +34,11 @@ var page;
 var msgLog = [];
 var msgLogPush = msgLog.push;
 msgLog.push = function() {
-    console.error.apply(console, arguments);
+    if (mono.isOpera) {
+        console.error(JSON.stringify(arguments[0]));
+    } else {
+        console.error.apply(console, arguments);
+    }
     msgLogPush.apply(msgLog, arguments);
 };
 
