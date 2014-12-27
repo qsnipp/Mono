@@ -25,6 +25,9 @@
             }
         }
     }), "data/mono");
+    var sdk_timers = require("sdk/timers");
+    setTimeout = sdk_timers.setTimeout;
+    clearTimeout = sdk_timers.clearTimeout;
 })();
 
 var page;
@@ -38,31 +41,31 @@ msgLog.push = function() {
 var actionList = {
     bgTest: function(message, response) {
         var sendMessageToActiveTab = function() {
-            msgLog.push(['[sa]', page, arguments[0]]);
+            msgLog.push(['[sa]', page, JSON.stringify(arguments[0])]);
             mono.sendMessageToActiveTab.apply(this, arguments);
         };
         var sendMessage = function() {
-            msgLog.push(['[s]', page, arguments[0]]);
+            msgLog.push(['[s]', page, JSON.stringify(arguments[0])]);
             mono.sendMessage.apply(this, arguments);
         };
 
         sendMessage({text: 'Hi all, from '+page});
         sendMessage({text: 'Hi all, with response, from '+page, response: 1}, function() {
-            msgLog.push(['[gr]', page, arguments[0]]);
+            msgLog.push(['[gr]', page, JSON.stringify(arguments[0])]);
         });
 
         sendMessageToActiveTab({text: 'Hi activeTab, from '+page});
         sendMessageToActiveTab({text: 'Hi activeTab, with response, from '+page, response: 1}, function() {
-            msgLog.push(['[gr]', page, arguments[0]]);
+            msgLog.push(['[gr]', page, JSON.stringify(arguments[0])]);
         });
     },
     msgTest: function(message, response) {
         var sendMessageToActiveTab = function() {
-            msgLog.push(['[sa]', page, arguments[0]]);
+            msgLog.push(['[sa]', page, JSON.stringify(arguments[0])]);
             mono.sendMessageToActiveTab.apply(this, arguments);
         };
         var sendMessage = function() {
-            msgLog.push(['[s]', page, arguments[0]]);
+            msgLog.push(['[s]', page, JSON.stringify(arguments[0])]);
             mono.sendMessage.apply(this, arguments);
         };
 
@@ -88,7 +91,7 @@ var actionList = {
         var testTimer3 = setTimeout(function() {
             console.error("[test#3]", '-', 'ERROR!');
         }, 500);
-        sendMessage({reSend: 1, to: 'options', message: {action: 'test1'}}, function(response) {
+        sendMessage({reSend: 1, to: 'options', message: {action: 'test1', test: 3}}, function(response) {
             if (response !== 'OK!') return;
             console.error("[test#3]", '-', 'OK');
             clearTimeout(testTimer3);
@@ -97,7 +100,7 @@ var actionList = {
         var testTimer4 = setTimeout(function() {
             console.error("[test#4]", '-', 'ERROR!');
         }, 500);
-        sendMessage({reSend: 1, to: 'popup', message: {action: 'test1'}}, function(response) {
+        sendMessage({reSend: 1, to: 'popup', message: {action: 'test1', test: 4}}, function(response) {
             if (response !== 'OK!') return;
             console.error("[test#4]", '-', 'OK');
             clearTimeout(testTimer4);
@@ -120,11 +123,12 @@ var init = function(addon) {
 
     mono.onMessage.call({isBg: true}, function(message, _response) {
         if (message.inLog) {
+            message.data[2] = JSON.stringify(message.data[2]);
             return msgLog.push(message.data);
         }
-        msgLog.push(['[i]', page, arguments[0]]);
+        msgLog.push(['[i]', page, JSON.stringify(arguments[0])]);
         var response = function() {
-            msgLog.push(['[sr]', page, arguments[0]]);
+            msgLog.push(['[sr]', page, JSON.stringify(arguments[0])]);
             _response.apply(this, arguments);
         };
 

@@ -183,13 +183,11 @@
       item.lib.emit('mono', message);
     }
 
-    if (flags.enableLocalScope && message.from !== undefined) {
-      if (fmPage !== undefined && (fmPage.isLocal || fmPage.page.isVirtual)) {
-        for (var index in map) {
-          var mPage = map[index];
-          if (fmPage === mPage || mPage.isLocal === false || mPage.active === false) continue;
-          mPage.page.port.emit('mono', message);
-        }
+    if (flags.enableLocalScope && fmPage !== undefined && fmPage.page.isVirtual && message.from !== undefined) {
+      for (var index in map) {
+        var mPage = map[index];
+        if (fmPage === mPage || mPage.isLocal === false || mPage.active === false) continue;
+        mPage.page.port.emit('mono', message);
       }
     }
   };

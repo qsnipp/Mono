@@ -1,5 +1,6 @@
 (function() {
     var monoLib = require("./monoLib.js");
+    monoLib.flags.enableLocalScope = true;
     var ToggleButton = require('sdk/ui/button/toggle').ToggleButton;
     var panels = require("sdk/panel");
     var self = require("sdk/self");
