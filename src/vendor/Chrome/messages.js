@@ -78,11 +78,13 @@
   (function() {
     if (chrome.runtime.getBackgroundPage === undefined) return;
 
-    mono.isChromeBgPage = 1;
+    mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
     chrome.runtime.getBackgroundPage(function(bgWin) {
       if (bgWin !== window) {
-        delete  mono.isChromeBgPage;
+        delete mono.isChromeBgPage;
+      } else {
+        mono.isChromeBgPage = 1;
       }
 
       if (!mono.isChromeBgPage) {
