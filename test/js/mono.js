@@ -781,10 +781,16 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
         if (Array.isArray(src) === true) {
           for (var i = 0, len = src.length; i < len; i++) {
             key = src[i];
+            if (!ss.storage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = ss.storage[key];
           }
         } else {
           for (key in src) {
+            if (!ss.storage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = ss.storage[key];
           }
         }
@@ -859,7 +865,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
      * @param {function} cb - Callback function
      */
     get: function (src, cb) {
-      var key, obj = {};
+      var key, value, obj = {};
       if (src === undefined || src === null) {
         var nameList = GM_listValues();
         for (key in nameList) {
@@ -873,11 +879,17 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       if (Array.isArray(src) === true) {
         for (var i = 0, len = src.length; i < len; i++) {
           key = src[i];
-          obj[key] = GM_getValue(key);
+          value = GM_getValue(key);
+          if (value !== undefined) {
+            obj[key] = value;
+          }
         }
       } else {
         for (key in src) {
-          obj[key] = GM_getValue(key);
+          value = GM_getValue(key);
+          if (value !== undefined) {
+            obj[key] = value;
+          }
         }
       }
       cb(obj);
@@ -1059,10 +1071,16 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
         if (Array.isArray(src) === true) {
           for (var i = 0, len = src.length; i < len; i++) {
             key = src[i];
+            if (!localStorage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = localStorageMode.readValue(key, localStorage[key]);
           }
         } else {
           for (key in src) {
+            if (!localStorage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = localStorageMode.readValue(key, localStorage[key]);
           }
         }

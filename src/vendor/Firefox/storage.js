@@ -30,10 +30,16 @@
         if (Array.isArray(src) === true) {
           for (var i = 0, len = src.length; i < len; i++) {
             key = src[i];
+            if (!ss.storage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = ss.storage[key];
           }
         } else {
           for (key in src) {
+            if (!ss.storage.hasOwnProperty(key)) {
+              continue;
+            }
             obj[key] = ss.storage[key];
           }
         }

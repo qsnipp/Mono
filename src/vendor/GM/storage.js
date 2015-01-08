@@ -19,7 +19,7 @@
      * @param {function} cb - Callback function
      */
     get: function (src, cb) {
-      var key, obj = {};
+      var key, value, obj = {};
       if (src === undefined || src === null) {
         var nameList = GM_listValues();
         for (key in nameList) {
@@ -33,11 +33,17 @@
       if (Array.isArray(src) === true) {
         for (var i = 0, len = src.length; i < len; i++) {
           key = src[i];
-          obj[key] = GM_getValue(key);
+          value = GM_getValue(key);
+          if (value !== undefined) {
+            obj[key] = value;
+          }
         }
       } else {
         for (key in src) {
-          obj[key] = GM_getValue(key);
+          value = GM_getValue(key);
+          if (value !== undefined) {
+            obj[key] = value;
+          }
         }
       }
       cb(obj);
