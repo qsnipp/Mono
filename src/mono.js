@@ -84,7 +84,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
           mono.isChromeWebApp = true;
         }
       }
-      mono.isChromeInject = chrome.tabs === undefined;
+      mono.isChromeInject = !chrome.hasOwnProperty('tabs');
       return;
     }
 

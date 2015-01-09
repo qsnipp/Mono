@@ -1,5 +1,5 @@
 (function() {
-  if (!mono.isChrome || (chrome.runtime && chrome.runtime.onMessage)) return;
+  if (!mono.isChrome || (chrome.hasOwnProperty('runtime') && chrome.runtime.onMessage)) return;
 
   var lowLevelHook = {};
 

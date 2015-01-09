@@ -1,5 +1,5 @@
 (function() {
-  if (!mono.isChrome || !(chrome.runtime && chrome.runtime.onMessage)) return;
+  if (!mono.isChrome || !(chrome.hasOwnProperty('runtime') && chrome.runtime.onMessage)) return;
 
   var lowLevelHook = {};
 
@@ -76,7 +76,7 @@
   chromeMsg.on.lowLevelHook = lowLevelHook;
 
   (function() {
-    if (chrome.runtime.getBackgroundPage === undefined) return;
+    if (!chrome.runtime.hasOwnProperty('getBackgroundPage')) return;
 
     mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 

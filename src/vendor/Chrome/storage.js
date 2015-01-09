@@ -1,5 +1,5 @@
 (function() {
-  if (!mono.isChrome || !chrome.storage) return;
+  if (!mono.isChrome || !chrome.hasOwnProperty('storage')) return;
 
   /**
    * Chrome storage mode
