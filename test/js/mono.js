@@ -735,7 +735,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
   mono.onMessage.on = gmMsg.on;
   mono.sendMessage.send = gmMsg.send;
-  mono.sendMessage.sendToActiveTab = gmMsg.send;
+  mono.sendMessage.sendToActiveTab = gmMsg.onMessage.bind({isBg: true});
 })();
 
 (function() {

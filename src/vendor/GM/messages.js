@@ -22,5 +22,5 @@
 
   mono.onMessage.on = gmMsg.on;
   mono.sendMessage.send = gmMsg.send;
-  mono.sendMessage.sendToActiveTab = gmMsg.send;
+  mono.sendMessage.sendToActiveTab = gmMsg.onMessage.bind({isBg: true});
 })();
