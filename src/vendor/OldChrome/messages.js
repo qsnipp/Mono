@@ -20,7 +20,7 @@
     },
     sendTo: function(message, tabId) {
       chrome.tabs.sendRequest(tabId, message, function(message) {
-        if (message.responseId !== undefined) {
+        if (message && message.responseId !== undefined) {
           return msgTools.callCb(message);
         }
       });
@@ -70,7 +70,7 @@
         message.toBgPage = 1;
       }
       chrome.extension.sendRequest(message, function(message) {
-        if (message.responseId !== undefined) {
+        if (message && message.responseId !== undefined) {
           return msgTools.callCb(message);
         }
       });
