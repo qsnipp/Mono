@@ -19,9 +19,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   if (window) {
     return mono = factory();
   }
-  factory.isFF = true;
-  factory.isModule = true;
-  return exports.init = factory;
+  exports.isFF = true;
+  exports.isModule = true;
+  exports.init = factory;
 }(typeof window !== "undefined" ? window : undefined, function ( addon ) {
   var require;
 
