@@ -1,7 +1,6 @@
 (function() {
     if (typeof window !== 'undefined') return;
     window = require('sdk/window/utils').getMostRecentBrowserWindow();
-    window.isModule = true;
     var self = require('sdk/self');
     mono = require('toolkit/loader').main(require('toolkit/loader').Loader({
         paths: {
@@ -166,7 +165,7 @@ var init = function(addon) {
     }
 };
 
-if (window.isModule) {
+if (mono.isModule) {
     /**
      * @namespace exports
      */
