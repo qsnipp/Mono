@@ -160,18 +160,19 @@
     activeTab: function(message) {
       var tabs = require("sdk/tabs");
       var currentTab = tabs.activeTab;
-      var pageId;
+      var pageIdList = [];
       for (var index in map) {
         if (map[index].page.tab === currentTab && map[index].page.url === currentTab.url) {
-          pageId = map[index].id;
-          break;
+          pageIdList.push(map[index].id);
         }
       }
-      if (pageId === undefined) {
+      if (pageIdList.length === 0) {
         return;
       }
-      message.to = pageId;
-      monoOnMessage(message);
+      for (var i = 0, page; page = pageIdList[i]; i++) {
+        message.to = page;
+        monoOnMessage(message);
+      }
     },
     popupWin: function(message) {
       var self = require("sdk/self");
