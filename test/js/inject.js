@@ -12,8 +12,10 @@
 
   if (mono.isChrome) {
     mono.onMessage.on.lowLevelHook.hasInject = function(message, sender, response) {
-      var isFrame = window.top !== window.self;
-      response(!isFrame);
+      if (message.url !== location.href) {
+        return setTimeout(function() {response(null);}, 1000);
+      }
+      response(true);
     }
   }
 

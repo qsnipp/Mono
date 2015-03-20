@@ -122,7 +122,7 @@ var actionList = {
             if (tabs[0] === undefined || tabs[0].id < 0) {
                 return;
             }
-            chrome.tabs.sendMessage(tabs[0].id, {hook: 'hasInject'}, function(has) {
+            chrome.tabs.sendMessage(tabs[0].id, {hook: 'hasInject', url: tabs[0].url}, function(has) {
                 console.log('>', has);
             });
         });
