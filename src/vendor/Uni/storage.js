@@ -264,13 +264,13 @@
     }
   };
 
-  if (false && mono.isOpera && window.widget) {
+  if (false && mono.isOpera && typeof widget !== 'undefined') {
     // remove false if need use prefs
     /**
      * Opera storage
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
      */
-    mono.storage = getLocalStorage(window.widget.preferences);
+    mono.storage = getLocalStorage(widget.preferences);
     mono.storage.local = mono.storage.sync = mono.storage;
     return;
   }
