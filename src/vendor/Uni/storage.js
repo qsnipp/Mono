@@ -93,7 +93,7 @@
           var data = value.substr(1);
           var type = value[0];
           if (type === 'i') {
-            value = parseInt(data);
+            value = parseFloat(data);
           } else if (type === 'b') {
             value = data === 'true';
           } else {
