@@ -283,7 +283,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       if (message.hook !== undefined) {
         var hookFunc = mono.sendHook[message.hook];
         if (hookFunc !== undefined) {
-          return mono.sendHook[message.hook](message.data, mResponse);
+          return hookFunc(message.data, mResponse);
         }
       }
       cb.call(_this, message.data, mResponse);
