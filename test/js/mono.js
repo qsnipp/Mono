@@ -73,7 +73,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       if (window.chrome !== undefined) {
         mono.isTM = true;
       } else
-      if (navigator.userAgent.indexOf('Maxthon/')) {
+      if (navigator.userAgent.indexOf('Maxthon/') !== -1) {
         mono.isVM = true;
       }
       return;
