@@ -227,7 +227,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
    * @param {*} message - Message
    * @param {function} [cb] - Callback function
    * @param {string} [hook] - Hook string
-   * @returns {*|callbackId} - callback id
+   * @returns {*|string} - callback id
    */
   mono.sendMessage = function(message, cb, hook) {
     message = {
@@ -247,7 +247,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
    * @param {*} message - Message
    * @param {function} [cb] - Callback function
    * @param {string} [hook] - Hook string
-   * @returns {*|callbackId} - callback id
+   * @returns {*|string} - callback id
    */
   mono.sendMessageToActiveTab = function(message, cb, hook) {
     message = {
