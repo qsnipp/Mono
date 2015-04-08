@@ -55,7 +55,7 @@
      */
     set: function (obj, cb) {
       for (var key in obj) {
-        GM_setValue(key, obj[key]);
+        GM_setValue(key, JSON.parse(JSON.stringify(obj[key])));
       }
       cb && cb();
     },
