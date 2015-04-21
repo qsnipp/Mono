@@ -35,14 +35,22 @@
           key = src[i];
           value = GM_getValue(key);
           if (value !== undefined) {
-            obj[key] = value;
+            if (typeof value !== 'object') {
+              obj[key] = value;
+            } else {
+              obj[key] = JSON.parse(JSON.stringify(value));
+            }
           }
         }
       } else {
         for (key in src) {
           value = GM_getValue(key);
           if (value !== undefined) {
-            obj[key] = value;
+            if (typeof value !== 'object') {
+              obj[key] = value;
+            } else {
+              obj[key] = JSON.parse(JSON.stringify(value));
+            }
           }
         }
       }
@@ -55,7 +63,11 @@
      */
     set: function (obj, cb) {
       for (var key in obj) {
-        GM_setValue(key, JSON.parse(JSON.stringify(obj[key])));
+        if (typeof obj[key] !== 'object') {
+          GM_setValue(key, obj[key]);
+        } else {
+          GM_setValue(key, JSON.parse(JSON.stringify(obj[key])));
+        }
       }
       cb && cb();
     },
