@@ -81,7 +81,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
     if (window.chrome !== undefined) {
       mono.isChrome = true;
-      if (chrome.app.getDetails === undefined) {
+      if (!chrome.app.hasOwnProperty('getDetails')) {
         mono.isChromeApp = true;
       } else {
         var details = chrome.app.getDetails();
