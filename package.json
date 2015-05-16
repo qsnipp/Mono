@@ -1,6 +1,6 @@
 {
   "name": "mono",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mono cross-browser engine",
   "main": "index.js",
   "dependencies": {
