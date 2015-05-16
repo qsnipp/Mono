@@ -19,6 +19,11 @@
     return;
   }
 
+  if (window.hasOwnProperty('opera')) {
+    //@include define/opera.js
+    return;
+  }
+
   if (navigator.userAgent.indexOf('Firefox') !== -1) {
     //@include define/firefox.js
     return;
@@ -26,11 +31,6 @@
 
   if (window.hasOwnProperty('safari')) {
     //@include define/safari.js
-    return;
-  }
-
-  if (window.hasOwnProperty('opera')) {
-    //@include define/opera.js
     return;
   }
 

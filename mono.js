@@ -105,6 +105,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             return;
         }
 
+        if (window.hasOwnProperty('opera')) {
+            mono.isOpera = true;
+            mono.isOperaInject = opera.extension.broadcastMessage === undefined;
+            return;
+        }
+
         if (navigator.userAgent.indexOf('Firefox') !== -1) {
             mono.isFF = true;
             mono.isModule = typeof window === 'undefined';
@@ -126,14 +132,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         if (window.hasOwnProperty('safari')) {
             mono.isSafari = true;
             mono.isSafariPopup = safari.self.identifier === 'popup';
-            mono.isSafariBgPage = !safari.self.hasOwnProperty('addEventListener');
-            mono.isSafariInject = !mono.isSafariPopup && !safari.hasOwnProperty('application');
-            return;
-        }
-
-        if (window.hasOwnProperty('opera')) {
-            mono.isOpera = true;
-            mono.isOperaInject = !opera.extension.hasOwnProperty('broadcastMessage');
+            mono.isSafariBgPage = safari.self.addEventListener === undefined;
+            mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
             return;
         }
 

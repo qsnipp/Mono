@@ -1,2 +1,2 @@
 mono.isOpera = true;
-mono.isOperaInject = !opera.extension.hasOwnProperty('broadcastMessage');
+mono.isOperaInject = opera.extension.broadcastMessage === undefined;
