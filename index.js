@@ -66,10 +66,19 @@ exports.get = {
 
     var info = {};
     for (var i = 0, type; type = typeList[i]; i++) {
-      var item =  depList[type];
+      var item = depList[type];
+      if (!item) {
+        console.error('Error: Item is not found:', item);
+        return;
+      }
       for (var key in item) {
         info[key] = item[key];
       }
+    }
+
+    if (!info.messages || !info.storage || !info.define) {
+      console.error('Error: --target is', '"'+typeList.join(',')+'"');
+      return;
     }
 
     var path = rootUrl + './src/';
