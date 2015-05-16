@@ -312,5 +312,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
 
 //@uniStorage
 
+//@insert
+
   return mono;
 }));
