@@ -10,6 +10,7 @@ Support Opera 12, Chrome, Safari, Firefox.
 Build
 -------------
 
-Use Ant for build library.
+Use Grune for build library.
 
-build.xml - /src/vendor/Ant/build.xml
+npm install
+grunt

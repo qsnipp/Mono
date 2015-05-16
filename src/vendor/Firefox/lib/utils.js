@@ -26,8 +26,6 @@ var serviceList = exports.serviceList = {
   }
 };
 
-//@ffLibOtherUtils
-
 sendHook.service = function(message) {
   var msg = message.data || {};
 

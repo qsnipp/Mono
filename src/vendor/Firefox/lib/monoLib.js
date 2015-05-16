@@ -248,8 +248,7 @@
     });
   };
 
-//@ffLibStorage
+  //@include storage.js
 
-//@ffLibUtils
-
+  //@include utils.js
 })();

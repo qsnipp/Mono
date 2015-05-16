@@ -1,3 +1,4 @@
 /.idea/
 /test/build*/
-test/build_opera.oex
+/test/build_opera.oex
+/node_modules/

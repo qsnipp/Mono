@@ -1,114 +1,124 @@
 var fs = require('fs');
 
-var dep = {
+var depList = {
   chrome: {
-    noStrip: 'chrome',
-    messages: ['Chrome/messages.js'],
-    storage: ['Chrome/storage.js']
+    define: 'chrome',
+    messages: 'Chrome/messages.js',
+    storage: 'Chrome/storage.js'
   },
   oldChrome: {
-    noStrip: 'chrome',
+    define: 'chrome',
     messages: [
       'Chrome/messages.js',
       'OldChrome/messages.js'
     ],
-    storage: ['Chrome/storage.js']
+    storage: 'Chrome/storage.js'
   },
   firefox: {
-    noStrip: 'firefox',
-    messages: ['Firefox/messages.js'],
-    storage: ['Firefox/storage.js']
+    define: 'firefox',
+    messages: 'Firefox/messages.js',
+    storage: 'Firefox/storage.js'
   },
   gm: {
-    noStrip: 'gm',
-    messages: ['GM/messages.js'],
-    storage: ['GM/storage.js']
+    define: 'gm',
+    messages: 'GM/messages.js',
+    storage: 'GM/storage.js'
   },
   opera: {
-    noStrip: 'opera',
-    messages: ['Opera/messages.js'],
-    storage: ['Uni/storage.js']
+    define: 'opera',
+    messages: 'Opera/messages.js',
+    storage: 'Uni/storage.js'
   },
   safari: {
-    noStrip: 'safari',
-    messages: ['Safari/messages.js'],
-    storage: ['Uni/storage.js']
+    define: 'safari',
+    messages: 'Safari/messages.js',
+    storage: 'Uni/storage.js'
   },
   localStorage: {
-    storage: ['Uni/storage.js']
+    storage: 'Uni/storage.js'
+  },
+  chromeApp: {
+    define: ['chrome', 'chromeApp']
+  },
+  chromeWebApp: {
+    define: ['chrome', 'chromeWebApp']
   }
 };
 
 var rootUrl = __dirname.replace(/\\/g, '/') + '/';
 
-var stripCode = function(code, noStrip) {
-  var m = code.match(/strip_start_\d+_\w+_/g);
-
-  for (var i = 0, item; item = m[i]; i++) {
-    var sPos = code.indexOf('//' + item);
-    var s = item.match(/strip_start_(\d+)_(\w+)_/);
-    var index = s[1];
-    var b = s[2];
-    var endComment = '//' + 'strip_end_' + index + '_' + b + '_';
-    var ePos = code.indexOf(endComment) + endComment.length;
-    if (b !== noStrip) {
-      // console.log('Strip', b);
-      code = code.substr(0, sPos) + code.substr(ePos);
+var extractIncludes = function(content, path) {
+  content = content.replace(/\/\/@include\s+([\w\/\.]+)/g, function(text, file) {
+    var subPath = path + file;
+    var pos = subPath.lastIndexOf('/');
+    if (pos === -1) {
+      subPath += '/';
+    } else {
+      subPath = subPath.substr(0, pos + 1);
     }
-  }
-
-  return code;
+    return extractIncludes(String(fs.readFileSync(path + file)), subPath);
+  });
+  return content;
 };
 
 exports.get = {
-  mono: function(depList) {
-    var basePath = rootUrl + './src/';
-    if (!Array.isArray(depList)) {
-      depList = [depList];
+  mono: function(typeList) {
+    if (typeof typeList !== 'object') {
+      typeList = [typeList];
     }
 
-    var messages = [], storage = [], noStrip;
-    for (var i = 0, item; item = depList[i]; i++) {
-      var depItem = dep[item];
-      if (depItem.messages) {
-        messages = depItem.messages;
-      }
-      if (depItem.storage) {
-        storage = depItem.storage;
-      }
-      if (depItem.noStrip) {
-        noStrip = depItem.noStrip;
+    var info = {};
+    for (var i = 0, type; type = typeList[i]; i++) {
+      var item =  depList[type];
+      for (var key in item) {
+        info[key] = item[key];
       }
     }
 
-    var mono = fs.readFileSync(basePath + 'mono.js');
-    mono = String(mono);
-    mono = stripCode(mono, noStrip);
-    var splitPos = mono.indexOf('//@insert');
-    var partList = [mono.substr(0, splitPos), mono.substr(splitPos)];
+    var path = rootUrl + './src/';
+    var content = String(fs.readFileSync(path + 'mono.js'));
+    if (typeof info.define !== 'object') {
+      info.define = [info.define];
+    }
+    if (typeof info.messages !== 'object') {
+      info.messages = [info.messages];
+    }
+    if (typeof info.storage !== 'object') {
+      info.storage = [info.storage];
+    }
 
-    var moduleList = messages.concat(storage);
-    for (var n = 0, fileItem; fileItem = moduleList[n]; n++) {
-      var content = fs.readFileSync(basePath + 'vendor/' + fileItem);
-      content = String(content);
-      partList.splice(partList.length - 1, 0, content);
+    var str = '';
+    for (i = 0, item; item = info.define[i]; i++) {
+      if (!str) {
+        str = item + '.js';
+      } else {
+        str += '\n' + '//@include components/define/' + item + '.js';
+      }
+    }
+
+    content = content.replace('components/browserDefine.js', 'components/define/'+str);
+
+    content = content.replace(/.*\/\/@include vendor\/.*\r?\n/g, '');
+
+    content = extractIncludes(content, path);
+
+    var insertPos = content.indexOf('//@insert');
+    var partList = [content.substr(0, insertPos), content.substr(insertPos)];
+
+    path = rootUrl + './src/vendor/';
+    for (i = 0, item; item = info.messages[i]; i++) {
+      var data = extractIncludes(String(fs.readFileSync(path + item)), path);
+      partList.splice(partList.length - 1, 0, data);
+    }
+
+    for (i = 0, item; item = info.storage[i]; i++) {
+      var data = extractIncludes(String(fs.readFileSync(path + item)), path);
+      partList.splice(partList.length - 1, 0, data);
     }
 
     return partList.join('\n');
   },
   monoLib: function() {
-    var basePath = rootUrl + './src/vendor/Firefox/lib/';
-    var monoLib = fs.readFileSync(basePath + 'monoLib.js');
-    monoLib = String(monoLib);
-    var splitPos = mono.indexOf('//@');
-    var partList = [mono.substr(0, splitPos), mono.substr(splitPos)];
-    var dep = ['storage.js', 'utils.js'];
-    for (var n = 0, fileItem; fileItem = dep[n]; n++) {
-      var content = fs.readFileSync(basePath + fileItem);
-      content = String(content);
-      partList.splice(partList.length - 1, 0, content);
-    }
-
-    return partList.join('\n');
+    return String(fs.readFileSync('monoLib.js'));
   }
 };

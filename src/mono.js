@@ -10,19 +10,22 @@
  *
  **/
 
-var mono = (typeof mono === 'undefined') ? undefined : mono;
+var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
-(function( window, factory ) {
+(function(window, factory) {
   if (mono) {
     return;
   }
+
   if (window) {
     return mono = factory();
   }
+
   exports.isFF = true;
   exports.isModule = true;
+
   exports.init = factory;
-}(typeof window !== "undefined" ? window : undefined, function ( addon ) {
+}(typeof window !== "undefined" ? window : undefined, function (_addon) {
   var require;
 
   /**
@@ -55,279 +58,27 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
    */
   var mono = {};
 
-  (function() {
-    //strip_start_1_firefox_
-    if (typeof window === 'undefined') {
-      /**
-       * @namespace _require
-       */
-      require = _require;
-      mono.isModule = true;
-      mono.isFF = true;
-      mono.addon = addon;
-      return;
-    }
-    //strip_end_1_firefox_
+  //@include components/browserDefine.js
 
-    window.mono = mono;
-    //strip_start_2_gm_
-    if (typeof GM_getValue !== 'undefined') {
-      mono.isGM = true;
-      if (window.chrome !== undefined) {
-        mono.isTM = true;
-      } else
-      if (navigator.userAgent.indexOf('Maxthon/') !== -1) {
-        mono.isVM = true;
-      }
-      return;
-    }
-    //strip_end_2_gm_
-
-    //strip_start_3_chrome_
-    if (window.chrome !== undefined) {
-      mono.isChrome = true;
-      if (!chrome.app.hasOwnProperty('getDetails')) {
-        mono.isChromeApp = true;
-      } else {
-        var details = chrome.app.getDetails();
-        if (details && details.app !== undefined) {
-          mono.isChromeWebApp = true;
-        }
-      }
-      mono.isChromeInject = !chrome.hasOwnProperty('tabs');
-      return;
-    }
-    //strip_end_3_chrome_
-
-    //strip_start_4_safari_
-    if (window.safari !== undefined) {
-      mono.isSafari = true;
-      mono.isSafariPopup = safari.self.identifier === 'popup';
-      mono.isSafariBgPage = safari.self.addEventListener === undefined;
-      mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
-      return;
-    }
-    //strip_end_4_safari_
-
-    //strip_start_5_opera_
-    if (window.opera !== undefined) {
-      mono.isOpera = true;
-      mono.isOperaInject = opera.extension.broadcastMessage === undefined;
-      return;
-    }
-    //strip_end_5_opera_
-
-    //strip_start_6_firefox_
-    mono.addon = window.addon || window.self;
-    if (mono.addon !== undefined && mono.addon.port !== undefined) {
-      mono.isFF = true;
-      return;
-    }
-    if (navigator.userAgent.indexOf('Firefox') !== -1) {
-      mono.isFF = true;
-      mono.noAddon = true;
-      return;
-    }
-    //strip_end_6_firefox_
-
-    //strip_start_7_safari_
-    if (navigator.userAgent.indexOf('Safari/') !== -1) {
-      // Safari bug!
-      mono.isSafari = true;
-      return;
-    }
-    //strip_end_7_safari_
-    
-    console.error('Mono: can\'t define browser!');
-  })();
-
-  mono.messageStack = 50;
-
-  /**
-   * Clone array or object via JSON
-   * @param {object|Array} obj
-   * @returns {object|Array}
-   */
   mono.cloneObj = function(obj) {
     return JSON.parse(JSON.stringify(obj));
   };
 
-  var msgTools = {
-    cbObj: {},
-    cbStack: [],
-    id: 0,
-    idPrefix: Math.floor(Math.random()*1000)+'_',
-    /**
-     * Add callback function in cbObj and cbStack
-     * @param {object} message - Message
-     * @param {function} cb - Callback function
-     */
-    addCb: function(message, cb) {
-      mono.onMessage.inited === undefined && mono.onMessage(function(){});
+  //@include components/msgTools.js
 
-      if (msgTools.cbStack.length > mono.messageStack) {
-        msgTools.clean();
-      }
-      var id = message.callbackId = msgTools.idPrefix+(++msgTools.id);
-      msgTools.cbObj[id] = {fn: cb, time: Date.now()};
-      msgTools.cbStack.push(id);
-    },
-    /**
-     * Call function from callback list
-     * @param {object} message
-     */
-    callCb: function(message) {
-      var cb = msgTools.cbObj[message.responseId];
-      if (cb === undefined) return;
-      delete msgTools.cbObj[message.responseId];
-      msgTools.cbStack.splice(msgTools.cbStack.indexOf(message.responseId), 1);
-      cb.fn(message.data);
-    },
-    /**
-     * Response function
-     * @param {function} response
-     * @param {string} callbackId
-     * @param {*} responseMessage
-     */
-    mkResponse: function(response, callbackId, responseMessage) {
-      if (callbackId === undefined) return;
+  //@include vendor/Chrome/messages.js
+  //@include vendor/Firefox/messages.js
+  //@include vendor/OldChrome/messages.js
+  //@include vendor/Safari/messages.js
+  //@include vendor/Opera/messages.js
+  //@include vendor/GM/messages.js
 
-      responseMessage = {
-        data: responseMessage,
-        responseId: callbackId
-      };
-      response.call(this, responseMessage);
-    },
-    /**
-     * Clear callback stack
-     */
-    clearCbStack: function() {
-      for (var item in msgTools.cbObj) {
-        delete msgTools.cbObj[item];
-      }
-      msgTools.cbStack.splice(0);
-    },
-    /**
-     * Remove item from cbObj and cbStack by cbId
-     * @param {string} cbId - Callback id
-     */
-    removeCb: function(cbId) {
-      var cb = msgTools.cbObj[cbId];
-      if (cb === undefined) return;
-      delete msgTools.cbObj[cbId];
-      msgTools.cbStack.splice(msgTools.cbStack.indexOf(cbId), 1);
-    },
-    /**
-     * Remove old callback from cbObj
-     * @param {number} aliveTime - Keep alive time
-     */
-    clean: function(aliveTime) {
-      var now = Date.now();
-      aliveTime = aliveTime || 120*1000;
-      for (var item in msgTools.cbObj) {
-        if (msgTools.cbObj[item].time + aliveTime < now) {
-          delete msgTools.cbObj[item];
-          msgTools.cbStack.splice(msgTools.cbStack.indexOf(item), 1);
-        }
-      }
-    }
-  };
+  //@include vendor/Chrome/storage.js
+  //@include vendor/Firefox/storage.js
+  //@include vendor/GM/storage.js
+  //@include vendor/Uni/storage.js
 
-  mono.msgClearStack = msgTools.clearCbStack;
-  mono.msgRemoveCbById = msgTools.removeCb;
-  mono.msgClean = msgTools.clean;
-
-  /**
-   * Send message if background page - to local pages, or to background page
-   * @param {*} message - Message
-   * @param {function} [cb] - Callback function
-   * @param {string} [hook] - Hook string
-   * @returns {*|string} - callback id
-   */
-  mono.sendMessage = function(message, cb, hook) {
-    message = {
-      data: message,
-      hook: hook
-    };
-    if (cb) {
-      msgTools.addCb(message, cb.bind(this));
-    }
-    mono.sendMessage.send.call(this, message);
-
-    return message.callbackId;
-  };
-
-  /**
-   * Send message to active page, background page only
-   * @param {*} message - Message
-   * @param {function} [cb] - Callback function
-   * @param {string} [hook] - Hook string
-   * @returns {*|string} - callback id
-   */
-  mono.sendMessageToActiveTab = function(message, cb, hook) {
-    message = {
-      data: message,
-      hook: hook
-    };
-    if (cb) {
-      msgTools.addCb(message, cb.bind(this));
-    }
-    mono.sendMessage.sendToActiveTab.call(this, message);
-
-    return message.callbackId;
-  };
-
-  /**
-   * Mono message hooks
-   * @type {{}}
-   */
-  mono.sendHook = {};
-
-  /**
-   * Listen messages and call callback function
-   * @param {function} cb - Callback function
-   */
-  mono.onMessage = function(cb) {
-    var _this = this;
-    mono.onMessage.inited = 1;
-    mono.onMessage.on.call(_this, function(message, response) {
-      if (message.responseId !== undefined) {
-        return msgTools.callCb(message);
-      }
-      var mResponse = msgTools.mkResponse.bind(_this, response, message.callbackId);
-      if (message.hook !== undefined) {
-        var hookFunc = mono.sendHook[message.hook];
-        if (hookFunc !== undefined) {
-          return hookFunc(message.data, mResponse);
-        }
-      }
-      cb.call(_this, message.data, mResponse);
-    });
-  };
-
-  mono.storage = undefined;
-
-//@chMsg
-
-//@ffMsg
-
-//@oldChMsg
-
-//@sfMsg
-
-//@oMsg
-
-//@gmMsg
-
-//@chStorage
-
-//@ffStorage
-
-//@gmStorage
-
-//@uniStorage
-
-//@insert
+  //@insert
 
   return mono;
 }));
