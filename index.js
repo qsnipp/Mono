@@ -125,6 +125,6 @@ exports.get = {
     return partList.join('\n');
   },
   monoLib: function() {
-    return String(fs.readFileSync('monoLib.js'));
+    return String(fs.readFileSync(rootUrl + '/dist/monoLib.js'));
   }
 };
