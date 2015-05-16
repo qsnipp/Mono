@@ -20,7 +20,6 @@
   if (window.hasOwnProperty('chrome')) {
     //@include define/chrome.js
     //@include define/chromeApp.js
-    //@include define/chromeWebApp.js
     return;
   }
   //@strip_chrome_<

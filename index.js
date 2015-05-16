@@ -39,9 +39,6 @@ var depList = {
   },
   chromeApp: {
     define: ['chrome', 'chromeApp']
-  },
-  chromeWebApp: {
-    define: ['chrome', 'chromeWebApp']
   }
 };
 
