@@ -1,0 +1,6 @@
+{
+  "name": "mono",
+  "version": "0.0.1",
+  "description": "Mono cross-browser engine",
+  "main": "index.js"
+}
