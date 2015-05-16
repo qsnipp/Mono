@@ -56,6 +56,7 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
   var mono = {};
 
   (function() {
+    //strip_start_1_firefox_
     if (typeof window === 'undefined') {
       /**
        * @namespace _require
@@ -66,8 +67,10 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       mono.addon = addon;
       return;
     }
+    //strip_end_1_firefox_
 
     window.mono = mono;
+    //strip_start_2_gm_
     if (typeof GM_getValue !== 'undefined') {
       mono.isGM = true;
       if (window.chrome !== undefined) {
@@ -78,7 +81,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       }
       return;
     }
+    //strip_end_2_gm_
 
+    //strip_start_3_chrome_
     if (window.chrome !== undefined) {
       mono.isChrome = true;
       if (!chrome.app.hasOwnProperty('getDetails')) {
@@ -92,7 +97,9 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       mono.isChromeInject = !chrome.hasOwnProperty('tabs');
       return;
     }
+    //strip_end_3_chrome_
 
+    //strip_start_4_safari_
     if (window.safari !== undefined) {
       mono.isSafari = true;
       mono.isSafariPopup = safari.self.identifier === 'popup';
@@ -100,13 +107,17 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
       return;
     }
+    //strip_end_4_safari_
 
+    //strip_start_5_opera_
     if (window.opera !== undefined) {
       mono.isOpera = true;
       mono.isOperaInject = opera.extension.broadcastMessage === undefined;
       return;
     }
+    //strip_end_5_opera_
 
+    //strip_start_6_firefox_
     mono.addon = window.addon || window.self;
     if (mono.addon !== undefined && mono.addon.port !== undefined) {
       mono.isFF = true;
@@ -117,11 +128,15 @@ var mono = (typeof mono === 'undefined') ? undefined : mono;
       mono.noAddon = true;
       return;
     }
+    //strip_end_6_firefox_
+
+    //strip_start_7_safari_
     if (navigator.userAgent.indexOf('Safari/') !== -1) {
       // Safari bug!
       mono.isSafari = true;
       return;
     }
+    //strip_end_7_safari_
     
     console.error('Mono: can\'t define browser!');
   })();
