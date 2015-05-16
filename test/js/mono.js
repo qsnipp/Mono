@@ -59,27 +59,20 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     var mono = {};
 
     (function() {
+        //@strip_firefox_>
         if (typeof window === 'undefined') {
             /**
              * @namespace _require
              */
             mono.isFF = true;
-            mono.isModule = typeof window === 'undefined';
-            if (mono.isModule) {
-                require = _require;
-                mono.addon = _addon;
-            } else
-            if (typeof addon !== 'undefined' && addon.hasOwnProperty('port')) {
-                mono.addon = addon;
-            } else
-            if (typeof self !== 'undefined' && self.hasOwnProperty('port')) {
-                mono.addon = self;
-            } else {
-                mono.noAddon = true;
-            }
+            mono.isModule = true;
+            mono.addon = _addon;
+            require = _require;
             return;
         }
+        //@strip_firefox_<
 
+        //@strip_gm_>
         if (typeof GM_getValue !== 'undefined') {
             mono.isGM = true;
             if (window.hasOwnProperty('chrome')) {
@@ -90,34 +83,37 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             }
             return;
         }
+        //@strip_gm_<
 
+        //@strip_chrome_>
         if (window.hasOwnProperty('chrome')) {
             mono.isChrome = true;
             mono.isChromeInject = !chrome.hasOwnProperty('tabs');
-            if (chrome.app.hasOwnProperty('getDetails')) {
+            if (!chrome.app.hasOwnProperty('getDetails')) {
                 mono.isChromeApp = true;
             }
-            var details = chrome.app.getDetails();
-            if (details && details.hasOwnProperty('app') !== 'undefined') {
-                mono.isChromeWebApp = true;
+            if (chrome.app.hasOwnProperty('getDetails')) {
+                var details = chrome.app.getDetails();
+                if (details && details.hasOwnProperty('app') !== 'undefined') {
+                    mono.isChromeWebApp = true;
+                }
+                details = undefined;
             }
-            details = undefined;
             return;
         }
+        //@strip_chrome_<
 
+        //@strip_opera_>
         if (window.hasOwnProperty('opera')) {
             mono.isOpera = true;
             mono.isOperaInject = opera.extension.broadcastMessage === undefined;
             return;
         }
+        //@strip_opera_<
 
+        //@strip_firefox_>
         if (navigator.userAgent.indexOf('Firefox') !== -1) {
             mono.isFF = true;
-            mono.isModule = typeof window === 'undefined';
-            if (mono.isModule) {
-                require = _require;
-                mono.addon = _addon;
-            } else
             if (typeof addon !== 'undefined' && addon.hasOwnProperty('port')) {
                 mono.addon = addon;
             } else
@@ -128,7 +124,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             }
             return;
         }
+        //@strip_firefox_<
 
+        //@strip_safari_>
         if (window.hasOwnProperty('safari')) {
             mono.isSafari = true;
             mono.isSafariPopup = safari.self.identifier === 'popup';
@@ -136,12 +134,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
             return;
         }
-
         if (navigator.userAgent.indexOf('Safari/') !== -1) {
             // Safari bug!
             mono.isSafari = true;
             return;
         }
+        //@strip_safari_<
 
         console.error('Mono: can\'t define browser!');
     })();

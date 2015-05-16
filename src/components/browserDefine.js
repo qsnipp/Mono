@@ -4,7 +4,7 @@
     /**
      * @namespace _require
      */
-    //@include define/firefox.js
+    //@include define/firefoxModule.js
     return;
   }
   //@strip_firefox_<
@@ -34,7 +34,7 @@
 
   //@strip_firefox_>
   if (navigator.userAgent.indexOf('Firefox') !== -1) {
-    //@include define/firefox.js
+    //@include define/firefoxNoModule.js
     return;
   }
   //@strip_firefox_<

@@ -1,3 +1,3 @@
-if (chrome.app.hasOwnProperty('getDetails')) {
+if (!chrome.app.hasOwnProperty('getDetails')) {
   mono.isChromeApp = true;
 }
