@@ -4,7 +4,7 @@
   "description": "Mono cross-browser engine",
   "main": "index.js",
   "dependencies": {
-    "fs": ""
+    "fs": "^0.0.2"
   },
   "devDependencies": {
     "grunt-contrib-clean": "",
