@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var depList = {
+var distList = {
   chrome: {
     define: 'chrome',
     messages: 'Chrome/messages.js',
@@ -66,9 +66,9 @@ exports.get = {
 
     var info = {};
     for (var i = 0, type; type = typeList[i]; i++) {
-      var item = depList[type];
+      var item = distList[type];
       if (!item) {
-        console.error('Error: Item is not found:', item);
+        console.error('Error: Item is not found in distList:', type);
         return;
       }
       for (var key in item) {
@@ -93,34 +93,33 @@ exports.get = {
       info.storage = [info.storage];
     }
 
-    var str = '';
-    for (i = 0, item; item = info.define[i]; i++) {
-      if (!str) {
-        str = item + '.js';
-      } else {
-        str += '\n' + '//@include components/define/' + item + '.js';
-      }
-    }
-
-    content = content.replace('components/browserDefine.js', 'components/define/'+str);
+    content = content.replace(/(\/\/@include\s+components\/)browserDefine.js/, function(text, include) {
+      var includeList = info.define.map(function(item) {
+        return include + 'define/' + item + '.js';
+      });
+      return includeList.join('\n');
+    });
 
     content = content.replace(/.*\/\/@include vendor\/.*\r?\n/g, '');
 
     content = extractIncludes(content, path);
 
-    var insertPos = content.indexOf('//@insert');
-    var partList = [content.substr(0, insertPos), content.substr(insertPos)];
-
     path = rootUrl + './src/vendor/';
-    for (i = 0, item; item = info.messages[i]; i++) {
-      var data = extractIncludes(String(fs.readFileSync(path + item)), path);
-      partList.splice(partList.length - 1, 0, data);
-    }
+    var insertPos = content.indexOf('//@insert');
 
-    for (i = 0, item; item = info.storage[i]; i++) {
-      var data = extractIncludes(String(fs.readFileSync(path + item)), path);
-      partList.splice(partList.length - 1, 0, data);
-    }
+    // insert start of content
+    var partList = [content.substr(0, insertPos)];
+
+    partList = partList.concat(info.messages.map(function(item) {
+      return extractIncludes(String(fs.readFileSync(path + item)), path);
+    }));
+
+    partList = partList.concat(info.storage.map(function(item) {
+      return extractIncludes(String(fs.readFileSync(path + item)), path);
+    }));
+
+    // insert end of content
+    partList.push(content.substr(insertPos));
 
     return partList.join('\n');
   },
