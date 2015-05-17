@@ -1,8 +1,15 @@
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsbeautifier');
     grunt.loadNpmTasks('grunt-closurecompiler');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.initConfig({
         dist: './dist/',
+        source: './src/',
+        test: './test/',
+        clean: {
+            dist: ['<%= dist %>']
+        },
         closurecompiler: {
             mono: {
                 files: {
@@ -25,6 +32,20 @@ module.exports = function (grunt) {
             one: {
                 src: ['<%= dist %>mono-*.js']
             }
+        },
+        copy: {
+            mono: {
+                expand: true,
+                cwd: '<%= dist %>',
+                src: 'mono.js',
+                dest: '<%= test %>js/'
+            },
+            monoLib: {
+                expand: true,
+                cwd: '<%= dist %>',
+                src: 'monoLib.js',
+                dest: '<%= test %>vendor/firefox/lib/'
+            }
         }
     });
 
@@ -43,25 +64,17 @@ module.exports = function (grunt) {
     };
 
     grunt.registerTask('buildMono', function() {
-        var path = './src/';
+        var path = grunt.config('source');
         var content = extractIncludes(grunt.file.read(path + 'mono.js'), path);
 
         grunt.file.write(grunt.config('dist') + 'mono.js', content);
     });
 
     grunt.registerTask('buildMonoLib', function() {
-        var path = './src/vendor/Firefox/lib/';
+        var path = grunt.config('source') + 'vendor/Firefox/lib/';
         var content = extractIncludes(grunt.file.read(path + 'monoLib.js'), path);
 
         grunt.file.write(grunt.config('dist') + 'monoLib.js', content);
-    });
-
-    grunt.registerTask('monoCopy', function() {
-        grunt.file.copy(grunt.config('dist') + 'mono.js', './test/js/mono.js');
-    });
-
-    grunt.registerTask('monoLibCopy', function() {
-        grunt.file.copy(grunt.config('dist') + 'monoLib.js', './test/vendor/firefox/lib/monoLib.js');
     });
 
     grunt.registerTask('mono', ['buildMono','jsbeautifier:mono']);
@@ -106,12 +119,11 @@ module.exports = function (grunt) {
         grunt.task.run('jsbeautifier:one');
     });
 
-    !grunt.file.exists(grunt.config('dist')) && grunt.file.mkdir(grunt.config('dist'));
-
     grunt.registerTask('default', [
+        'clean:dist',
         'mono',
-        'monoCopy',
+        'copy:mono',
         'monoLib',
-        'monoLibCopy'
+        'copy:monoLib'
     ]);
 };

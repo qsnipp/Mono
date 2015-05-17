@@ -1,12 +1,14 @@
 {
   "name": "mono",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Mono cross-browser engine",
   "main": "index.js",
   "dependencies": {
     "fs": ""
   },
   "devDependencies": {
+    "grunt-contrib-clean": "",
+    "grunt-contrib-copy": "",
     "grunt-closurecompiler": "",
     "grunt-jsbeautifier": "",
     "grunt": ""
