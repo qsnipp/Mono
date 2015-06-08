@@ -982,8 +982,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 if (Array.isArray(src) === true) {
                     for (var i = 0, len = src.length; i < len; i++) {
                         key = src[i];
-                        value = GM_getValue(key);
-                        if (value !== undefined) {
+                        value = GM_getValue(key, 'isMonoEmptyValue');
+                        if (value !== undefined && value !== 'isMonoEmptyValue') {
                             if (typeof value !== 'object') {
                                 obj[key] = value;
                             } else {
@@ -993,8 +993,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     }
                 } else {
                     for (key in src) {
-                        value = GM_getValue(key);
-                        if (value !== undefined) {
+                        value = GM_getValue(key, 'isMonoEmptyValue');
+                        if (value !== undefined && value !== 'isMonoEmptyValue') {
                             if (typeof value !== 'object') {
                                 obj[key] = value;
                             } else {
