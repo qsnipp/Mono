@@ -82,6 +82,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         } else {
             console.error('Msg transport is not defined!');
         }
+        mono.msgList = undefined;
 
         //@include components/storageDefine.js
 
@@ -108,6 +109,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         } else {
             console.error('Storage is not defined!');
         }
+        mono.storageList = undefined;
 
         //@insert
 
