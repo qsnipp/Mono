@@ -35,6 +35,11 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         //@include components/browserDefine.js
 
+        /**
+         * Clone array or object via JSON
+         * @param {object|Array} obj
+         * @returns {object|Array}
+         */
         mono.cloneObj = function (obj) {
             return JSON.parse(JSON.stringify(obj));
         };
