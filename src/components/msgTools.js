@@ -3,6 +3,7 @@ var msgTools = {
     cbStack: [],
     id: 0,
     idPrefix: Math.floor(Math.random() * 1000) + '_',
+    aliveTime: 120 * 1000,
     /**
      * Add callback function in cbObj and cbStack
      * @param {object} message - Message
@@ -67,7 +68,7 @@ var msgTools = {
      */
     clean: function (aliveTime) {
         var now = Date.now();
-        aliveTime = aliveTime || 120 * 1000;
+        aliveTime = aliveTime || this.aliveTime;
         for (var item in this.cbObj) {
             if (this.cbObj[item].time + aliveTime < now) {
                 delete this.cbObj[item];
