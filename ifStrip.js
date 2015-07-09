@@ -4,10 +4,10 @@
 exports.ifStrip = function(data, options) {
     options = options || {};
     var startPos = -1;
-    var n = 100;
+    var n = 1000;
     while (true) {
-        n--;
-        if (n === 0) {
+        if (n-- === 0) {
+            console.error('Cycle!');
             return;
         }
 
