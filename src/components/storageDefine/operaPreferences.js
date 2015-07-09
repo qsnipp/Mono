@@ -1,3 +1,1 @@
-if (typeof widget !== 'undefined') {
-    mono.storageType = 'operaPreferences';
-}
+mono.storageType = 'operaPreferences';
