@@ -95,8 +95,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('oneList', function () {
         var typeList = [
-            'chrome',
-            'oldChrome',
             'firefox',
             'gm',
             'opera',
@@ -104,11 +102,14 @@ module.exports = function (grunt) {
             'safari'
         ];
         ['chrome', 'oldChrome'].forEach(function(type) {
-            ['chromeApp', 'chromeWebApp'].forEach(function (type2) {
-                var list = [type, type2];
+            ['', 'chromeApp', 'chromeWebApp'].forEach(function (type2) {
+                var list = [type];
+                type2 && list.push(type2);
+
                 typeList.push(list);
                 if (type2 !== 'chromeApp') {
                     list.push('localStorage');
+                    
                     typeList.push(list);
                 }
             });
