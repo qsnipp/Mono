@@ -81,7 +81,7 @@ mono.msgList.oldChrome = function () {
         if (chrome.runtime.getBackgroundPage !== undefined) {
             mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-            //@if chromeForceDefineBgPage=1>
+            //@if5 chromeForceDefineBgPage=1>
             chrome.runtime.getBackgroundPage(function (bgWin) {
                 if (bgWin !== window) {
                     delete mono.isChromeBgPage;
@@ -89,7 +89,7 @@ mono.msgList.oldChrome = function () {
                     mono.isChromeBgPage = 1;
                 }
             });
-            //@if chromeForceDefineBgPage=1<
+            //@if5 chromeForceDefineBgPage=1<
         }
     } catch (e) {}
 

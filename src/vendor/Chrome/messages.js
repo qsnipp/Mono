@@ -10,13 +10,13 @@ mono.msgList.chrome = function () {
                     chromeMsg.sendTo(message, sender.tab.id);
                 }
             }
-            //@if chromeUseDirectMsg=1>
+            //@if4 chromeUseDirectMsg=1>
             if (sender.monoDirect) {
                 return function (message) {
                     sender(mono.cloneObj(message), chromeMsg.onMessage);
                 };
             }
-            //@if chromeUseDirectMsg=1<
+            //@if4 chromeUseDirectMsg=1<
             return function (message) {
                 // send to extension
                 chromeMsg.send(message);
@@ -78,7 +78,7 @@ mono.msgList.chrome = function () {
     if (chrome.runtime.hasOwnProperty('getBackgroundPage')) {
         mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-        //@if chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
+        //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
         chrome.runtime.getBackgroundPage(function (bgWin) {
             if (bgWin !== window) {
                 delete mono.isChromeBgPage;
@@ -86,7 +86,7 @@ mono.msgList.chrome = function () {
                 mono.isChromeBgPage = 1;
             }
 
-            //@if chromeUseDirectMsg=1>
+            //@if4 chromeUseDirectMsg=1>
             if (!mono.isChromeBgPage) {
                 chromeMsg.onMessage.monoDirect = true;
                 chromeMsg.send = mono.sendMessage.send = function (message) {
@@ -97,9 +97,9 @@ mono.msgList.chrome = function () {
                     chromeMsg.onMessage(message, sender);
                 };
             }
-            //@if chromeUseDirectMsg=1<
+            //@if4 chromeUseDirectMsg=1<
         });
-        //@if chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
+        //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
     }
 
     mono.onMessage.on = chromeMsg.on;
