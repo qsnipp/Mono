@@ -1,48 +1,48 @@
 (function () {
-    //@if browser=firefox>
+    //@if useFf=1>
     if (typeof window === 'undefined') {
         //@include browserDefine/firefoxModule.js
         return;
     }
-    //@if browser=firefox<
+    //@if useFf=1<
 
-    //@if browser=gm>
+    //@if useGm=1>
     if (typeof GM_getValue !== 'undefined') {
         //@include browserDefine/gm.js
         return;
     }
-    //@if browser=gm<
+    //@if useGm=1<
 
-    //@if browser=chrome>
+    //@if useChrome=1>
     if (window.hasOwnProperty('chrome')) {
         //@include browserDefine/chrome.js
 
-        //@if chromeExtType=app>
+        //@if useChromeApp=1>
         //@include browserDefine/chromeApp.js
-        //@if chromeExtType=app<
+        //@if useChromeApp=1<
 
-        //@if chromeExtType=webApp>
+        //@if useChromeWebApp=1>
         //@include browserDefine/chromeWebApp.js
-        //@if chromeExtType=webApp<
+        //@if useChromeWebApp=1<
         return;
     }
-    //@if browser=chrome<
+    //@if useChrome=1<
 
-    //@if browser=opera>
+    //@if useOpera=1>
     if (window.hasOwnProperty('opera')) {
         //@include browserDefine/opera.js
         return;
     }
-    //@if browser=opera<
+    //@if useOpera=1<
 
-    //@if browser=firefox>
+    //@if useFf=1>
     if (navigator.userAgent.indexOf('Firefox') !== -1) {
         //@include browserDefine/firefoxNoModule.js
         return;
     }
-    //@if browser=firefox<
+    //@if useFf=1<
 
-    //@if browser=safari>
+    //@if useSafari=1>
     if (window.hasOwnProperty('safari')) {
         //@include browserDefine/safari.js
         return;
@@ -52,7 +52,7 @@
         mono.isSafari = true;
         return;
     }
-    //@if browser=safari<
+    //@if useSafari=1<
 
     console.error('Mono: can\'t define browser!');
 })();
