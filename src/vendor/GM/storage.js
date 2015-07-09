@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isGM) return;
-
+mono.storageList.gm = function () {
     /**
      * GM storage
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
@@ -106,4 +104,4 @@
      */
     mono.storage = storage;
     mono.storage.local = mono.storage.sync = mono.storage;
-})();
+};

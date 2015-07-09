@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isChrome || !chrome.hasOwnProperty('storage')) return;
-
+mono.storageList.chrome = function () {
     /**
      * Chrome storage mode
      * @param {string} mode - Local/Sync
@@ -25,4 +23,4 @@
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
      */
     mono.storage.sync = chStorage('sync');
-})();
+};

@@ -1,6 +1,4 @@
-(function () {
-    if (mono.storage) return;
-
+mono.storageList.localStorage = mono.storageList.operaPreferences = function () {
     /**
      * localStorage mode
      * @param {object} localStorage - Storage type
@@ -10,7 +8,7 @@
         /**
          * localStorage mode
          * @type {{getObj: Function, setObj: Function, rmObj: Function, readValue: Function
-     * get: Function, set: Function, remove: Function, clear: Function}}
+         * get: Function, set: Function, remove: Function, clear: Function}}
          */
         var localStorageMode = {
             /**
@@ -261,37 +259,40 @@
         }
     };
 
-    if (false && mono.isOpera && typeof widget !== 'undefined') {
-        // remove false if need use prefs
-        /**
-         * Opera storage
-         * @type {{get: Function, set: Function, remove: Function, clear: Function}}
-         */
+    if (mono.storageType === 'operaPreferences') {
         mono.storage = getLocalStorage(widget.preferences);
         mono.storage.local = mono.storage.sync = mono.storage;
         return;
     }
-    if (mono.isFF || mono.isChromeInject || mono.isOperaInject || mono.isSafariInject) {
-        /**
-         * Firefox bridge storage
-         * @type {{get: Function, set: Function, remove: Function, clear: Function}}
-         */
+
+    if (mono.isChromeInject || mono.isOperaInject || mono.isSafariInject) {
         mono.storage = externalStorage;
         mono.storage.local = mono.storage.sync = mono.storage;
         return;
     }
-    if (window.localStorage) {
+
+    var _localStorage;
+    try {
+        if (typeof localStorage !== 'undefined') {
+            _localStorage = localStorage;
+        } else
+        if (window.localStorage) {
+            _localStorage = window.localStorage;
+        }
+    } catch(e) {}
+
+    if (_localStorage) {
         /**
          * LocalStorage
          * @type {{get: Function, set: Function, remove: Function, clear: Function}}
          */
-        mono.storage = getLocalStorage(window.localStorage);
+        mono.storage = getLocalStorage(_localStorage);
         mono.storage.local = mono.storage.sync = mono.storage;
         if (mono.isChrome || mono.isSafari || mono.isOpera) {
-            // ff work via monoLib.js
             mono.sendHook.monoStorage = externalStorageHook;
         }
         return;
     }
-    console.error('Can\'t detect storage!');
-})();
+
+    console.error('Can\'t detect localStorage!');
+};

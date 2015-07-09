@@ -1,49 +1,4 @@
-(function () {
-    if (!mono.isFF) return;
-
-    if (!mono.isModule) {
-        /**
-         * External storage mode
-         * @type {{get: Function, set: Function, remove: Function, clear: Function}}
-         */
-        var externalStorage = {
-            /**
-             * Get item from storage
-             * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
-             * @param {function} cb - Callback function
-             */
-            get: function (obj, cb) {
-                mono.sendMessage({action: 'get', data: obj}, cb, 'monoStorage');
-            },
-            /**
-             * Set item in storage
-             * @param {Object} obj
-             * @param {function} [cb]
-             */
-            set: function (obj, cb) {
-                mono.sendMessage({action: 'set', data: obj}, cb, 'monoStorage');
-            },
-            /**
-             * Remove item from storage
-             * @param {Array|string} obj
-             * @param {function} [cb]
-             */
-            remove: function (obj, cb) {
-                mono.sendMessage({action: 'remove', data: obj}, cb, 'monoStorage');
-            },
-            /**
-             * Clear storage
-             * @param {function} [cb]
-             */
-            clear: function (cb) {
-                mono.sendMessage({action: 'clear'}, cb, 'monoStorage');
-            }
-        };
-        mono.storage = externalStorage;
-        mono.storage.local = mono.storage.sync = mono.storage;
-        return;
-    }
-
+mono.storageList.simpleStorage = function() {
     /**
      * Firefox simple storage
      * @returns {{get: Function, set: Function, remove: Function, clear: Function}}
@@ -134,4 +89,51 @@
      */
     mono.storage = ffSimpleStorage();
     mono.storage.local = mono.storage.sync = mono.storage;
-})();
+};
+
+mono.storageList.externalStorage = function() {
+    /**
+     * External storage mode
+     * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+     */
+    var externalStorage = {
+        /**
+         * Get item from storage
+         * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
+         * @param {function} cb - Callback function
+         */
+        get: function (obj, cb) {
+            mono.sendMessage({action: 'get', data: obj}, cb, 'monoStorage');
+        },
+        /**
+         * Set item in storage
+         * @param {Object} obj
+         * @param {function} [cb]
+         */
+        set: function (obj, cb) {
+            mono.sendMessage({action: 'set', data: obj}, cb, 'monoStorage');
+        },
+        /**
+         * Remove item from storage
+         * @param {Array|string} obj
+         * @param {function} [cb]
+         */
+        remove: function (obj, cb) {
+            mono.sendMessage({action: 'remove', data: obj}, cb, 'monoStorage');
+        },
+        /**
+         * Clear storage
+         * @param {function} [cb]
+         */
+        clear: function (cb) {
+            mono.sendMessage({action: 'clear'}, cb, 'monoStorage');
+        }
+    };
+
+    /**
+     * FF Storage
+     * @type {{get: Function, set: Function, remove: Function, clear: Function}}
+     */
+    mono.storage = externalStorage;
+    mono.storage.local = mono.storage.sync = mono.storage;
+};
