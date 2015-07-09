@@ -9,25 +9,24 @@ var msgTools = {
      * @param {function} cb - Callback function
      */
     addCb: function (message, cb) {
-        mono.onMessage.inited === undefined && mono.onMessage(function () {
-        });
+        mono.onMessage.count === 0 && mono.onMessage(mono.emptyFunc);
 
-        if (msgTools.cbStack.length > mono.messageStack) {
-            msgTools.clean();
+        if (this.cbStack.length > mono.messageStack) {
+            this.clean();
         }
-        var id = message.callbackId = msgTools.idPrefix + (++msgTools.id);
-        msgTools.cbObj[id] = {fn: cb, time: Date.now()};
-        msgTools.cbStack.push(id);
+        var id = message.callbackId = this.idPrefix + (++this.id);
+        this.cbObj[id] = {fn: cb, time: Date.now()};
+        this.cbStack.push(id);
     },
     /**
      * Call function from callback list
      * @param {object} message
      */
     callCb: function (message) {
-        var cb = msgTools.cbObj[message.responseId];
+        var cb = this.cbObj[message.responseId];
         if (cb === undefined) return;
-        delete msgTools.cbObj[message.responseId];
-        msgTools.cbStack.splice(msgTools.cbStack.indexOf(message.responseId), 1);
+        delete this.cbObj[message.responseId];
+        this.cbStack.splice(this.cbStack.indexOf(message.responseId), 1);
         cb.fn(message.data);
     },
     /**
@@ -37,44 +36,42 @@ var msgTools = {
      * @param {*} responseMessage
      */
     mkResponse: function (response, callbackId, responseMessage) {
-        if (callbackId === undefined) return;
-
         responseMessage = {
             data: responseMessage,
             responseId: callbackId
         };
-        response.call(this, responseMessage);
+        response(responseMessage);
     },
     /**
      * Clear callback stack
      */
     clearCbStack: function () {
-        for (var item in msgTools.cbObj) {
-            delete msgTools.cbObj[item];
+        for (var item in this.cbObj) {
+            delete this.cbObj[item];
         }
-        msgTools.cbStack.splice(0);
+        this.cbStack.splice(0);
     },
     /**
      * Remove item from cbObj and cbStack by cbId
      * @param {string} cbId - Callback id
      */
     removeCb: function (cbId) {
-        var cb = msgTools.cbObj[cbId];
+        var cb = this.cbObj[cbId];
         if (cb === undefined) return;
-        delete msgTools.cbObj[cbId];
-        msgTools.cbStack.splice(msgTools.cbStack.indexOf(cbId), 1);
+        delete this.cbObj[cbId];
+        this.cbStack.splice(this.cbStack.indexOf(cbId), 1);
     },
     /**
      * Remove old callback from cbObj
-     * @param {number} aliveTime - Keep alive time
+     * @param {number} [aliveTime] - Keep alive time
      */
     clean: function (aliveTime) {
         var now = Date.now();
         aliveTime = aliveTime || 120 * 1000;
-        for (var item in msgTools.cbObj) {
-            if (msgTools.cbObj[item].time + aliveTime < now) {
-                delete msgTools.cbObj[item];
-                msgTools.cbStack.splice(msgTools.cbStack.indexOf(item), 1);
+        for (var item in this.cbObj) {
+            if (this.cbObj[item].time + aliveTime < now) {
+                delete this.cbObj[item];
+                this.cbStack.splice(this.cbStack.indexOf(item), 1);
             }
         }
     }
@@ -137,20 +134,28 @@ mono.sendHook = {};
  */
 mono.onMessage = function (cb) {
     var _this = this;
-    mono.onMessage.inited = 1;
-    mono.onMessage.on.call(_this, function (message, response) {
+    var onMsg = function (message, response) {
         if (message.responseId !== undefined) {
             return msgTools.callCb(message);
         }
-        var mResponse = msgTools.mkResponse.bind(_this, response, message.callbackId);
+        var mResponse;
+        if (message.callbackId === undefined) {
+            mResponse = mono.emptyFunc;
+        } else {
+            mResponse = msgTools.mkResponse.bind(msgTools, response.bind(_this), message.callbackId);
+        }
         if (message.hook !== undefined) {
+            if (onMsg.index !== 0) {
+                return;
+            }
             var hookFunc = mono.sendHook[message.hook];
             if (hookFunc !== undefined) {
                 return hookFunc(message.data, mResponse);
             }
         }
         cb.call(_this, message.data, mResponse);
-    });
+    };
+    onMsg.index = mono.onMessage.count++;
+    mono.onMessage.on.call(_this, onMsg);
 };
-
-mono.storage = undefined;
+mono.onMessage.count = 0;

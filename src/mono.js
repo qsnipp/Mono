@@ -30,7 +30,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         var require;
 
         var mono = {
-            isLoaded: 1
+            isLoaded: 1,
+            emptyFunc: function(){}
         };
 
         //@include components/browserDefine.js
