@@ -18,11 +18,20 @@
         //@include browserDefine/chrome.js
 
         //@if1 useChromeApp=1>
-        //@include browserDefine/chromeApp.js
+        if (!chrome.app.hasOwnProperty('getDetails')) {
+            //@include browserDefine/chromeApp.js
+        }
         //@if1 useChromeApp=1<
 
         //@if1 useChromeWebApp=1>
-        //@include browserDefine/chromeWebApp.js
+        if (chrome.app.hasOwnProperty('getDetails')) {
+            mono.isChromeWebApp = chrome.app.getDetails();
+            if (mono.isChromeWebApp && mono.isChromeWebApp.hasOwnProperty('app')) {
+                //@include browserDefine/chromeWebApp.js
+            } else {
+                delete mono.isChromeWebApp;
+            }
+        }
         //@if1 useChromeWebApp=1<
         return;
     }

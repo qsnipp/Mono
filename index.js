@@ -47,10 +47,12 @@ var distList = {
         useLocalStorage: 1
     },
     chromeApp: {
-        define: ['chrome', 'chromeApp']
+        define: ['chrome', 'chromeApp'],
+        useChromeApp: 1
     },
     chromeWebApp: {
-        define: ['chrome', 'chromeWebApp']
+        define: ['chrome', 'chromeWebApp'],
+        useChromeWebApp: 1
     }
 };
 
