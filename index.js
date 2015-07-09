@@ -118,7 +118,7 @@ exports.get = {
 
         content = ifStrip(content, info);
 
-        content = content.replace(/\n\n/g, '\n');
+        content = content.replace(/\n[\t\s]*\n/g, '\n\n');
 
         return content;
     },
