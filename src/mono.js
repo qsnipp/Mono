@@ -31,7 +31,11 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         var mono = {
             isLoaded: 1,
-            emptyFunc: function(){}
+            emptyFunc: function(){},
+            msgType: undefined,
+            storageType: undefined,
+            msgList: {},
+            storageList: {}
         };
 
         //@include components/browserDefine.js
@@ -47,19 +51,49 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         //@include components/msgTools.js
 
+        //@if browser=chrome>
         //@include vendor/Chrome/messages.js
+        //@if browser=chrome<
+
+        //@if browser=firefox>
         //@include vendor/Firefox/messages.js
+        //@if browser=firefox<
+
+        //@if browser=chrome>
+        //@if oldChromeSupport=1>
         //@include vendor/OldChrome/messages.js
+        //@if oldChromeSupport=1<
+        //@if browser=chrome<
+
+        //@if browser=safari>
         //@include vendor/Safari/messages.js
+        //@if browser=safari<
+
+        //@if browser=opera>
         //@include vendor/Opera/messages.js
+        //@if browser=opera<
+
+        //@if browser=gm>
         //@include vendor/GM/messages.js
+        //@if browser=gm<
 
         //@include components/storageDefine.js
 
-        //@include vendor/Chrome/storage.js
+        //@if browser=firefox>
         //@include vendor/Firefox/storage.js
+        //@if browser=firefox<
+
+        //@if browser=gm>
         //@include vendor/GM/storage.js
+        //@if browser=gm<
+
+        //@if browser=chrome>
+        //@include vendor/Chrome/storage.js
+        //@if browser=chrome<
+
+        //@if useLocalStorage=1||browser=opera>
         //@include vendor/Uni/storage.js
+        //@if useLocalStorage=1||browser=opera<
 
         //@insert
 
