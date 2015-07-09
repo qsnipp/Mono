@@ -22,12 +22,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         return mono = factory(null, mono);
     }
 
-    //@if useFf=1>
+    //@if0 useFf=1>
     exports.isFF = true;
     exports.isModule = true;
 
     exports.init = factory;
-    //@if useFf=1<
+    //@if0 useFf=1<
 }(
     typeof window !== "undefined" ? window : undefined,
     function initMono(_addon, _mono) {
@@ -55,29 +55,29 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         //@include components/msgTools.js
 
-        //@if useChrome=1>
+        //@if0 useChrome=1>
         //@include vendor/Chrome/messages.js
-        //@if useChrome=1<
+        //@if0 useChrome=1<
 
-        //@if useChrome=1&&oldChromeSupport=1>
+        //@if0 useChrome=1&&oldChromeSupport=1>
         //@include vendor/OldChrome/messages.js
-        //@if useChrome=1&&oldChromeSupport=1<
+        //@if0 useChrome=1&&oldChromeSupport=1<
 
-        //@if useFf=1>
+        //@if0 useFf=1>
         //@include vendor/Firefox/messages.js
-        //@if useFf=1<
+        //@if0 useFf=1<
 
-        //@if useSafari=1>
+        //@if0 useSafari=1>
         //@include vendor/Safari/messages.js
-        //@if useSafari=1<
+        //@if0 useSafari=1<
 
-        //@if useOpera=1>
+        //@if0 useOpera=1>
         //@include vendor/Opera/messages.js
-        //@if useOpera=1<
+        //@if0 useOpera=1<
 
-        //@if useGM=1>
+        //@if0 useGM=1>
         //@include vendor/GM/messages.js
-        //@if useGM=1<
+        //@if0 useGM=1<
 
         var func = mono.msgList[mono.msgType];
         if (func !== undefined) {
@@ -90,21 +90,21 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         //@include components/storageDefine.js
 
-        //@if useFf=1>
+        //@if0 useFf=1>
         //@include vendor/Firefox/storage.js
-        //@if useFf=1<
+        //@if0 useFf=1<
 
-        //@if useGM=1>
+        //@if0 useGM=1>
         //@include vendor/GM/storage.js
-        //@if useGM=1<
+        //@if0 useGM=1<
 
-        //@if useChrome=1>
+        //@if0 useChrome=1>
         //@include vendor/Chrome/storage.js
-        //@if useChrome=1<
+        //@if0 useChrome=1<
 
-        //@if useLocalStorage=1||useOpera=1>
+        //@if0 useLocalStorage=1||useOpera=1>
         //@include vendor/Uni/storage.js
-        //@if useLocalStorage=1||useOpera=1<
+        //@if0 useLocalStorage=1||useOpera=1<
 
         func = mono.storageList[mono.storageType];
         if (func !== undefined) {

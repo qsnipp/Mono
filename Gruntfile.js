@@ -97,6 +97,7 @@ module.exports = function (grunt) {
             'opera',
             'safari',
             ['chrome', 'chromeApp'],
+            ['chrome', 'chromeWebApp'],
             ['chrome', 'localStorage'],
             ['oldChrome', 'localStorage']
         ];

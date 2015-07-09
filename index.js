@@ -3,42 +3,46 @@ var fs = require('fs');
 var distList = {
     chrome: {
         define: 'chrome',
-        messages: 'Chrome/messages.js',
-        storage: 'Chrome/storage.js'
+        storage: 'chromeStorage',
+        useChrome: 1,
+        chromeForceDefineBgPage: 1,
+        chromeUseDirectMsg: 1
     },
     oldChrome: {
         define: 'chrome',
-        messages: [
-            'Chrome/messages.js',
-            'OldChrome/messages.js'
-        ],
-        storage: 'Chrome/storage.js'
+        storage: 'chromeStorage',
+        useChrome: 1,
+        oldChromeSupport: 1
     },
     firefox: {
         define: 'firefox',
-        messages: 'Firefox/messages.js',
-        storage: 'Firefox/storage.js'
+        storage: 'firefox',
+        useFf: 1
     },
     gm: {
         define: 'gm',
-        messages: 'GM/messages.js',
-        storage: 'GM/storage.js'
+        storage: 'gm',
+        useGm: 1
     },
     opera: {
         define: 'opera',
-        messages: 'Opera/messages.js',
-        storage: 'Uni/storage.js'
+        storage: 'operaPreferences',
+        useOpera: 1
     },
     safari: {
         define: 'safari',
-        messages: 'Safari/messages.js',
-        storage: 'Uni/storage.js'
+        storage: 'localStorage',
+        useSafari: 1
     },
     localStorage: {
-        storage: 'Uni/storage.js'
+        storage: 'localStorage',
+        useLocalStorage: 1
     },
     chromeApp: {
         define: ['chrome', 'chromeApp']
+    },
+    chromeWebApp: {
+        define: ['chrome', 'chromeWebApp']
     }
 };
 
@@ -62,54 +66,45 @@ exports.get = {
             }
         }
 
-        if (!info.messages || !info.storage || !info.define) {
+        if (!info.storage || !info.define) {
             console.error('Error: --target is', '"' + typeList.join(',') + '"');
             return;
         }
 
-        var path = rootUrl + './src/';
-        var content = String(fs.readFileSync(path + 'mono.js'));
         if (typeof info.define !== 'object') {
             info.define = [info.define];
         }
-        if (typeof info.messages !== 'object') {
-            info.messages = [info.messages];
-        }
+
         if (typeof info.storage !== 'object') {
             info.storage = [info.storage];
         }
 
+        var path = rootUrl + './src/';
+        var content = String(fs.readFileSync(path + 'mono.js'));
+
         content = content.replace(/(\/\/@include\s+components\/)browserDefine.js/, function (text, include) {
             var includeList = info.define.map(function (item) {
-                return include + 'define/' + item + '.js';
+                return include + 'browserDefine/' + item + '.js';
             });
             return includeList.join('\n');
         });
 
-        content = content.replace(/.*\/\/@include vendor\/.*\r?\n/g, '');
+        content = content.replace(/(\/\/@include\s+components\/)storageDefine.js/, function (text, include) {
+            var includeList = info.storage.map(function (item) {
+                return include + 'storageDefine/' + item + '.js';
+            });
+            return includeList.join('\n');
+        });
+
+        var ifStrip = require('./ifStrip.js').ifStrip;
 
         var extractIncludes = require('./extractIncludes.js').extractIncludes;
 
         content = extractIncludes(content, path);
 
-        path = rootUrl + './src/vendor/';
-        var insertPos = content.indexOf('//@insert');
+        content = ifStrip(content, info);
 
-        // insert start of content
-        var partList = [content.substr(0, insertPos)];
-
-        partList = partList.concat(info.messages.map(function (item) {
-            return extractIncludes(String(fs.readFileSync(path + item)), path);
-        }));
-
-        partList = partList.concat(info.storage.map(function (item) {
-            return extractIncludes(String(fs.readFileSync(path + item)), path);
-        }));
-
-        // insert end of content
-        partList.push(content.substr(insertPos));
-
-        return partList.join('\n');
+        return content;
     },
     monoLib: function () {
         return String(fs.readFileSync(rootUrl + '/dist/monoLib.js'));
