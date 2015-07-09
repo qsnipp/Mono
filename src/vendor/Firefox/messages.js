@@ -1,9 +1,5 @@
-(function () {
-    if (!mono.isFF) return;
-
-    (function () {
-        if (!mono.noAddon) return;
-
+mono.msgList.firefox = function () {
+    if (mono.noAddon) {
         var onCollector = [];
         mono.addon = {
             port: {
@@ -29,7 +25,7 @@
                 }
             }
         }
-    })();
+    }
 
     var firefoxMsg = {
         cbList: [],
@@ -66,4 +62,4 @@
     mono.onMessage.on = firefoxMsg.on;
     mono.sendMessage.send = firefoxMsg.send;
     mono.sendMessage.sendToActiveTab = firefoxMsg.sendToActiveTab;
-})();
+};

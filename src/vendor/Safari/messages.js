@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isSafari) return;
-
+mono.msgList.safari = function () {
     var localUrl, localUrlLen;
     if (mono.isSafariBgPage && window.location && window.location.href) {
         localUrl = window.location.href.substr(0, window.location.href.indexOf('/', 19));
@@ -87,4 +85,4 @@
     mono.onMessage.on = safariMsg.on;
     mono.sendMessage.send = safariMsg.send;
     mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
-})();
+};

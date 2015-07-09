@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isOpera) return;
-
+mono.msgList.opera = function () {
     var inLocalScope = window.location && window.location.href && window.location.href.substr(0, 9) === 'widget://';
 
     var operaMsg = {
@@ -45,4 +43,4 @@
     mono.onMessage.on = operaMsg.on;
     mono.sendMessage.send = operaMsg.send;
     mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
-})();
+};

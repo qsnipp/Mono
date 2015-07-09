@@ -55,15 +55,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/Chrome/messages.js
         //@if browser=chrome<
 
+        //@if browser=chrome&&oldChromeSupport=1>
+        //@include vendor/OldChrome/messages.js
+        //@if browser=chrome&&oldChromeSupport=1<
+
         //@if browser=firefox>
         //@include vendor/Firefox/messages.js
         //@if browser=firefox<
-
-        //@if browser=chrome>
-        //@if oldChromeSupport=1>
-        //@include vendor/OldChrome/messages.js
-        //@if oldChromeSupport=1<
-        //@if browser=chrome<
 
         //@if browser=safari>
         //@include vendor/Safari/messages.js

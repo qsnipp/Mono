@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isChrome || (chrome.hasOwnProperty('runtime') && chrome.runtime.onMessage)) return;
-
+mono.msgList.oldChrome = function () {
     var lowLevelHook = {};
 
     var chromeMsg = {
@@ -79,25 +77,23 @@
 
     chromeMsg.on.lowLevelHook = lowLevelHook;
 
-    (function () {
-        try {
-            if (chrome.runtime.getBackgroundPage === undefined) return;
-        } catch (e) {
-            return;
+    try {
+        if (chrome.runtime.getBackgroundPage !== undefined) {
+            mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
+
+            //@if chromeForceDefineBgPage=1>
+            chrome.runtime.getBackgroundPage(function (bgWin) {
+                if (bgWin !== window) {
+                    delete mono.isChromeBgPage;
+                } else {
+                    mono.isChromeBgPage = 1;
+                }
+            });
+            //@if chromeForceDefineBgPage=1<
         }
-
-        mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
-
-        chrome.runtime.getBackgroundPage(function (bgWin) {
-            if (bgWin !== window) {
-                delete mono.isChromeBgPage;
-            } else {
-                mono.isChromeBgPage = 1;
-            }
-        });
-    })();
+    } catch (e) {}
 
     mono.onMessage.on = chromeMsg.on;
     mono.sendMessage.send = chromeMsg.send;
     mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
-})();
+};

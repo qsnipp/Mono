@@ -1,6 +1,4 @@
-(function () {
-    if (!mono.isGM) return;
-
+mono.msgList.gm = function () {
     var gmMsg = {
         cbList: [],
         onMessage: function (_message) {
@@ -23,4 +21,4 @@
     mono.onMessage.on = gmMsg.on;
     mono.sendMessage.send = gmMsg.send;
     mono.sendMessage.sendToActiveTab = gmMsg.onMessage.bind({isBg: true});
-})();
+};
