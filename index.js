@@ -30,7 +30,8 @@ var distList = {
     opera: {
         define: 'opera',
         storage: 'operaPreferences',
-        useOpera: 1
+        useOpera: 1,
+        userScript: 1
     },
     safari: {
         define: 'safari',
@@ -85,6 +86,10 @@ exports.get = {
 
         var path = rootUrl + './src/';
         var content = String(fs.readFileSync(path + 'mono.js'));
+
+        if (info.userScript) {
+            content = '//@include vendor/Opera/userScript.js\n' + content;
+        }
 
         content = content.replace(/(\/\/@include\s+components\/)browserDefine.js/, function (text, include) {
             var includeList = info.define.map(function (item) {

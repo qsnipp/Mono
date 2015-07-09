@@ -53,7 +53,12 @@ module.exports = function (grunt) {
 
     grunt.registerTask('buildMono', function () {
         var path = grunt.config('source');
-        var content = extractIncludes(grunt.file.read(path + 'mono.js'), path);
+
+        var content = grunt.file.read(path + 'mono.js');
+
+        content = '//@include vendor/Opera/userScript.js\n' + content;
+
+        content = extractIncludes(content, path);
 
         grunt.file.write(grunt.config('dist') + 'mono.js', content);
     });

@@ -1,0 +1,3 @@
+// ==UserScript==
+// @exclude     file://*
+// ==/UserScript==
