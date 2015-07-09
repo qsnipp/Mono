@@ -5,15 +5,15 @@ var distList = {
         define: 'chrome',
         storage: 'chromeStorage',
         useChrome: 1,
-        chromeForceDefineBgPage: 1,
-        chromeUseDirectMsg: 1,
+        chromeForceDefineBgPage: 0,
+        chromeUseDirectMsg: 0,
         useLocalStorage: 0
     },
     oldChrome: {
         define: 'chrome',
         storage: 'chromeStorage',
         useChrome: 1,
-        chromeForceDefineBgPage: 1,
+        chromeForceDefineBgPage: 0,
         oldChromeSupport: 1,
         useLocalStorage: 0
     },
