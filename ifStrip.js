@@ -45,7 +45,6 @@ exports.ifStrip = function(data, options) {
             var key = keyValue[0];
             var value = keyValue[1];
             result = options[key] == value;
-            console.log(result, key)
         }
 
         if (!result) {

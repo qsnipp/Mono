@@ -95,12 +95,17 @@ module.exports = function (grunt) {
             'firefox',
             'gm',
             'opera',
-            'safari',
-            ['chrome', 'chromeApp'],
-            ['chrome', 'chromeWebApp'],
-            ['chrome', 'localStorage'],
-            ['oldChrome', 'localStorage']
+            ['opera', 'localStorage'],
+            'safari'
         ];
+        ['chrome', 'oldChrome'].forEach(function(type) {
+            ['chromeApp', 'chromeWebApp'].forEach(function (type2) {
+                typeList.push([type, type2]);
+                if (type2 !== 'chromeApp') {
+                    typeList.push([type, type2, 'localStorage']);
+                }
+            });
+        });
         for (var i = 0, type; type = typeList[i]; i++) {
             if (Array.isArray(type)) {
                 type = type.join(',');

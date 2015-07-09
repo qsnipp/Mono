@@ -75,9 +75,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/Opera/messages.js
         //@if0 useOpera=1<
 
-        //@if0 useGM=1>
+        //@if0 useGm=1>
         //@include vendor/GM/messages.js
-        //@if0 useGM=1<
+        //@if0 useGm=1<
 
         var func = mono.msgList[mono.msgType];
         if (func !== undefined) {
@@ -94,13 +94,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/Firefox/storage.js
         //@if0 useFf=1<
 
-        //@if0 useGM=1>
+        //@if0 useGm=1>
         //@include vendor/GM/storage.js
-        //@if0 useGM=1<
+        //@if0 useGm=1<
 
-        //@if0 useChrome=1>
+        //@if0 useChrome=1&&useLocalStorage=0>
         //@include vendor/Chrome/storage.js
-        //@if0 useChrome=1<
+        //@if0 useChrome=1&&useLocalStorage=0<
 
         //@if0 useLocalStorage=1||useOpera=1>
         //@include vendor/Uni/storage.js

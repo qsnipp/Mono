@@ -6,13 +6,16 @@ var distList = {
         storage: 'chromeStorage',
         useChrome: 1,
         chromeForceDefineBgPage: 1,
-        chromeUseDirectMsg: 1
+        chromeUseDirectMsg: 1,
+        useLocalStorage: 0
     },
     oldChrome: {
         define: 'chrome',
         storage: 'chromeStorage',
         useChrome: 1,
-        oldChromeSupport: 1
+        chromeForceDefineBgPage: 1,
+        oldChromeSupport: 1,
+        useLocalStorage: 0
     },
     firefox: {
         define: 'firefox',
@@ -32,7 +35,8 @@ var distList = {
     safari: {
         define: 'safari',
         storage: 'localStorage',
-        useSafari: 1
+        useSafari: 1,
+        useLocalStorage: 1
     },
     localStorage: {
         storage: 'localStorage',

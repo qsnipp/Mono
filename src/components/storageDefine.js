@@ -27,7 +27,7 @@
     //@include storageDefine/localStorage.js
 
     //@if2 useOpera=1>
-    //@include storageDefine/opera.js
+    //@include storageDefine/operaPreferences.js
     //@if2 useOpera=1<
     //@if2 useLocalStorage=1||useOpera=1<
 })();

@@ -22,12 +22,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         return mono = factory(null, mono);
     }
 
-    //@if useFf=1>
+    //@if0 useFf=1>
     exports.isFF = true;
     exports.isModule = true;
 
     exports.init = factory;
-    //@if useFf=1<
+    //@if0 useFf=1<
 }(
     typeof window !== "undefined" ? window : undefined,
     function initMono(_addon, _mono) {
@@ -43,7 +43,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         };
 
         (function() {
-            //@if useFf=1>
+            //@if1 useFf=1>
             if (typeof window === 'undefined') {
                 mono.isFF = true;
                 mono.msgType = 'firefox';
@@ -52,9 +52,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 require = _require;
                 return;
             }
-            //@if useFf=1<
+            //@if1 useFf=1<
 
-            //@if useGm=1>
+            //@if1 useGm=1>
             if (typeof GM_getValue !== 'undefined') {
                 mono.isGM = true;
                 mono.msgType = 'gm';
@@ -67,9 +67,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 return;
             }
-            //@if useGm=1<
+            //@if1 useGm=1<
 
-            //@if useChrome=1>
+            //@if1 useChrome=1>
             if (window.hasOwnProperty('chrome')) {
                 mono.isChrome = true;
                 mono.isChromeInject = !chrome.hasOwnProperty('tabs');
@@ -80,13 +80,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 //@if oldChromeSupport=1<
 
-                //@if useChromeApp=1>
+                //@if1 useChromeApp=1>
                 if (!chrome.app.hasOwnProperty('getDetails')) {
                     mono.isChromeApp = true;
                 }
-                //@if useChromeApp=1<
+                //@if1 useChromeApp=1<
 
-                //@if useChromeWebApp=1>
+                //@if1 useChromeWebApp=1>
                 if (chrome.app.hasOwnProperty('getDetails')) {
                     mono.isChromeWebApp = chrome.app.getDetails();
                     if (mono.isChromeWebApp && mono.isChromeWebApp.hasOwnProperty('app')) {
@@ -95,21 +95,21 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         delete mono.isChromeWebApp;
                     }
                 }
-                //@if useChromeWebApp=1<
+                //@if1 useChromeWebApp=1<
                 return;
             }
-            //@if useChrome=1<
+            //@if1 useChrome=1<
 
-            //@if useOpera=1>
+            //@if1 useOpera=1>
             if (window.hasOwnProperty('opera')) {
                 mono.isOpera = true;
                 mono.msgType = 'opera';
                 mono.isOperaInject = opera.extension.broadcastMessage === undefined;
                 return;
             }
-            //@if useOpera=1<
+            //@if1 useOpera=1<
 
-            //@if useFf=1>
+            //@if1 useFf=1>
             if (navigator.userAgent.indexOf('Firefox') !== -1) {
                 mono.isFF = true;
                 mono.msgType = 'firefox';
@@ -123,9 +123,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 return;
             }
-            //@if useFf=1<
+            //@if1 useFf=1<
 
-            //@if useSafari=1>
+            //@if1 useSafari=1>
             if (window.hasOwnProperty('safari')) {
                 mono.isSafari = true;
                 mono.msgType = 'safari';
@@ -139,7 +139,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.isSafari = true;
                 return;
             }
-            //@if useSafari=1<
+            //@if1 useSafari=1<
 
             console.error('Mono: can\'t define browser!');
         })();
@@ -319,7 +319,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         };
         mono.onMessage.count = 0;
 
-        //@if useChrome=1>
+        //@if0 useChrome=1>
         mono.msgList.chrome = function() {
             var lowLevelHook = {};
 
@@ -431,9 +431,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.sendMessage.send = chromeMsg.send;
             mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
         };
-        //@if useChrome=1<
+        //@if0 useChrome=1<
 
-        //@if useChrome=1&&oldChromeSupport=1>
+        //@if0 useChrome=1&&oldChromeSupport=1>
         mono.msgList.oldChrome = function() {
             var lowLevelHook = {};
 
@@ -536,9 +536,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.sendMessage.send = chromeMsg.send;
             mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
         };
-        //@if useChrome=1&&oldChromeSupport=1<
+        //@if0 useChrome=1&&oldChromeSupport=1<
 
-        //@if useFf=1>
+        //@if0 useFf=1>
         mono.msgList.firefox = function() {
             if (mono.noAddon) {
                 var onCollector = [];
@@ -604,9 +604,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.sendMessage.send = firefoxMsg.send;
             mono.sendMessage.sendToActiveTab = firefoxMsg.sendToActiveTab;
         };
-        //@if useFf=1<
+        //@if0 useFf=1<
 
-        //@if useSafari=1>
+        //@if0 useSafari=1>
         mono.msgList.safari = function() {
             var localUrl, localUrlLen;
             if (mono.isSafariBgPage && window.location && window.location.href) {
@@ -701,9 +701,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.sendMessage.send = safariMsg.send;
             mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
         };
-        //@if useSafari=1<
+        //@if0 useSafari=1<
 
-        //@if useOpera=1>
+        //@if0 useOpera=1>
         mono.msgList.opera = function() {
             var inLocalScope = window.location && window.location.href && window.location.href.substr(0, 9) === 'widget://';
 
@@ -749,9 +749,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.sendMessage.send = operaMsg.send;
             mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
         };
-        //@if useOpera=1<
+        //@if0 useOpera=1<
 
-        //@if useGM=1>
+        //@if0 useGm=1>
         mono.msgList.gm = function() {
             var gmMsg = {
                 cbList: [],
@@ -780,7 +780,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 isBg: true
             });
         };
-        //@if useGM=1<
+        //@if0 useGm=1<
 
         var func = mono.msgList[mono.msgType];
         if (func !== undefined) {
@@ -795,7 +795,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
          * Created by Anton on 09.07.2015.
          */
         (function() {
-            //@if useFf=1>
+            //@if2 useFf=1>
             if (mono.isFF) {
                 if (!mono.isModule) {
                     mono.storageType = 'externalStorage';
@@ -804,34 +804,34 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 return;
             }
-            //@if useFf=1<
+            //@if2 useFf=1<
 
-            //@if useGm=1>
+            //@if2 useGm=1>
             if (mono.isGM) {
                 mono.storageType = 'gm';
                 return;
             }
-            //@if useGm=1<
+            //@if2 useGm=1<
 
-            //@if useChrome=1>
+            //@if2 useChrome=1>
             if (mono.isChrome && chrome.hasOwnProperty('storage')) {
                 mono.storageType = 'chrome';
                 return;
             }
-            //@if useChrome=1<
+            //@if2 useChrome=1<
 
-            //@if useLocalStorage=1||useOpera=1>
+            //@if2 useLocalStorage=1||useOpera=1>
             mono.storageType = 'localStorage';
 
-            //@if useOpera=1>
+            //@if2 useOpera=1>
             if (typeof widget !== 'undefined') {
                 mono.storageType = 'operaPreferences';
             }
-            //@if useOpera=1<
-            //@if useLocalStorage=1||useOpera=1<
+            //@if2 useOpera=1<
+            //@if2 useLocalStorage=1||useOpera=1<
         })();
 
-        //@if useFf=1>
+        //@if0 useFf=1>
         mono.storageList.simpleStorage = function() {
             /**
              * Firefox simple storage
@@ -982,9 +982,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.storage = externalStorage;
             mono.storage.local = mono.storage.sync = mono.storage;
         };
-        //@if useFf=1<
+        //@if0 useFf=1<
 
-        //@if useGM=1>
+        //@if0 useGm=1>
         mono.storageList.gm = function() {
             /**
              * GM storage
@@ -1092,9 +1092,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.storage = storage;
             mono.storage.local = mono.storage.sync = mono.storage;
         };
-        //@if useGM=1<
+        //@if0 useGm=1<
 
-        //@if useChrome=1>
+        //@if0 useChrome=1&&useLocalStorage=0>
         mono.storageList.chrome = function() {
             /**
              * Chrome storage mode
@@ -1121,9 +1121,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
              */
             mono.storage.sync = chStorage('sync');
         };
-        //@if useChrome=1<
+        //@if0 useChrome=1&&useLocalStorage=0<
 
-        //@if useLocalStorage=1||useOpera=1>
+        //@if0 useLocalStorage=1||useOpera=1>
         mono.storageList.localStorage = mono.storageList.operaPreferences = function() {
             /**
              * localStorage mode
@@ -1432,7 +1432,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
             console.error('Can\'t detect localStorage!');
         };
-        //@if useLocalStorage=1||useOpera=1<
+        //@if0 useLocalStorage=1||useOpera=1<
 
         func = mono.storageList[mono.storageType];
         if (func !== undefined) {
