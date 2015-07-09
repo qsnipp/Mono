@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         source: './src/',
         test: './test/',
         clean: {
-            dist: ['<%= dist %>']
+            dist: ['<%= dist %>/**']
         },
         closurecompiler: {
             mono: {

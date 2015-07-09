@@ -1,3 +1,7 @@
+// ==UserScript==
+// @exclude     file://*
+// ==/UserScript==
+
 /**
  *
  * Created by Anton on 21.06.2014.
@@ -15,7 +19,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     }
 
     if (typeof window !== "undefined") {
-        return factory(null, mono);
+        return mono = factory(null, mono);
     }
 
     //@if useFf=1>
