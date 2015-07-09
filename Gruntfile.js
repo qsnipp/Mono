@@ -105,9 +105,11 @@ module.exports = function (grunt) {
         ];
         ['chrome', 'oldChrome'].forEach(function(type) {
             ['chromeApp', 'chromeWebApp'].forEach(function (type2) {
-                typeList.push([type, type2]);
+                var list = [type, type2];
+                typeList.push(list);
                 if (type2 !== 'chromeApp') {
-                    typeList.push([type, type2, 'localStorage']);
+                    list.push('localStorage');
+                    typeList.push(list);
                 }
             });
         });
