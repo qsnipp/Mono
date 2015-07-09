@@ -118,6 +118,8 @@ exports.get = {
 
         content = ifStrip(content, info);
 
+        content = content.replace(/\n\n/g, '\n');
+
         return content;
     },
     monoLib: function () {
