@@ -87,12 +87,14 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
             readValue: function (key, value) {
                 if (value === localStorageMode.chunkItem) {
                     value = localStorageMode.getObj(key)
-                } else if (value !== undefined) {
+                } else
+                if (value !== undefined) {
                     var data = value.substr(1);
                     var type = value[0];
                     if (type === 'i') {
                         value = parseFloat(data);
-                    } else if (type === 'b') {
+                    } else
+                    if (type === 'b') {
                         value = data === 'true';
                     } else {
                         value = data;
@@ -151,13 +153,15 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
                     var value = obj[key];
                     if (value === undefined) {
                         localStorageMode.remove(key);
-                    } else if (typeof value === 'object') {
+                    } else
+                    if (typeof value === 'object') {
                         localStorageMode.setObj(key, value);
                     } else {
                         var type = typeof value;
                         if (type === 'boolean') {
                             value = 'b' + value;
-                        } else if (type === 'number') {
+                        } else
+                        if (type === 'number') {
                             value = 'i' + value;
                         } else {
                             value = 's' + value;
@@ -250,11 +254,14 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
     var externalStorageHook = function (message, response) {
         if (message.action === 'get') {
             return mono.storage.get(message.data, response);
-        } else if (message.action === 'set') {
+        } else
+        if (message.action === 'set') {
             return mono.storage.set(message.data, response);
-        } else if (message.action === 'remove') {
+        } else
+        if (message.action === 'remove') {
             return mono.storage.remove(message.data, response);
-        } else if (message.action === 'clear') {
+        } else
+        if (message.action === 'clear') {
             return mono.storage.clear(response);
         }
     };

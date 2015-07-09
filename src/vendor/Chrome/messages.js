@@ -31,7 +31,8 @@ mono.msgList.chrome = function () {
                     // block msg's from bg page to bg page.
                     return;
                 }
-            } else if (message.toBgPage === 1) {
+            } else
+            if (message.toBgPage === 1) {
                 // block msg to bg page not in bg page.
                 return;
             }
@@ -92,7 +93,8 @@ mono.msgList.chrome = function () {
                 chromeMsg.send = mono.sendMessage.send = function (message) {
                     bgWin.mono.chromeDirectOnMessage(mono.cloneObj(message), chromeMsg.onMessage);
                 }
-            } else if (mono.chromeDirectOnMessage === undefined) {
+            } else
+            if (mono.chromeDirectOnMessage === undefined) {
                 mono.chromeDirectOnMessage = function (message, sender) {
                     chromeMsg.onMessage(message, sender);
                 };

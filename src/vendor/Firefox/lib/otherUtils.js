@@ -22,7 +22,8 @@ var sanitizerHTML = function (html) {
         var data = arg2;
         if (arg2.search(sanitizeRegExp[2]) === 0) {
             data = '';
-        } else if (arg2[0] === '/' || arg2.substr(0, 4) !== 'http') {
+        } else
+        if (arg2[0] === '/' || arg2.substr(0, 4) !== 'http') {
             data = 'http://' + sanitizeRegExp[3] + '#' + arg2
         }
         return 'href=' + arg1 + data + arg1;

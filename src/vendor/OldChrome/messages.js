@@ -29,7 +29,8 @@ mono.msgList.oldChrome = function () {
                     // block msg's from bg page to bg page.
                     return;
                 }
-            } else if (message.toBgPage === 1) {
+            } else
+            if (message.toBgPage === 1) {
                 // block msg to bg page not in bg page.
                 return;
             }
