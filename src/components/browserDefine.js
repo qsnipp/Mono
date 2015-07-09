@@ -1,28 +1,28 @@
 (function () {
     //@if browser=firefox>
     if (typeof window === 'undefined') {
-        //@include define/firefoxModule.js
+        //@include browserDefine/firefoxModule.js
         return;
     }
     //@if browser=firefox<
 
     //@if browser=gm>
     if (typeof GM_getValue !== 'undefined') {
-        //@include define/gm.js
+        //@include browserDefine/gm.js
         return;
     }
     //@if browser=gm<
 
     //@if browser=chrome>
     if (window.hasOwnProperty('chrome')) {
-        //@include define/chrome.js
+        //@include browserDefine/chrome.js
 
         //@if chromeExtType=app>
-        //@include define/chromeApp.js
+        //@include browserDefine/chromeApp.js
         //@if chromeExtType=app<
 
         //@if chromeExtType=webApp>
-        //@include define/chromeWebApp.js
+        //@include browserDefine/chromeWebApp.js
         //@if chromeExtType=webApp<
         return;
     }
@@ -30,21 +30,21 @@
 
     //@if browser=opera>
     if (window.hasOwnProperty('opera')) {
-        //@include define/opera.js
+        //@include browserDefine/opera.js
         return;
     }
     //@if browser=opera<
 
     //@if browser=firefox>
     if (navigator.userAgent.indexOf('Firefox') !== -1) {
-        //@include define/firefoxNoModule.js
+        //@include browserDefine/firefoxNoModule.js
         return;
     }
     //@if browser=firefox<
 
     //@if browser=safari>
     if (window.hasOwnProperty('safari')) {
-        //@include define/safari.js
+        //@include browserDefine/safari.js
         return;
     }
     if (navigator.userAgent.indexOf('Safari/') !== -1) {

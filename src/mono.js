@@ -54,6 +54,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/Opera/messages.js
         //@include vendor/GM/messages.js
 
+        //@include components/storageDefine.js
+
         //@include vendor/Chrome/storage.js
         //@include vendor/Firefox/storage.js
         //@include vendor/GM/storage.js
