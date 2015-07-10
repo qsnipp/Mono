@@ -18,6 +18,7 @@ exports.ifStrip = function(data, options) {
 
         var str = data.substr(startPos, data.indexOf('>', startPos) - startPos);
         var endPos = data.indexOf(str + '<', startPos);
+        var ifLen = str.length + 1;
 
         var sIf = str.match(/\/\/@if\d*\s+([^><]+)/);
 
@@ -48,10 +49,10 @@ exports.ifStrip = function(data, options) {
         }
 
         if (!result) {
-            data = data.substr(0, startPos) + data.substr(endPos + str.length + 1);
+            data = data.substr(0, startPos) + data.substr(endPos + ifLen);
         } else {
-            data = data.substr(0, endPos) + data.substr(endPos + str.length + 1);
-            data = data.substr(0, startPos) + data.substr(startPos + str.length + 1);
+            data = data.substr(0, endPos) + data.substr(endPos + ifLen);
+            data = data.substr(0, startPos) + data.substr(startPos + ifLen);
         }
     }
 
