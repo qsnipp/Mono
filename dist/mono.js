@@ -42,7 +42,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             storageList: {}
         };
 
-        (function() {
+        (function browserDefine() {
             //@if1 useFf=1>
             if (typeof window === 'undefined') {
                 mono.isFF = true;
@@ -798,7 +798,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         /**
          * Created by Anton on 09.07.2015.
          */
-        (function() {
+        (function storageDefine() {
             //@if2 useFf=1>
             if (mono.isFF) {
                 if (!mono.isModule) {

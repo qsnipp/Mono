@@ -1,4 +1,4 @@
-(function () {
+(function browserDefine () {
     //@if1 useFf=1>
     if (typeof window === 'undefined') {
         //@include browserDefine/firefoxModule.js

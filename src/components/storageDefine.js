@@ -1,7 +1,7 @@
 /**
  * Created by Anton on 09.07.2015.
  */
-(function () {
+(function storageDefine () {
     //@if2 useFf=1>
     if (mono.isFF) {
         //@include storageDefine/firefox.js
