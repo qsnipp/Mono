@@ -129,7 +129,19 @@ mono.sendMessageToActiveTab = function (message, cb, hook) {
  */
 mono.sendHook = {};
 
-mono.onMessageFunc = function (cb, index, message, response) {
+/**
+ * Listen messages and call callback function
+ * @param {function} cb - Callback function
+ */
+mono.onMessage = function (cb) {
+    var index = mono.onMessage.count++;
+    var func = mono.onMessage.wrapFunc.bind(this, cb, index);
+    cb.monoCbId = index;
+    mono.onMessage.on.call(this, mono.onMessage.wrapper[index] = func);
+};
+mono.onMessage.count = 0;
+mono.onMessage.wrapper = {};
+mono.onMessage.wrapFunc = function (cb, index, message, response) {
     if (message.responseId !== undefined) {
         return msgTools.callCb(message);
     }
@@ -150,19 +162,6 @@ mono.onMessageFunc = function (cb, index, message, response) {
     }
     cb.call(this, message.data, mResponse);
 };
-
-/**
- * Listen messages and call callback function
- * @param {function} cb - Callback function
- */
-mono.onMessage = function (cb) {
-    var index = mono.onMessage.count++;
-    var func = mono.onMessageFunc.bind(this, cb, index);
-    cb.monoCbId = index;
-    mono.onMessage.on.call(this, mono.onMessage.wrapper[index] = func);
-};
-mono.onMessage.count = 0;
-mono.onMessage.wrapper = {};
 
 /**
  * Remove listener
