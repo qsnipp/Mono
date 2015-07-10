@@ -30,6 +30,7 @@
         ],
         contentScriptFile: [
           self.data.url("js/mono.js"),
+          self.data.url("js/base.js"),
           self.data.url("js/inject.js")
         ],
         contentScriptWhen: 'start',

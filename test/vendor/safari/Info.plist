@@ -54,6 +54,7 @@
 			<key>Start</key>
 			<array>
 				<string>js/mono.js</string>
+				<string>js/base.js</string>
 				<string>js/inject.js</string>
 			</array>
 		</dict>
