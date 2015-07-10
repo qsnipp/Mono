@@ -902,9 +902,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         }
         mono.msgList = undefined;
 
-        /**
-         * Created by Anton on 09.07.2015.
-         */
         (function storageDefine() {
             //@if2 useFf=1>
             if (mono.isFF) {
