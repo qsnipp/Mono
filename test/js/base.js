@@ -35,8 +35,9 @@ var initBase = function (pageId) {
         height: '480px',
         backgroundColor: '#fff',
         position: 'absolute',
-        left: panel.style.top = '10px',
-        border: '1px solid #ccc',
+        left: 0,
+        top: 0,
+        boxShadow: '0 0 2px rgba(0,0,0,0.5)',
         padding: '5px',
         overflow: 'auto'
     };
@@ -91,6 +92,11 @@ var initBase = function (pageId) {
             }).join('\n') + '\n<';
         });
     });
+
+    setTimeout(function() {
+        "use strict";
+        message.focus();
+    }, 100);
 
     var actionList = {
         reply: function (msg, response) {
