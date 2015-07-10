@@ -38,7 +38,7 @@ var actionList = {
         sendMessage(msg.msg, response);
     },
     getLog: function (msg, response) {
-        response(log.log);
+        response.direct(log.list);
     }
 };
 
@@ -46,7 +46,11 @@ var log = function () {
     var msg = [].slice.call(arguments);
     log.list.push(msg);
     var text = JSON.stringify(msg);
-    console.error(text);
+    if (mono.isFF) {
+        console.error(text);
+    } else {
+        console.debug(text);
+    }
 };
 log.list = [];
 
@@ -63,10 +67,15 @@ var init = function (addon) {
         }
         log('bg', 'receive:', message);
         var func = actionList[message.action];
-        func && func(message, function (msg) {
-            log('bg', 'reply:', message);
+        var _response = function (msg) {
+            log('bg', 'reply:', msg);
             response(msg);
-        });
+        };
+        _response.direct = function (msg) {
+            log('bg', 'reply:', '[skip log]');
+            response(msg);
+        };
+        func && func(message, _response);
     });
 
     if (mono.isSafariBgPage) {

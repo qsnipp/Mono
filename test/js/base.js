@@ -20,10 +20,11 @@ var initBase = function (pageId) {
      <span>{pageId}</span>
      <textarea style="width: 620px; height: 430px" id="output"></textarea>
      <br/>
-     <input type="text" id="message" />
-     <input type="button" id="send" value="Send" />
-     <input type="button" id="sendAndReply" value="Send and reply" />
-     <input type="button" id="sendFromBg" value="Send from bg" />
+     <input type="text" id="message"/>
+     <input type="button" id="send" value="Send"/>
+     <input type="button" id="sendAndReply" value="Send and reply"/>
+     <input type="button" id="sendFromBg" value="Send from bg"/>
+     <input type="button" id="getBgLog" value="Get bg page log"/>
      */
     }.toString().replace(/\{pageId\}/g, pageId);
 
@@ -53,6 +54,7 @@ var initBase = function (pageId) {
     var send = panel.querySelector('#send');
     var sendAndReply = panel.querySelector('#sendAndReply');
     var sendFromBg = panel.querySelector('#sendFromBg');
+    var getBgLog = panel.querySelector('#getBgLog');
     var output = panel.querySelector('#output');
 
     var sendMessage = function (msg) {
@@ -82,8 +84,22 @@ var initBase = function (pageId) {
         message.value = '';
         sendMessage({action: 'send', msg: text});
     });
+    getBgLog.addEventListener('click', function() {
+        sendMessage({action: 'getLog'}, function(response) {
+            output.textContent = '>\n' + response.map(function(item) {
+                return JSON.stringify(item);
+            }).join('\n') + '\n<';
+        });
+    });
 
-    var actionList = {};
+    var actionList = {
+        reply: function (msg, response) {
+            response(msg.reply);
+        },
+        send: function (msg, response) {
+            sendMessage(msg.msg, response);
+        }
+    };
 
     mono.onMessage(function (message, response) {
         log(pageId, 'receive:', message);
