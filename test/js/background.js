@@ -80,7 +80,7 @@ var runAutoTest = function(cb) {
 
     sendMessage({action: 'send', msg: {action: 'ping'}});
 
-    setTimeout(function() {
+    runAutoTest.timer = setTimeout(function() {
         var result = log.list.slice(pos);
         var testResult = JSON.parse(testLog);
 
@@ -95,9 +95,10 @@ var runAutoTest = function(cb) {
 
             stateText += 'Error!';
             stateText += '\nCurrent result:\n';
-            stateText += JSON.stringify(result).replace(/],\[/g, '],\n[');
+            stateText += JSON.stringify(result);
             stateText += '\nRequire result:\n';
-            stateText += testLog.replace(/],\[/g, '],\n[');
+            stateText += testLog;
+            stateText = stateText.replace(/],\[/g, '],\n[');
         } else {
             stateText += 'OK!';
         }
@@ -105,7 +106,6 @@ var runAutoTest = function(cb) {
         cb.direct(stateText);
     }, 500);
 };
-runAutoTest.timer;
 
 var actionList = {
     reply: function (msg, response) {
@@ -145,7 +145,7 @@ var init = function (addon) {
         mono = mono.init(addon);
     }
 
-    console.error(page = "Background page!");
+    console.error("Background page!");
 
     mono.onMessage.call({isBg: true}, function (message, response) {
         if (message.action === 'inLog') {
