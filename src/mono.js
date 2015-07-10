@@ -78,10 +78,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         var func = mono.msgList[mono.msgType];
         if (func !== undefined) {
             func();
-            func = undefined;
         } else {
             console.error('Msg transport is not defined!');
         }
+        func = undefined;
         mono.msgList = undefined;
 
         //@include components/storageDefine.js
@@ -105,10 +105,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         func = mono.storageList[mono.storageType];
         if (func !== undefined) {
             func();
-            func = undefined;
         } else {
             console.error('Storage is not defined!');
         }
+        func = undefined;
         mono.storageList = undefined;
 
         //@insert
