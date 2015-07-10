@@ -28,6 +28,18 @@ mono.msgList.opera = function () {
                 }
             }
         },
+        off: function(cb) {
+            var cbList = operaMsg.cbList;
+            var pos = cbList.indexOf(cb);
+            if (pos === -1) {
+                return;
+            }
+            cbList.splice(pos, 1);
+            if (cbList.length !== 0) {
+                return;
+            }
+            opera.extension.onmessage = undefined;
+        },
         sendToActiveTab: function (message) {
             var currentTab = opera.extension.tabs.getSelected();
             operaMsg.sendTo(message, currentTab);
@@ -41,6 +53,7 @@ mono.msgList.opera = function () {
     };
 
     mono.onMessage.on = operaMsg.on;
+    mono.onMessage.off = operaMsg.off;
     mono.sendMessage.send = operaMsg.send;
     mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
 };

@@ -288,37 +288,54 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
          */
         mono.sendHook = {};
 
+        mono.onMessageFunc = function(cb, index, message, response) {
+            if (message.responseId !== undefined) {
+                return msgTools.callCb(message);
+            }
+            var mResponse;
+            if (message.callbackId === undefined) {
+                mResponse = mono.emptyFunc;
+            } else {
+                mResponse = msgTools.mkResponse.bind(msgTools, response.bind(this), message.callbackId);
+            }
+            if (message.hook !== undefined) {
+                if (index !== 0) {
+                    return;
+                }
+                var hookFunc = mono.sendHook[message.hook];
+                if (hookFunc !== undefined) {
+                    return hookFunc(message.data, mResponse);
+                }
+            }
+            cb.call(this, message.data, mResponse);
+        };
+
         /**
          * Listen messages and call callback function
          * @param {function} cb - Callback function
          */
         mono.onMessage = function(cb) {
-            var _this = this;
-            var onMsg = function(message, response) {
-                if (message.responseId !== undefined) {
-                    return msgTools.callCb(message);
-                }
-                var mResponse;
-                if (message.callbackId === undefined) {
-                    mResponse = mono.emptyFunc;
-                } else {
-                    mResponse = msgTools.mkResponse.bind(msgTools, response.bind(_this), message.callbackId);
-                }
-                if (message.hook !== undefined) {
-                    if (onMsg.index !== 0) {
-                        return;
-                    }
-                    var hookFunc = mono.sendHook[message.hook];
-                    if (hookFunc !== undefined) {
-                        return hookFunc(message.data, mResponse);
-                    }
-                }
-                cb.call(_this, message.data, mResponse);
-            };
-            onMsg.index = mono.onMessage.count++;
-            mono.onMessage.on.call(_this, onMsg);
+            var index = mono.onMessage.count++;
+            var func = mono.onMessageFunc.bind(this, cb, index);
+            cb.monoCbId = index;
+            mono.onMessage.on.call(this, mono.onMessage.wrapper[index] = func);
         };
         mono.onMessage.count = 0;
+        mono.onMessage.wrapper = {};
+
+        /**
+         * Remove listener
+         * @param {function} cb
+         */
+        mono.offMessage = function(cb) {
+            var func = mono.onMessage.wrapper[cb.monoCbId];
+            if (func === undefined) {
+                return;
+            }
+            delete mono.onMessage.wrapper[cb.monoCbId];
+            delete cb.monoCbId;
+            mono.onMessage.off(func);
+        };
 
         //@if0 useChrome=1>
         mono.msgList.chrome = function() {
@@ -379,6 +396,18 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     }
                     chrome.runtime.onMessage.addListener(chromeMsg.onMessage);
                 },
+                off: function(cb) {
+                    var cbList = chromeMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
+                    if (cbList.length !== 0) {
+                        return;
+                    }
+                    chrome.runtime.onMessage.removeListener(chromeMsg.onMessage);
+                },
                 sendToActiveTab: function(message) {
                     chrome.tabs.query({
                         active: true,
@@ -431,6 +460,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             }
 
             mono.onMessage.on = chromeMsg.on;
+            mono.onMessage.off = chromeMsg.off;
             mono.sendMessage.send = chromeMsg.send;
             mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
         };
@@ -493,6 +523,18 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     }
                     chrome.extension.onRequest.addListener(chromeMsg.onMessage);
                 },
+                off: function(cb) {
+                    var cbList = chromeMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
+                    if (cbList.length !== 0) {
+                        return;
+                    }
+                    chrome.extension.onRequest.removeListener(chromeMsg.onMessage);
+                },
                 sendToActiveTab: function(message) {
                     chrome.tabs.query({
                         active: true,
@@ -537,6 +579,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             } catch (e) {}
 
             mono.onMessage.on = chromeMsg.on;
+            mono.onMessage.off = chromeMsg.off;
             mono.sendMessage.send = chromeMsg.send;
             mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
         };
@@ -546,27 +589,39 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         mono.msgList.firefox = function() {
             if (mono.noAddon) {
                 var onCollector = [];
+                var onMessage = function(e) {
+                    if (e.detail[0] !== '<') {
+                        return;
+                    }
+                    var data = e.detail.substr(1);
+                    var json = JSON.parse(data);
+                    for (var i = 0, cb; cb = onCollector[i]; i++) {
+                        cb(json);
+                    }
+                };
                 mono.addon = {
                     port: {
                         emit: function(pageId, message) {
                             var msg = '>' + JSON.stringify(message);
                             window.postMessage(msg, "*");
                         },
-                        on: function(pageId, onMessage) {
-                            onCollector.push(onMessage);
+                        on: function(pageId, func) {
+                            onCollector.push(func);
                             if (onCollector.length > 1) {
                                 return;
                             }
-                            window.addEventListener('monoMessage', function(e) {
-                                if (e.detail[0] !== '<') {
-                                    return;
-                                }
-                                var data = e.detail.substr(1);
-                                var json = JSON.parse(data);
-                                for (var i = 0, cb; cb = onCollector[i]; i++) {
-                                    cb(json);
-                                }
-                            });
+                            window.addEventListener('monoMessage', onMessage);
+                        },
+                        removeListener: function(pageId, func) {
+                            var pos = onCollector.indexOf(func);
+                            if (pos === -1) {
+                                return;
+                            }
+                            onCollector.splice(pos, 1);
+                            if (onCollector.length !== 0) {
+                                return;
+                            }
+                            window.removeEventListener('monoMessage', onMessage);
                         }
                     }
                 }
@@ -579,17 +634,30 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         firefoxMsg.sendTo(message, pageId);
                     }
                 },
+                onMessage: function(msg) {
+                    var response = firefoxMsg.mkResponse(msg.from);
+                    for (var i = 0, cb; cb = firefoxMsg.cbList[i]; i++) {
+                        cb(msg, response);
+                    }
+                },
                 on: function(cb) {
                     firefoxMsg.cbList.push(cb);
                     if (firefoxMsg.cbList.length !== 1) {
                         return;
                     }
-                    mono.addon.port.on('mono', function(msg) {
-                        var response = firefoxMsg.mkResponse(msg.from);
-                        for (var i = 0, cb; cb = firefoxMsg.cbList[i]; i++) {
-                            cb(msg, response);
-                        }
-                    });
+                    mono.addon.port.on('mono', firefoxMsg.onMessage);
+                },
+                off: function(cb) {
+                    var cbList = firefoxMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
+                    if (cbList.length !== 0) {
+                        return;
+                    }
+                    mono.addon.port.removeListener('mono', firefoxMsg.onMessage);
                 },
                 send: function(message) {
                     mono.addon.port.emit('mono', message);
@@ -605,6 +673,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             };
 
             mono.onMessage.on = firefoxMsg.on;
+            mono.onMessage.off = firefoxMsg.off;
             mono.sendMessage.send = firefoxMsg.send;
             mono.sendMessage.sendToActiveTab = firefoxMsg.sendToActiveTab;
         };
@@ -655,6 +724,21 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     }
                     safari.self.addEventListener("message", safariMsg.onMessage, false);
                 },
+                off: function(cb) {
+                    var cbList = safariMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
+                    if (cbList.length !== 0) {
+                        return;
+                    }
+                    if (mono.isSafariBgPage) {
+                        return safari.application.removeEventListener("message", safariMsg.onMessage, false);
+                    }
+                    safari.self.removeEventListener("message", safariMsg.onMessage, false);
+                },
                 sendToActiveTab: function(message) {
                     var currentTab = safari.application.activeBrowserWindow.activeTab;
                     safariMsg.sendTo(message, currentTab);
@@ -702,6 +786,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             };
 
             mono.onMessage.on = safariMsg.on;
+            mono.onMessage.off = safariMsg.off;
             mono.sendMessage.send = safariMsg.send;
             mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
         };
@@ -737,6 +822,18 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         }
                     }
                 },
+                off: function(cb) {
+                    var cbList = operaMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
+                    if (cbList.length !== 0) {
+                        return;
+                    }
+                    opera.extension.onmessage = undefined;
+                },
                 sendToActiveTab: function(message) {
                     var currentTab = opera.extension.tabs.getSelected();
                     operaMsg.sendTo(message, currentTab);
@@ -750,6 +847,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             };
 
             mono.onMessage.on = operaMsg.on;
+            mono.onMessage.off = operaMsg.off;
             mono.sendMessage.send = operaMsg.send;
             mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
         };
@@ -774,11 +872,20 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 on: function(cb) {
                     cb.isBg = this.isBg;
                     gmMsg.cbList.push(cb);
+                },
+                off: function(cb) {
+                    var cbList = gmMsg.cbList;
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
                 }
             };
             gmMsg.send = gmMsg.onMessage;
 
             mono.onMessage.on = gmMsg.on;
+            mono.onMessage.off = gmMsg.off;
             mono.sendMessage.send = gmMsg.send;
             mono.sendMessage.sendToActiveTab = gmMsg.onMessage.bind({
                 isBg: true

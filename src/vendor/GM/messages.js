@@ -14,11 +14,20 @@ mono.msgList.gm = function () {
         on: function (cb) {
             cb.isBg = this.isBg;
             gmMsg.cbList.push(cb);
+        },
+        off: function(cb) {
+            var cbList = gmMsg.cbList;
+            var pos = cbList.indexOf(cb);
+            if (pos === -1) {
+                return;
+            }
+            cbList.splice(pos, 1);
         }
     };
     gmMsg.send = gmMsg.onMessage;
 
     mono.onMessage.on = gmMsg.on;
+    mono.onMessage.off = gmMsg.off;
     mono.sendMessage.send = gmMsg.send;
     mono.sendMessage.sendToActiveTab = gmMsg.onMessage.bind({isBg: true});
 };

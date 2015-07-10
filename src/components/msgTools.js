@@ -129,34 +129,51 @@ mono.sendMessageToActiveTab = function (message, cb, hook) {
  */
 mono.sendHook = {};
 
+mono.onMessageFunc = function (cb, index, message, response) {
+    if (message.responseId !== undefined) {
+        return msgTools.callCb(message);
+    }
+    var mResponse;
+    if (message.callbackId === undefined) {
+        mResponse = mono.emptyFunc;
+    } else {
+        mResponse = msgTools.mkResponse.bind(msgTools, response.bind(this), message.callbackId);
+    }
+    if (message.hook !== undefined) {
+        if (index !== 0) {
+            return;
+        }
+        var hookFunc = mono.sendHook[message.hook];
+        if (hookFunc !== undefined) {
+            return hookFunc(message.data, mResponse);
+        }
+    }
+    cb.call(this, message.data, mResponse);
+};
+
 /**
  * Listen messages and call callback function
  * @param {function} cb - Callback function
  */
 mono.onMessage = function (cb) {
-    var _this = this;
-    var onMsg = function (message, response) {
-        if (message.responseId !== undefined) {
-            return msgTools.callCb(message);
-        }
-        var mResponse;
-        if (message.callbackId === undefined) {
-            mResponse = mono.emptyFunc;
-        } else {
-            mResponse = msgTools.mkResponse.bind(msgTools, response.bind(_this), message.callbackId);
-        }
-        if (message.hook !== undefined) {
-            if (onMsg.index !== 0) {
-                return;
-            }
-            var hookFunc = mono.sendHook[message.hook];
-            if (hookFunc !== undefined) {
-                return hookFunc(message.data, mResponse);
-            }
-        }
-        cb.call(_this, message.data, mResponse);
-    };
-    onMsg.index = mono.onMessage.count++;
-    mono.onMessage.on.call(_this, onMsg);
+    var index = mono.onMessage.count++;
+    var func = mono.onMessageFunc.bind(this, cb, index);
+    cb.monoCbId = index;
+    mono.onMessage.on.call(this, mono.onMessage.wrapper[index] = func);
 };
 mono.onMessage.count = 0;
+mono.onMessage.wrapper = {};
+
+/**
+ * Remove listener
+ * @param {function} cb
+ */
+mono.offMessage = function (cb) {
+    var func = mono.onMessage.wrapper[cb.monoCbId];
+    if (func === undefined) {
+        return;
+    }
+    delete mono.onMessage.wrapper[cb.monoCbId];
+    delete cb.monoCbId;
+    mono.onMessage.off(func);
+};

@@ -56,6 +56,18 @@ mono.msgList.chrome = function () {
             }
             chrome.runtime.onMessage.addListener(chromeMsg.onMessage);
         },
+        off: function(cb) {
+            var cbList = chromeMsg.cbList;
+            var pos = cbList.indexOf(cb);
+            if (pos === -1) {
+                return;
+            }
+            cbList.splice(pos, 1);
+            if (cbList.length !== 0) {
+                return;
+            }
+            chrome.runtime.onMessage.removeListener(chromeMsg.onMessage);
+        },
         sendToActiveTab: function (message) {
             chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
                 if (tabs[0] === undefined || tabs[0].id < 0) {
@@ -105,6 +117,7 @@ mono.msgList.chrome = function () {
     }
 
     mono.onMessage.on = chromeMsg.on;
+    mono.onMessage.off = chromeMsg.off;
     mono.sendMessage.send = chromeMsg.send;
     mono.sendMessage.sendToActiveTab = chromeMsg.sendToActiveTab;
 };

@@ -74,6 +74,17 @@
                         subscribClientList[to] = [];
                     }
                     subscribClientList[to].push(cb);
+                },
+                removeListener: function(to, cb) {
+                    var cbList;
+                    if ((cbList = subscribClientList[to]) === undefined) {
+                        return;
+                    }
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
                 }
             },
             lib: {
@@ -101,6 +112,17 @@
                         subscribServerList[to] = [];
                     }
                     subscribServerList[to].push(cb);
+                },
+                removeListener: function(to, cb) {
+                    var cbList;
+                    if ((cbList = subscribServerList[to]) === undefined) {
+                        return;
+                    }
+                    var pos = cbList.indexOf(cb);
+                    if (pos === -1) {
+                        return;
+                    }
+                    cbList.splice(pos, 1);
                 }
             },
             isVirtual: true

@@ -42,6 +42,21 @@ mono.msgList.safari = function () {
             }
             safari.self.addEventListener("message", safariMsg.onMessage, false);
         },
+        off: function(cb) {
+            var cbList = safariMsg.cbList;
+            var pos = cbList.indexOf(cb);
+            if (pos === -1) {
+                return;
+            }
+            cbList.splice(pos, 1);
+            if (cbList.length !== 0) {
+                return;
+            }
+            if (mono.isSafariBgPage) {
+                return safari.application.removeEventListener("message", safariMsg.onMessage, false);
+            }
+            safari.self.removeEventListener("message", safariMsg.onMessage, false);
+        },
         sendToActiveTab: function (message) {
             var currentTab = safari.application.activeBrowserWindow.activeTab;
             safariMsg.sendTo(message, currentTab);
@@ -83,6 +98,7 @@ mono.msgList.safari = function () {
     };
 
     mono.onMessage.on = safariMsg.on;
+    mono.onMessage.off = safariMsg.off;
     mono.sendMessage.send = safariMsg.send;
     mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
 };
