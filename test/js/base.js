@@ -22,9 +22,12 @@ var initBase = function (pageId) {
      <br/>
      <input type="text" id="message"/>
      <input type="button" id="send" value="Send"/>
-     <input type="button" id="sendAndReply" value="Send and reply"/>
-     <input type="button" id="sendFromBg" value="Send from bg"/>
-     <input type="button" id="getBgLog" value="Get bg page log"/>
+     <input type="button" id="sendToActiveTab" value="Send2tab"/>
+     <input type="button" id="sendAndReply" value="Send&reply"/>
+     <input type="button" id="sendAsBg" value="SendAsBg"/>
+     <input type="button" id="ping" value="Ping"/>
+     <input type="button" id="getBgLog" value="Log"/>
+     <input type="button" id="autoTest" value="Test"/>
      */
     }.toString().replace(/\{pageId\}/g, pageId);
 
@@ -53,9 +56,12 @@ var initBase = function (pageId) {
 
     var message = panel.querySelector('#message');
     var send = panel.querySelector('#send');
+    var sendToActiveTab = panel.querySelector('#sendToActiveTab');
     var sendAndReply = panel.querySelector('#sendAndReply');
-    var sendFromBg = panel.querySelector('#sendFromBg');
+    var sendAsBg = panel.querySelector('#sendAsBg');
+    var ping = panel.querySelector('#ping');
     var getBgLog = panel.querySelector('#getBgLog');
+    var autoTest = panel.querySelector('#autoTest');
     var output = panel.querySelector('#output');
 
     var sendMessage = function (msg) {
@@ -75,21 +81,36 @@ var initBase = function (pageId) {
             onSubmit();
         }
     });
+    sendToActiveTab.addEventListener('click', function() {
+        var text = message.value;
+        message.value = '';
+        sendMessage({action: 'sendToActiveTab', msg: text});
+    });
     sendAndReply.addEventListener('click', function() {
         var text = message.value;
         message.value = '';
         sendMessage({action: 'reply', reply: text});
     });
-    sendFromBg.addEventListener('click', function() {
+    sendAsBg.addEventListener('click', function() {
         var text = message.value;
         message.value = '';
         sendMessage({action: 'send', msg: text});
+    });
+    ping.addEventListener('click', function() {
+        sendMessage({action: 'ping'}, function(response) {
+            log(pageId, 'receive:', response);
+        });
     });
     getBgLog.addEventListener('click', function() {
         sendMessage({action: 'getLog'}, function(response) {
             output.textContent = '>\n' + response.map(function(item) {
                 return JSON.stringify(item);
             }).join('\n') + '\n<';
+        });
+    });
+    autoTest.addEventListener('click', function() {
+        sendMessage({action: 'autoTest'}, function(result) {
+            output.textContent = '>\n' +result + '\n<';
         });
     });
 
@@ -111,7 +132,7 @@ var initBase = function (pageId) {
         log(pageId, 'receive:', message);
         var func = actionList[message.action];
         func && func(message, function (msg) {
-            log(pageId, 'reply:', message);
+            log(pageId, 'reply:', msg);
             response(msg);
         });
     });
