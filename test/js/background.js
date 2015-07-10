@@ -62,6 +62,69 @@ var compareList = function(a, b) {
     return true;
 };
 
+var storageTest = function(cb) {
+    var wait = 0;
+    var ready = 0;
+    var log = [];
+    var onReady = function() {
+        ready++;
+        if (ready !== wait) {
+            return;
+        }
+        cb(log.join('\n'));
+    };
+    mono.storage.clear(function() {
+        var orig = {
+            number: 1, strInt: '1', boolFalse: false, boolTrue: true,
+            strFalse: 'false', strTrue: 'true', numberFloat: 1.5,
+            undef: undefined, nan: NaN, null: null
+        };
+        var list = Object.keys(orig);
+
+        wait++;
+        mono.storage.get(list, function(storage) {
+            list.forEach(function(key) {
+                if (storage[key] !== undefined) {
+                    log.push('Clear storage error! "'+key+'":', String(storage[key]));
+                }
+            });
+            sendToActiveTab({action: 'storage', subAction: 'set', args: [orig]}, function() {
+                mono.storage.get(list, function(storage) {
+                    list.forEach(function(key) {
+                        var value = orig[key];
+                        if (value !== storage[key]) {
+                            log.push('Storage set "'+key+'" error! ' + String(value) + ' ' + String(storage[key]));
+                        }
+                    });
+                    onReady();
+                });
+            });
+        });
+
+        wait++;
+        mono.storage.set({test: 'test'}, function() {
+            sendToActiveTab({action: 'storage', subAction: 'get', args: ['test']}, function(storage) {
+                if (storage.test !== 'test') {
+                    log.push('Storage get "test" error! ' + String(storage.test) + ' ' + 'test');
+                }
+                onReady();
+            });
+        });
+
+        wait++;
+        mono.storage.set({test2: 'test2'}, function() {
+            sendToActiveTab({action: 'storage', subAction: 'remove', args: ['test2']}, function() {
+                mono.storage.get('test2', function(storage) {
+                    if (storage.test2 !== undefined) {
+                        log.push('Storage remove "test2" error! ' + String(storage.test2) + ' ' + 'undefined');
+                    }
+                    onReady();
+                });
+            });
+        });
+    });
+};
+
 var runAutoTest = function(cb) {
     var pos = log.list.length;
     clearTimeout(runAutoTest.timer);
@@ -119,6 +182,9 @@ var actionList = {
     },
     autoTest: function(msg, response) {
         runAutoTest(response);
+    },
+    storageTest: function(msg, response) {
+        storageTest(response);
     },
     ping: function(msg, response) {
         response('pong');

@@ -18,7 +18,7 @@ var initBase = function (pageId) {
 
     var panelCode = function () {/*
      <span>{pageId}</span>
-     <textarea style="width: 620px; height: 430px" id="output"></textarea>
+     <textarea style="width: 620px; height: 410px" id="output"></textarea>
      <br/>
      <input type="text" id="message"/>
      <input type="button" id="send" value="Send"/>
@@ -28,6 +28,7 @@ var initBase = function (pageId) {
      <input type="button" id="ping" value="Ping"/>
      <input type="button" id="getBgLog" value="Log"/>
      <input type="button" id="autoTest" value="Test"/>
+     <input type="button" id="storageTest" value="sTest"/>
      */
     }.toString().replace(/\{pageId\}/g, pageId);
 
@@ -62,6 +63,7 @@ var initBase = function (pageId) {
     var ping = panel.querySelector('#ping');
     var getBgLog = panel.querySelector('#getBgLog');
     var autoTest = panel.querySelector('#autoTest');
+    var storageTest = panel.querySelector('#storageTest');
     var output = panel.querySelector('#output');
 
     var sendMessage = function (msg) {
@@ -113,6 +115,11 @@ var initBase = function (pageId) {
             output.textContent = '>\n' +result + '\n<';
         });
     });
+    storageTest.addEventListener('click', function() {
+        sendMessage({action: 'storageTest'}, function(result) {
+            output.textContent = '>\n' +result + '\n<';
+        });
+    });
 
     setTimeout(function() {
         "use strict";
@@ -125,6 +132,11 @@ var initBase = function (pageId) {
         },
         send: function (msg, response) {
             sendMessage(msg.msg, response);
+        },
+        storage: function(msg, response) {
+            var args = msg.args || [];
+            args.push(response);
+            mono.storage[msg.subAction].apply(mono.storage, args);
         }
     };
 
