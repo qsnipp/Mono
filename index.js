@@ -60,6 +60,7 @@ var rootUrl = __dirname.replace(/\\/g, '/') + '/';
 
 exports.get = {
     mono: function (typeList) {
+        "use strict";
         if (typeof typeList !== 'object') {
             typeList = [typeList];
         }
@@ -123,6 +124,7 @@ exports.get = {
         return content;
     },
     monoLib: function () {
+        "use strict";
         return String(fs.readFileSync(rootUrl + '/dist/monoLib.js'));
     }
 };

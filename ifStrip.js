@@ -1,7 +1,19 @@
 /**
  * Created by Anton on 09.07.2015.
  */
+var idIndex = 0;
+exports.setIfId = function(content) {
+    "use strict";
+    var hasIf = false;
+    content = content.replace(/(\/\/@if)(\s+)/g, function(text, aif, space) {
+        hasIf = true;
+        return aif + idIndex + space;
+    });
+    hasIf && idIndex++;
+    return content;
+};
 exports.ifStrip = function(data, options) {
+    "use strict";
     options = options || {};
     var startPos = -1;
     var n = 1000;

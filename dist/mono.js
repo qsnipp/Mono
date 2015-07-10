@@ -75,11 +75,11 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.isChrome = true;
                 mono.isChromeInject = !chrome.hasOwnProperty('tabs');
                 mono.msgType = 'chrome';
-                //@if3 oldChromeSupport=1>
+                //@if2 oldChromeSupport=1>
                 if (!(chrome.hasOwnProperty('runtime') && chrome.runtime.onMessage)) {
                     mono.msgType = 'oldChrome';
                 }
-                //@if3 oldChromeSupport=1<
+                //@if2 oldChromeSupport=1<
 
                 //@if1 useChromeApp=1>
                 if (!chrome.app.hasOwnProperty('getDetails')) {
@@ -349,13 +349,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             chromeMsg.sendTo(message, sender.tab.id);
                         }
                     }
-                    //@if4 chromeUseDirectMsg=1>
+                    //@if3 chromeUseDirectMsg=1>
                     if (sender.monoDirect) {
                         return function(message) {
                             sender(mono.cloneObj(message), chromeMsg.onMessage);
                         };
                     }
-                    //@if4 chromeUseDirectMsg=1<
+                    //@if3 chromeUseDirectMsg=1<
                     return function(message) {
                         // send to extension
                         chromeMsg.send(message);
@@ -433,7 +433,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             if (chrome.runtime.hasOwnProperty('getBackgroundPage')) {
                 mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-                //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
+                //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
                 chrome.runtime.getBackgroundPage(function(bgWin) {
                     if (bgWin !== window) {
                         delete mono.isChromeBgPage;
@@ -441,7 +441,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         mono.isChromeBgPage = 1;
                     }
 
-                    //@if4 chromeUseDirectMsg=1>
+                    //@if3 chromeUseDirectMsg=1>
                     if (!mono.isChromeBgPage) {
                         chromeMsg.onMessage.monoDirect = true;
                         chromeMsg.send = mono.sendMessage.send = function(message) {
@@ -453,9 +453,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             chromeMsg.onMessage(message, sender);
                         };
                     }
-                    //@if4 chromeUseDirectMsg=1<
+                    //@if3 chromeUseDirectMsg=1<
                 });
-                //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
+                //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
             }
 
             mono.onMessage.on = chromeMsg.on;
@@ -565,7 +565,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 if (chrome.runtime.getBackgroundPage !== undefined) {
                     mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-                    //@if5 chromeForceDefineBgPage=1>
+                    //@if4 chromeForceDefineBgPage=1>
                     chrome.runtime.getBackgroundPage(function(bgWin) {
                         if (bgWin !== window) {
                             delete mono.isChromeBgPage;
@@ -573,7 +573,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             mono.isChromeBgPage = 1;
                         }
                     });
-                    //@if5 chromeForceDefineBgPage=1<
+                    //@if4 chromeForceDefineBgPage=1<
                 }
             } catch (e) {}
 
@@ -895,14 +895,14 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         var func = mono.msgList[mono.msgType];
         if (func !== undefined) {
             func();
-            func = undefined;
         } else {
             console.error('Msg transport is not defined!');
         }
+        func = undefined;
         mono.msgList = undefined;
 
         (function storageDefine() {
-            //@if2 useFf=1>
+            //@if5 useFf=1>
             if (mono.isFF) {
                 if (!mono.isModule) {
                     mono.storageType = 'externalStorage';
@@ -911,31 +911,31 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 return;
             }
-            //@if2 useFf=1<
+            //@if5 useFf=1<
 
-            //@if2 useGm=1>
+            //@if5 useGm=1>
             if (mono.isGM) {
                 mono.storageType = 'gm';
                 return;
             }
-            //@if2 useGm=1<
+            //@if5 useGm=1<
 
-            //@if2 useChrome=1>
+            //@if5 useChrome=1>
             if (mono.isChrome && chrome.hasOwnProperty('storage')) {
                 mono.storageType = 'chrome';
                 return;
             }
-            //@if2 useChrome=1<
+            //@if5 useChrome=1<
 
-            //@if2 useLocalStorage=1||useOpera=1>
+            //@if5 useLocalStorage=1||useOpera=1>
             mono.storageType = 'localStorage';
 
-            //@if2 useOpera=1>
+            //@if5 useOpera=1>
             if (typeof widget !== 'undefined') {
                 mono.storageType = 'operaPreferences';
             }
-            //@if2 useOpera=1<
-            //@if2 useLocalStorage=1||useOpera=1<
+            //@if5 useOpera=1<
+            //@if5 useLocalStorage=1||useOpera=1<
         })();
 
         //@if0 useFf=1>
@@ -1551,10 +1551,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         func = mono.storageList[mono.storageType];
         if (func !== undefined) {
             func();
-            func = undefined;
         } else {
             console.error('Storage is not defined!');
         }
+        func = undefined;
         mono.storageList = undefined;
 
         //@insert

@@ -1,5 +1,8 @@
 var fs = require('fs');
+var setIfId = require('./ifStrip').setIfId;
 var extractIncludes = function (content, path) {
+    "use strict";
+    content = setIfId(content);
     content = content.replace(/\/\/@include\s+([\w\/\.]+)/g, function (text, file) {
         var subPath = path + file;
         var pos = subPath.lastIndexOf('/');
@@ -8,7 +11,8 @@ var extractIncludes = function (content, path) {
         } else {
             subPath = subPath.substr(0, pos + 1);
         }
-        return extractIncludes(String(fs.readFileSync(path + file)), subPath);
+        var content = String(fs.readFileSync(path + file));
+        return extractIncludes(content, subPath);
     });
     return content;
 };

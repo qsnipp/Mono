@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+    "use strict";
     grunt.loadNpmTasks('grunt-jsbeautifier');
     grunt.loadNpmTasks('grunt-closurecompiler');
     grunt.loadNpmTasks('grunt-contrib-copy');
