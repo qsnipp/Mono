@@ -1,18 +1,9 @@
 mono.storageList.chrome = function () {
     /**
-     * Chrome storage mode
-     * @param {string} mode - Local/Sync
-     * @returns {{get: Function, set: Function, remove: Function, clear: Function}}
-     */
-    var chStorage = function (mode) {
-        return chrome.storage[mode];
-    };
-
-    /**
      * Chrome storage
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
      */
-    mono.storage = chStorage('local');
+    mono.storage = chrome.storage.local;
     /**
      * Chrome local
      * @type {{get: Function, set: Function, remove: Function, clear: Function}|mono.storage|*}
@@ -22,5 +13,5 @@ mono.storageList.chrome = function () {
      * Chrome sync storage
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
      */
-    mono.storage.sync = chStorage('sync');
+    mono.storage.sync = chrome.storage.sync;
 };

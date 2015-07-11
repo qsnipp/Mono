@@ -12,24 +12,15 @@ var ffSimpleStorage = (function () {
                 }
                 return cb(obj);
             }
-            if (typeof src === 'string') {
+            if (Array.isArray(src) === false) {
                 src = [src];
             }
-            if (Array.isArray(src) === true) {
-                for (var i = 0, len = src.length; i < len; i++) {
-                    key = src[i];
-                    if (!ss.storage.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    obj[key] = ss.storage[key];
+            for (var i = 0, len = src.length; i < len; i++) {
+                key = src[i];
+                if (!ss.storage.hasOwnProperty(key)) {
+                    continue;
                 }
-            } else {
-                for (key in src) {
-                    if (!ss.storage.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    obj[key] = ss.storage[key];
-                }
+                obj[key] = ss.storage[key];
             }
             cb(obj);
         },
@@ -39,19 +30,21 @@ var ffSimpleStorage = (function () {
             }
             cb && cb();
         },
-        remove: function (obj, cb) {
-            if (Array.isArray(obj)) {
-                for (var i = 0, len = obj.length; i < len; i++) {
-                    var key = obj[i];
-                    delete ss.storage[key];
-                }
-            } else {
-                delete ss.storage[obj];
+        remove: function (arr, cb) {
+            if (Array.isArray(arr) === false) {
+                arr = [arr];
+            }
+            for (var i = 0, len = arr.length; i < len; i++) {
+                var key = arr[i];
+                delete ss.storage[key];
             }
             cb && cb();
         },
         clear: function (cb) {
             for (var key in ss.storage) {
+                if (!ss.storage.hasOwnProperty(key)) {
+                    continue;
+                }
                 delete ss.storage[key];
             }
             cb && cb();

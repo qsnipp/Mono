@@ -48,7 +48,7 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
                 var valueLen = value.length;
                 var number_of_part = Math.floor(valueLen / chunkLen);
                 if (number_of_part >= 512) {
-                    console.log('monoLog:', 'localStorage', 'Can\'t save item', key, ', very big!');
+                    console.error('monoLog:', 'localStorage', 'Can\'t save item', key, ', very big!');
                     return;
                 }
                 var dataList = value.match(localStorageMode.regexp);
@@ -104,7 +104,7 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
             },
             /**
              * Get item from storage
-             * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+             * @param {string|number|null|undefined|Array} src - Item's, null/undefined - all items
              * @param {function} cb - Callback function
              */
             get: function (src, cb) {
@@ -121,24 +121,15 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
                     }
                     return cb(obj);
                 }
-                if (typeof src === 'string') {
+                if (Array.isArray(src) === false) {
                     src = [src];
                 }
-                if (Array.isArray(src) === true) {
-                    for (var i = 0, len = src.length; i < len; i++) {
-                        key = src[i];
-                        if (!localStorage.hasOwnProperty(key)) {
-                            continue;
-                        }
-                        obj[key] = localStorageMode.readValue(key, localStorage[key]);
+                for (var i = 0, len = src.length; i < len; i++) {
+                    key = src[i];
+                    if (!localStorage.hasOwnProperty(key)) {
+                        continue;
                     }
-                } else {
-                    for (key in src) {
-                        if (!localStorage.hasOwnProperty(key)) {
-                            continue;
-                        }
-                        obj[key] = localStorageMode.readValue(key, localStorage[key]);
-                    }
+                    obj[key] = localStorageMode.readValue(key, localStorage[key]);
                 }
                 cb(obj);
             },
@@ -148,8 +139,7 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
              * @param {function} [cb]
              */
             set: function (obj, cb) {
-                var key;
-                for (key in obj) {
+                for (var key in obj) {
                     var value = obj[key];
                     if (value === undefined) {
                         localStorageMode.remove(key);
@@ -173,23 +163,22 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
             },
             /**
              * Remove item from storage
-             * @param {Array|string} obj
+             * @param {Array|string} arr
              * @param {function} [cb]
              */
-            remove: function (obj, cb) {
-                if (Array.isArray(obj)) {
-                    for (var i = 0, len = obj.length; i < len; i++) {
-                        var key = obj[i];
-                        if (localStorage[key] === localStorageMode.chunkItem) {
-                            localStorageMode.rmObj(key);
-                        }
-                        delete localStorage[key];
+            remove: function (arr, cb) {
+                if (Array.isArray(arr) === false) {
+                    arr = [arr];
+                }
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    var key = arr[i];
+                    if (!localStorage.hasOwnProperty(key)) {
+                        continue;
                     }
-                } else {
-                    if (localStorage[obj] === localStorageMode.chunkItem) {
-                        localStorageMode.rmObj(obj);
+                    if (localStorage[key] === localStorageMode.chunkItem) {
+                        localStorageMode.rmObj(key);
                     }
-                    delete localStorage[obj];
+                    delete localStorage[key];
                 }
                 cb && cb();
             },
@@ -215,7 +204,7 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
     var externalStorage = {
         /**
          * Get item from storage
-         * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
+         * @param {string|number|null|undefined|Array} obj - Item's, null/undefined - all items
          * @param {function} cb - Callback function
          */
         get: function (obj, cb) {

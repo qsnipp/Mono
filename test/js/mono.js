@@ -949,7 +949,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 return {
                     /**
                      * Get item from storage
-                     * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+                     * @param {string|number|null|undefined|Array} src - Item's, null/undefined - all items
                      * @param {function} cb - Callback function
                      */
                     get: function(src, cb) {
@@ -963,24 +963,15 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             }
                             return cb(obj);
                         }
-                        if (typeof src === 'string') {
+                        if (Array.isArray(src) === false) {
                             src = [src];
                         }
-                        if (Array.isArray(src) === true) {
-                            for (var i = 0, len = src.length; i < len; i++) {
-                                key = src[i];
-                                if (!ss.storage.hasOwnProperty(key)) {
-                                    continue;
-                                }
-                                obj[key] = ss.storage[key];
+                        for (var i = 0, len = src.length; i < len; i++) {
+                            key = src[i];
+                            if (!ss.storage.hasOwnProperty(key)) {
+                                continue;
                             }
-                        } else {
-                            for (key in src) {
-                                if (!ss.storage.hasOwnProperty(key)) {
-                                    continue;
-                                }
-                                obj[key] = ss.storage[key];
-                            }
+                            obj[key] = ss.storage[key];
                         }
                         cb(obj);
                     },
@@ -997,17 +988,16 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     },
                     /**
                      * Remove item from storage
-                     * @param {Array|string} obj
+                     * @param {Array|string} arr
                      * @param {function} [cb]
                      */
-                    remove: function(obj, cb) {
-                        if (Array.isArray(obj)) {
-                            for (var i = 0, len = obj.length; i < len; i++) {
-                                var key = obj[i];
-                                delete ss.storage[key];
-                            }
-                        } else {
-                            delete ss.storage[obj];
+                    remove: function(arr, cb) {
+                        if (Array.isArray(arr) === false) {
+                            arr = [arr];
+                        }
+                        for (var i = 0, len = arr.length; i < len; i++) {
+                            var key = arr[i];
+                            delete ss.storage[key];
                         }
                         cb && cb();
                     },
@@ -1017,6 +1007,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                      */
                     clear: function(cb) {
                         for (var key in ss.storage) {
+                            if (!ss.storage.hasOwnProperty(key)) {
+                                continue;
+                            }
                             delete ss.storage[key];
                         }
                         cb && cb();
@@ -1040,7 +1033,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             var externalStorage = {
                 /**
                  * Get item from storage
-                 * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
+                 * @param {string|number|null|undefined|Array} obj - Item's, null/undefined - all items
                  * @param {function} cb - Callback function
                  */
                 get: function(obj, cb) {
@@ -1107,42 +1100,31 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
                 /**
                  * Get item from storage
-                 * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+                 * @param {string|number|null|undefined|Array} src - Item's, null/undefined - all items
                  * @param {function} cb - Callback function
                  */
                 get: function(src, cb) {
-                    var key, value, obj = {};
+                    var key, value, obj = {},
+                        i, len;
                     if (src === undefined || src === null) {
                         var nameList = GM_listValues();
-                        for (key in nameList) {
+                        for (i = 0, len = nameList.length; i < len; i++) {
+                            key = nameList[i];
                             obj[key] = GM_getValue(key);
                         }
                         return cb(obj);
                     }
-                    if (typeof src === 'string') {
+                    if (Array.isArray(src) === false) {
                         src = [src];
                     }
-                    if (Array.isArray(src) === true) {
-                        for (var i = 0, len = src.length; i < len; i++) {
-                            key = src[i];
-                            value = GM_getValue(key, 'isMonoEmptyValue');
-                            if (value !== undefined && value !== 'isMonoEmptyValue') {
-                                if (typeof value !== 'object') {
-                                    obj[key] = value;
-                                } else {
-                                    obj[key] = JSON.parse(JSON.stringify(value));
-                                }
-                            }
-                        }
-                    } else {
-                        for (key in src) {
-                            value = GM_getValue(key, 'isMonoEmptyValue');
-                            if (value !== undefined && value !== 'isMonoEmptyValue') {
-                                if (typeof value !== 'object') {
-                                    obj[key] = value;
-                                } else {
-                                    obj[key] = JSON.parse(JSON.stringify(value));
-                                }
+                    for (i = 0, len = src.length; i < len; i++) {
+                        key = src[i];
+                        value = GM_getValue(key, 'isMonoEmptyValue');
+                        if (value !== undefined && value !== 'isMonoEmptyValue') {
+                            if (typeof value !== 'object') {
+                                obj[key] = value;
+                            } else {
+                                obj[key] = JSON.parse(JSON.stringify(value));
                             }
                         }
                     }
@@ -1165,17 +1147,16 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 },
                 /**
                  * Remove item from storage
-                 * @param {Array|string} obj
+                 * @param {Array|string} arr
                  * @param {function} [cb]
                  */
-                remove: function(obj, cb) {
-                    if (Array.isArray(obj)) {
-                        for (var i = 0, len = obj.length; i < len; i++) {
-                            var key = obj[i];
-                            GM_deleteValue(key);
-                        }
-                    } else {
-                        GM_deleteValue(obj);
+                remove: function(arr, cb) {
+                    if (Array.isArray(arr) === false) {
+                        arr = [arr];
+                    }
+                    for (var i = 0, len = arr.length; i < len; i++) {
+                        var key = arr[i];
+                        GM_deleteValue(key);
                     }
                     cb && cb();
                 },
@@ -1185,7 +1166,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                  */
                 clear: function(cb) {
                     var nameList = GM_listValues();
-                    for (var key in nameList) {
+                    for (var i = 0, len = nameList.length; i < len; i++) {
+                        var key = nameList[i];
                         GM_deleteValue(key);
                     }
                     cb && cb();
@@ -1204,19 +1186,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@if0 useChrome=1&&useLocalStorage=0>
         mono.storageList.chrome = function() {
             /**
-             * Chrome storage mode
-             * @param {string} mode - Local/Sync
-             * @returns {{get: Function, set: Function, remove: Function, clear: Function}}
-             */
-            var chStorage = function(mode) {
-                return chrome.storage[mode];
-            };
-
-            /**
              * Chrome storage
              * @type {{get: Function, set: Function, remove: Function, clear: Function}}
              */
-            mono.storage = chStorage('local');
+            mono.storage = chrome.storage.local;
             /**
              * Chrome local
              * @type {{get: Function, set: Function, remove: Function, clear: Function}|mono.storage|*}
@@ -1226,7 +1199,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
              * Chrome sync storage
              * @type {{get: Function, set: Function, remove: Function, clear: Function}}
              */
-            mono.storage.sync = chStorage('sync');
+            mono.storage.sync = chrome.storage.sync;
         };
         //@if0 useChrome=1&&useLocalStorage=0<
 
@@ -1280,7 +1253,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         var valueLen = value.length;
                         var number_of_part = Math.floor(valueLen / chunkLen);
                         if (number_of_part >= 512) {
-                            console.log('monoLog:', 'localStorage', 'Can\'t save item', key, ', very big!');
+                            console.error('monoLog:', 'localStorage', 'Can\'t save item', key, ', very big!');
                             return;
                         }
                         var dataList = value.match(localStorageMode.regexp);
@@ -1336,7 +1309,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     },
                     /**
                      * Get item from storage
-                     * @param {string|null|undefined|Array|Object} src - Item's, null/undefined - all items
+                     * @param {string|number|null|undefined|Array} src - Item's, null/undefined - all items
                      * @param {function} cb - Callback function
                      */
                     get: function(src, cb) {
@@ -1353,24 +1326,15 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             }
                             return cb(obj);
                         }
-                        if (typeof src === 'string') {
+                        if (Array.isArray(src) === false) {
                             src = [src];
                         }
-                        if (Array.isArray(src) === true) {
-                            for (var i = 0, len = src.length; i < len; i++) {
-                                key = src[i];
-                                if (!localStorage.hasOwnProperty(key)) {
-                                    continue;
-                                }
-                                obj[key] = localStorageMode.readValue(key, localStorage[key]);
+                        for (var i = 0, len = src.length; i < len; i++) {
+                            key = src[i];
+                            if (!localStorage.hasOwnProperty(key)) {
+                                continue;
                             }
-                        } else {
-                            for (key in src) {
-                                if (!localStorage.hasOwnProperty(key)) {
-                                    continue;
-                                }
-                                obj[key] = localStorageMode.readValue(key, localStorage[key]);
-                            }
+                            obj[key] = localStorageMode.readValue(key, localStorage[key]);
                         }
                         cb(obj);
                     },
@@ -1380,8 +1344,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                      * @param {function} [cb]
                      */
                     set: function(obj, cb) {
-                        var key;
-                        for (key in obj) {
+                        for (var key in obj) {
                             var value = obj[key];
                             if (value === undefined) {
                                 localStorageMode.remove(key);
@@ -1405,23 +1368,22 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     },
                     /**
                      * Remove item from storage
-                     * @param {Array|string} obj
+                     * @param {Array|string} arr
                      * @param {function} [cb]
                      */
-                    remove: function(obj, cb) {
-                        if (Array.isArray(obj)) {
-                            for (var i = 0, len = obj.length; i < len; i++) {
-                                var key = obj[i];
-                                if (localStorage[key] === localStorageMode.chunkItem) {
-                                    localStorageMode.rmObj(key);
-                                }
-                                delete localStorage[key];
+                    remove: function(arr, cb) {
+                        if (Array.isArray(arr) === false) {
+                            arr = [arr];
+                        }
+                        for (var i = 0, len = arr.length; i < len; i++) {
+                            var key = arr[i];
+                            if (!localStorage.hasOwnProperty(key)) {
+                                continue;
                             }
-                        } else {
-                            if (localStorage[obj] === localStorageMode.chunkItem) {
-                                localStorageMode.rmObj(obj);
+                            if (localStorage[key] === localStorageMode.chunkItem) {
+                                localStorageMode.rmObj(key);
                             }
-                            delete localStorage[obj];
+                            delete localStorage[key];
                         }
                         cb && cb();
                     },
@@ -1447,7 +1409,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             var externalStorage = {
                 /**
                  * Get item from storage
-                 * @param {string|null|undefined|Array|Object} obj - Item's, null/undefined - all items
+                 * @param {string|number|null|undefined|Array} obj - Item's, null/undefined - all items
                  * @param {function} cb - Callback function
                  */
                 get: function(obj, cb) {
