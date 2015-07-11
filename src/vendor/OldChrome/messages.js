@@ -24,7 +24,7 @@ mono.msgList.oldChrome = function () {
             });
         },
         onMessage: function (message, sender, _response) {
-            if (mono.isChromeBgPage === 1) {
+            if (mono.isChromeBgPage) {
                 if (message.fromBgPage === 1) {
                     // block msg's from bg page to bg page.
                     return;
@@ -99,7 +99,7 @@ mono.msgList.oldChrome = function () {
                 if (bgWin !== window) {
                     delete mono.isChromeBgPage;
                 } else {
-                    mono.isChromeBgPage = 1;
+                    mono.isChromeBgPage = true;
                 }
             });
             //@if chromeForceDefineBgPage=1<

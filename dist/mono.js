@@ -365,7 +365,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     chrome.tabs.sendMessage(tabId, message);
                 },
                 onMessage: function(message, sender, _response) {
-                    if (mono.isChromeBgPage === 1) {
+                    if (mono.isChromeBgPage) {
                         if (message.fromBgPage === 1) {
                             // block msg's from bg page to bg page.
                             return;
@@ -438,7 +438,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     if (bgWin !== window) {
                         delete mono.isChromeBgPage;
                     } else {
-                        mono.isChromeBgPage = 1;
+                        mono.isChromeBgPage = true;
                     }
 
                     //@if3 chromeUseDirectMsg=1>
@@ -492,7 +492,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     });
                 },
                 onMessage: function(message, sender, _response) {
-                    if (mono.isChromeBgPage === 1) {
+                    if (mono.isChromeBgPage) {
                         if (message.fromBgPage === 1) {
                             // block msg's from bg page to bg page.
                             return;
@@ -570,7 +570,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         if (bgWin !== window) {
                             delete mono.isChromeBgPage;
                         } else {
-                            mono.isChromeBgPage = 1;
+                            mono.isChromeBgPage = true;
                         }
                     });
                     //@if4 chromeForceDefineBgPage=1<

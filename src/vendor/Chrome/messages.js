@@ -26,7 +26,7 @@ mono.msgList.chrome = function () {
             chrome.tabs.sendMessage(tabId, message);
         },
         onMessage: function (message, sender, _response) {
-            if (mono.isChromeBgPage === 1) {
+            if (mono.isChromeBgPage) {
                 if (message.fromBgPage === 1) {
                     // block msg's from bg page to bg page.
                     return;
@@ -96,7 +96,7 @@ mono.msgList.chrome = function () {
             if (bgWin !== window) {
                 delete mono.isChromeBgPage;
             } else {
-                mono.isChromeBgPage = 1;
+                mono.isChromeBgPage = true;
             }
 
             //@if chromeUseDirectMsg=1>
