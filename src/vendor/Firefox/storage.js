@@ -41,7 +41,11 @@ mono.storageList.simpleStorage = function() {
              */
             set: function (obj, cb) {
                 for (var key in obj) {
-                    ss.storage[key] = obj[key];
+                    if (obj[key] === undefined) {
+                        delete ss.storage[key];
+                    } else {
+                        ss.storage[key] = obj[key];
+                    }
                 }
                 cb && cb();
             },
