@@ -1050,7 +1050,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 set: function(obj, cb) {
                     mono.sendMessage({
                         action: 'set',
-                        data: obj
+                        data: obj,
+                        keys: Object.keys(obj)
                     }, cb, 'monoStorage');
                 },
                 /**
@@ -1426,7 +1427,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 set: function(obj, cb) {
                     mono.sendMessage({
                         action: 'set',
-                        data: obj
+                        data: obj,
+                        keys: Object.keys(obj)
                     }, cb, 'monoStorage');
                 },
                 /**
@@ -1461,6 +1463,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     return mono.storage.get(message.data, response);
                 } else
                 if (message.action === 'set') {
+                    for (var i = 0, len = message.keys.length; i < len; i++) {
+                        var key = message.keys[i];
+                        if (!message.data.hasOwnProperty(key)) {
+                            message.data[key] = undefined;
+                        }
+                    }
                     return mono.storage.set(message.data, response);
                 } else
                 if (message.action === 'remove') {

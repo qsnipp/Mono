@@ -216,7 +216,7 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
          * @param {function} [cb]
          */
         set: function (obj, cb) {
-            mono.sendMessage({action: 'set', data: obj}, cb, 'monoStorage');
+            mono.sendMessage({action: 'set', data: obj, keys: Object.keys(obj)}, cb, 'monoStorage');
         },
         /**
          * Remove item from storage
@@ -245,6 +245,12 @@ mono.storageList.localStorage = mono.storageList.operaPreferences = function () 
             return mono.storage.get(message.data, response);
         } else
         if (message.action === 'set') {
+            for (var i = 0, len = message.keys.length; i < len; i++) {
+                var key = message.keys[i];
+                if (!message.data.hasOwnProperty(key)) {
+                    message.data[key] = undefined;
+                }
+            }
             return mono.storage.set(message.data, response);
         } else
         if (message.action === 'remove') {

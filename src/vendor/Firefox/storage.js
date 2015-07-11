@@ -104,7 +104,7 @@ mono.storageList.externalStorage = function() {
          * @param {function} [cb]
          */
         set: function (obj, cb) {
-            mono.sendMessage({action: 'set', data: obj}, cb, 'monoStorage');
+            mono.sendMessage({action: 'set', data: obj, keys: Object.keys(obj)}, cb, 'monoStorage');
         },
         /**
          * Remove item from storage

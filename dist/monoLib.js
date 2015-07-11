@@ -341,6 +341,14 @@
         };
         var func = ffSimpleStorage[msg.action];
         if (func === undefined) return;
+        if (msg.action === 'set') {
+            for (var i = 0, len = msg.keys.length; i < len; i++) {
+                var key = msg.keys[i];
+                if (!msg.data.hasOwnProperty(key)) {
+                    msg.data[key] = undefined;
+                }
+            }
+        }
         if (msg.action === 'clear') {
             func(response);
         } else {
