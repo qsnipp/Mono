@@ -59,6 +59,23 @@ var distList = {
 var rootUrl = __dirname.replace(/\\/g, '/') + '/';
 
 exports.get = {
+    uniMono: function(options) {
+        "use strict";
+        var path = rootUrl + './src/';
+        var content = String(fs.readFileSync(path + 'mono.js'));
+
+        var ifStrip = require('./ifStrip.js').ifStrip;
+
+        var extractIncludes = require('./extractIncludes.js').extractIncludes;
+
+        content = extractIncludes(content, path);
+
+        content = ifStrip(content, options);
+
+        content = content.replace(/\n[\t\s]*\n/g, '\n\n');
+
+        return content;
+    },
     mono: function (typeList) {
         "use strict";
         if (typeof typeList !== 'object') {

@@ -78,7 +78,7 @@ module.exports = function (grunt) {
 
     var target = grunt.option('target') || '';
 
-    var oneFunc;
+    var oneFunc, uniFunc;
     grunt.registerTask('one', oneFunc = function (_target) {
         var browser = _target || target;
         browser = browser.split(',').map(function (a) {
@@ -89,6 +89,25 @@ module.exports = function (grunt) {
         var content = index.get.mono(browser);
 
         grunt.config('oneName', 'mono-' + browser.join('-') + '.js');
+        grunt.file.write(grunt.config('dist') + grunt.config('oneName'), content);
+
+        !_target && grunt.task.run('jsbeautifier:one');
+    });
+    grunt.registerTask('uni', uniFunc = function (_target) {
+        var params = _target || target;
+        params = params.split(',').map(function (a) {
+            return a.trim()
+        });
+        var options = {};
+        params.forEach(function(item) {
+            var kv = item.split('=');
+            options[kv[0]] = kv[1];
+        });
+
+        var index = require('./index.js');
+        var content = index.get.uniMono(options);
+
+        grunt.config('oneName', 'mono-' + params.join('-') + '.js');
         grunt.file.write(grunt.config('dist') + grunt.config('oneName'), content);
 
         !_target && grunt.task.run('jsbeautifier:one');
@@ -120,6 +139,33 @@ module.exports = function (grunt) {
                 type = type.join(',');
             }
             oneFunc(type);
+        }
+        grunt.task.run('jsbeautifier:one');
+    });
+
+    grunt.registerTask('uniList', function () {
+        var config = [
+            [
+                'useChrome=1',
+                'useFf=1',
+                'chromeUseDirectMsg=1',
+                'oldChromeSupport=1'
+            ],
+            [
+                'useChrome=1',
+                'useFf=1',
+                'oldChromeSupport=1'
+            ],
+            [
+                'useChrome=1',
+                'useFf=1'
+            ]
+        ];
+        for (var i = 0, type; type = config[i]; i++) {
+            if (Array.isArray(type)) {
+                type = type.join(',');
+            }
+            uniFunc(type);
         }
         grunt.task.run('jsbeautifier:one');
     });

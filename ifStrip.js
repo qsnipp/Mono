@@ -12,9 +12,25 @@ exports.setIfId = function(content) {
     hasIf && idIndex++;
     return content;
 };
+var strTo = function(str) {
+    "use strict";
+    var value = str;
+    if (strTo.isNumber.test(value)) {
+        value = parseFloat(value);
+    } else
+    if (strTo.isBool.test(value)) {
+        value = value === 'true';
+    }
+    return value;
+};
+strTo.isNumber = /^[\d.]+$/;
+strTo.isBool = /^(true|false)$/i;
 exports.ifStrip = function(data, options) {
     "use strict";
     options = options || {};
+    for (var key in options) {
+        options[key] = strTo(options[key]);
+    }
     var startPos = -1;
     var n = 1000;
     while (true) {
@@ -55,9 +71,14 @@ exports.ifStrip = function(data, options) {
                 continue;
             }
             var keyValue = item.split('=');
-            var key = keyValue[0];
-            var value = keyValue[1];
-            result = options[key] == value;
+            key = keyValue[0];
+            if (key[0] === '!') {
+                key = key.substr(1);
+                result = !options[key];
+            } else {
+                var value = strTo(keyValue[1]);
+                result = options[key] === value;
+            }
         }
 
         if (!result) {

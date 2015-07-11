@@ -1188,7 +1188,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         };
         //@if0 useGm=1<
 
-        //@if0 useChrome=1&&useLocalStorage=0>
+        //@if0 useChrome=1&&!useLocalStorage>
         mono.storageList.chrome = function() {
             /**
              * Chrome storage
@@ -1206,7 +1206,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
              */
             mono.storage.sync = chrome.storage.sync;
         };
-        //@if0 useChrome=1&&useLocalStorage=0<
+        //@if0 useChrome=1&&!useLocalStorage<
 
         //@if0 useLocalStorage=1||useOpera=1>
         mono.storageList.localStorage = mono.storageList.operaPreferences = function() {
