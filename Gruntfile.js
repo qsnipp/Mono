@@ -107,7 +107,7 @@ module.exports = function (grunt) {
                 var list = [type];
                 type2 && list.push(type2);
 
-                typeList.push(list);
+                typeList.push(list.slice(0));
                 if (type2 !== 'chromeApp') {
                     list.push('localStorage');
                     
