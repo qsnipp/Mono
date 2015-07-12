@@ -156,18 +156,30 @@
             return;
         }
 
+        var onPageShow = function() {
+            mPage.active = true;
+        };
+
+        var onPageHide = function() {
+            mPage.active = false;
+        };
+
         var onAttach = function() {
             mPage.active = true;
             map[mPage.id] = mPage;
 
             mPage.page.removeListener('detach', onDetach);
             mPage.page.on('detach', onDetach);
+            mPage.page.on('pageshow', onPageShow);
+            mPage.page.on('pagehide', onPageHide);
         };
 
         var onDetach = function() {
             delete map[mPage.id];
             mPage.active = false;
 
+            mPage.page.removeListener('pagehide', onPageHide);
+            mPage.page.removeListener('pageshow', onPageShow);
             mPage.page.removeListener('attach', onAttach);
             mPage.page.on('attach', onAttach);
         };
