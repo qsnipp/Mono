@@ -166,6 +166,8 @@
             mPage.active = true;
             map[mPage.id] = mPage;
 
+            mPage.page.removeListener('pagehide', onPageHide);
+            mPage.page.removeListener('pageshow', onPageShow);
             mPage.page.removeListener('detach', onDetach);
             mPage.page.on('detach', onDetach);
             mPage.page.on('pageshow', onPageShow);
