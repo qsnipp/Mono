@@ -14,7 +14,7 @@
     //@if useGm=1<
 
     //@if useChrome=1>
-    if (window.hasOwnProperty('chrome')) {
+    if (window.chrome) {
         //@include browserDefine/chrome.js
 
         //@if useChromeApp=1>
@@ -38,7 +38,7 @@
     //@if useChrome=1<
 
     //@if useOpera=1>
-    if (window.hasOwnProperty('opera')) {
+    if (window.opera) {
         //@include browserDefine/opera.js
         return;
     }
@@ -52,7 +52,7 @@
     //@if useFf=1<
 
     //@if useSafari=1>
-    if (window.hasOwnProperty('safari')) {
+    if (window.safari) {
         //@include browserDefine/safari.js
         return;
     }
