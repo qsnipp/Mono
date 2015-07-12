@@ -71,7 +71,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             //@if1 useGm=1<
 
             //@if1 useChrome=1>
-            if (window.hasOwnProperty('chrome')) {
+            if (window.chrome) {
                 mono.isChrome = true;
                 mono.isChromeInject = !chrome.hasOwnProperty('tabs');
                 mono.msgType = 'chrome';
@@ -102,7 +102,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             //@if1 useChrome=1<
 
             //@if1 useOpera=1>
-            if (window.hasOwnProperty('opera')) {
+            if (window.opera) {
                 mono.isOpera = true;
                 mono.msgType = 'opera';
                 mono.isOperaInject = opera.extension.broadcastMessage === undefined;
@@ -127,7 +127,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             //@if1 useFf=1<
 
             //@if1 useSafari=1>
-            if (window.hasOwnProperty('safari')) {
+            if (window.safari) {
                 mono.isSafari = true;
                 mono.msgType = 'safari';
                 mono.isSafariPopup = safari.self.identifier === 'popup';
