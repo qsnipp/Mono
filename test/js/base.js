@@ -91,7 +91,9 @@ var initBase = function (pageId) {
     sendAndReply.addEventListener('click', function() {
         var text = message.value;
         message.value = '';
-        sendMessage({action: 'reply', reply: text});
+        sendMessage({action: 'reply', reply: text}, function(msg) {
+            log(pageId, 'reply:', msg);
+        });
     });
     sendAsBg.addEventListener('click', function() {
         var text = message.value;
@@ -100,7 +102,7 @@ var initBase = function (pageId) {
     });
     ping.addEventListener('click', function() {
         sendMessage({action: 'ping'}, function(response) {
-            log(pageId, 'receive:', response);
+            log(pageId, 'reply:', response);
         });
     });
     getBgLog.addEventListener('click', function() {
