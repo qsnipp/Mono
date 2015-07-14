@@ -94,9 +94,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/GM/storage.js
         //@if useGm=1<
 
-        //@if useChrome=1&&!useLocalStorage>
+        //@if useChrome=1>
         //@include vendor/Chrome/storage.js
-        //@if useChrome=1&&!useLocalStorage<
+        //@if useChrome=1<
 
         //@if useLocalStorage=1||useOpera=1>
         //@include vendor/Uni/storage.js
