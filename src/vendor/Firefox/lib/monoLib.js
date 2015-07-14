@@ -193,7 +193,7 @@
             var currentTab = tabs.activeTab;
             var pageIdList = [];
             for (var index in map) {
-                if (map[index].page.tab === currentTab && map[index].page.url === currentTab.url) {
+                if (map[index].page.tab === currentTab && map[index].page.tab && map[index].page.tab.url === currentTab.url) {
                     pageIdList.push(map[index].id);
                 }
             }
