@@ -1,6 +1,6 @@
 mono.isGM = true;
 mono.msgType = 'gm';
-if (window.hasOwnProperty('chrome')) {
+if (window.chrome !== undefined) {
     mono.isTM = true;
 } else
 if (navigator.userAgent.indexOf('Maxthon/') !== -1) {
