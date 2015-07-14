@@ -1353,21 +1353,22 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             var value = obj[key];
                             if (value === undefined) {
                                 localStorageMode.remove(key);
-                            } else
-                            if (typeof value === 'object') {
-                                localStorageMode.setObj(key, value);
-                            } else {
-                                var type = typeof value;
-                                if (type === 'boolean') {
-                                    value = 'b' + value;
-                                } else
-                                if (type === 'number') {
-                                    value = 'i' + value;
-                                } else {
-                                    value = 's' + value;
-                                }
-                                localStorage[key] = value;
+                                continue;
                             }
+                            var type = typeof value;
+                            if (type === 'object') {
+                                localStorageMode.setObj(key, value);
+                                continue;
+                            }
+                            if (type === 'boolean') {
+                                value = 'b' + value;
+                            } else
+                            if (type === 'number') {
+                                value = 'i' + value;
+                            } else {
+                                value = 's' + value;
+                            }
+                            localStorage[key] = value;
                         }
                         cb && cb();
                     },
