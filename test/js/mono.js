@@ -33,6 +33,37 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     function initMono(_addon, _mono) {
         var require;
 
+        /**
+         * Mono
+         * @type {{
+         * isLoaded: Boolean,
+         * msgType: string,
+         * storageType: string,
+         * isModule: Boolean,
+         * isFF: Boolean,
+         * isGM: Boolean,
+         * isTM: Boolean,
+         * isChrome: Boolean,
+         * isChromeApp: Boolean,
+         * isChromeWebApp: Boolean,
+         * isChromeInject: Boolean,
+         * isSafari: Boolean,
+         * isSafariPopup: Boolean,
+         * isSafariBgPage: Boolean,
+         * isSafariInject: Boolean,
+         * isOpera: Boolean,
+         * isOperaInject: Boolean,
+         * messageStack: number,
+         * cloneObj: Function,
+         * msgClearStack: Function,
+         * msgRemoveCbById: Function,
+         * sendMessage: Function,
+         * sendMessageToActiveTab: Function,
+         * sendHook: Object,
+         * onMessage: Function
+         * storage: Object
+         * }}
+         */
         var mono = {
             isLoaded: 1,
             emptyFunc: function() {},
@@ -41,6 +72,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             msgList: {},
             storageList: {}
         };
+
+        //@if0 true=false>
+        0 !== 0 && (window.mono = mono);
+        //@if0 true=false<
 
         (function browserDefine() {
             //@if1 useFf=1>

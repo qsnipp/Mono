@@ -69,6 +69,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             storageList: {}
         };
 
+        //@if true=false>
+        0 !== 0 && (window.mono = mono);
+        //@if true=false<
+
         //@include components/browserDefine.js
 
         /**
