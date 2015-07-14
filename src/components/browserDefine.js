@@ -14,7 +14,7 @@
     //@if useGm=1<
 
     //@if useChrome=1>
-    if (window.chrome) {
+    if (window.chrome !== undefined) {
         //@include browserDefine/chrome.js
 
         //@if useChromeApp=1>
@@ -38,7 +38,7 @@
     //@if useChrome=1<
 
     //@if useOpera=1>
-    if (window.opera) {
+    if (window.opera !== undefined) {
         //@include browserDefine/opera.js
         return;
     }
@@ -52,7 +52,7 @@
     //@if useFf=1<
 
     //@if useSafari=1>
-    if (window.safari) {
+    if (window.safari !== undefined) {
         //@include browserDefine/safari.js
         return;
     }
