@@ -65,7 +65,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
          * }}
          */
         var mono = {
-            isLoaded: 1,
+            isLoaded: true,
             emptyFunc: function() {},
             msgType: undefined,
             storageType: undefined,
