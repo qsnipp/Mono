@@ -153,6 +153,11 @@ module.exports = function (grunt) {
             ],
             [
                 'useChrome=1',
+                'oldChromeSupport=1',
+                'useChromeWebApp=1'
+            ],
+            [
+                'useChrome=1',
                 'useFf=1',
                 'oldChromeSupport=1'
             ],
