@@ -13,4 +13,5 @@ Build
 Use Grunt for build library.
 
 npm install
+
 grunt
