@@ -164,6 +164,10 @@ module.exports = function (grunt) {
             [
                 'useChrome=1',
                 'useFf=1'
+            ],
+            [
+                'useChrome=1',
+                'chromeForceDefineBgPage=1'
             ]
         ];
         for (var i = 0, type; type = config[i]; i++) {
