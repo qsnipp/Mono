@@ -10,7 +10,7 @@ Support Opera 12, Chrome, Safari, Firefox.
 Build
 -------------
 
-Use Grune for build library.
+Use Grunt for build library.
 
 npm install
 grunt
