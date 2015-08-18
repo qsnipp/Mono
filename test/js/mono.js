@@ -1150,7 +1150,14 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         var nameList = GM_listValues();
                         for (i = 0, len = nameList.length; i < len; i++) {
                             key = nameList[i];
-                            obj[key] = GM_getValue(key);
+                            value = GM_getValue(key, 'isMonoEmptyValue');
+                            if (value !== undefined && value !== 'undefined' && value !== 'isMonoEmptyValue') {
+                                if (typeof value !== 'object') {
+                                    obj[key] = value;
+                                } else {
+                                    obj[key] = JSON.parse(JSON.stringify(value));
+                                }
+                            }
                         }
                         return cb(obj);
                     }
