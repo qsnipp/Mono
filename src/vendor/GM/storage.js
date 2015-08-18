@@ -32,7 +32,7 @@ mono.storageList.gm = function () {
             for (i = 0, len = src.length; i < len; i++) {
                 key = src[i];
                 value = GM_getValue(key, 'isMonoEmptyValue');
-                if (value !== undefined && value !== 'isMonoEmptyValue') {
+                if (value !== undefined && value !== 'undefined' && value !== 'isMonoEmptyValue') {
                     if (typeof value !== 'object') {
                         obj[key] = value;
                     } else {
