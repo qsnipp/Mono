@@ -1151,7 +1151,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         for (i = 0, len = nameList.length; i < len; i++) {
                             key = nameList[i];
                             value = GM_getValue(key, 'isMonoEmptyValue');
-                            if (value !== undefined && value !== 'undefined' && value !== 'isMonoEmptyValue') {
+                            if (value !== undefined && value !== 'isMonoEmptyValue') {
                                 if (typeof value !== 'object') {
                                     obj[key] = value;
                                 } else {
@@ -1167,7 +1167,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     for (i = 0, len = src.length; i < len; i++) {
                         key = src[i];
                         value = GM_getValue(key, 'isMonoEmptyValue');
-                        if (value !== undefined && value !== 'undefined' && value !== 'isMonoEmptyValue') {
+                        if (value !== undefined && value !== 'isMonoEmptyValue') {
                             if (typeof value !== 'object') {
                                 obj[key] = value;
                             } else {
@@ -1183,11 +1183,16 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                  * @param {function} [cb]
                  */
                 set: function(obj, cb) {
+                    var value;
                     for (var key in obj) {
-                        if (typeof obj[key] !== 'object') {
-                            GM_setValue(key, obj[key]);
+                        value = obj[key];
+                        if (typeof value !== 'object') {
+                            if (value === undefined) {
+                                value = 'isMonoEmptyValue';
+                            }
+                            GM_setValue(key, value);
                         } else {
-                            GM_setValue(key, JSON.parse(JSON.stringify(obj[key])));
+                            GM_setValue(key, JSON.parse(JSON.stringify(value)));
                         }
                     }
                     cb && cb();
