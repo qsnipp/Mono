@@ -1188,9 +1188,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         value = obj[key];
                         if (typeof value !== 'object') {
                             if (value === undefined) {
-                                value = 'isMonoEmptyValue';
+                                GM_deleteValue(key);
+                            } else {
+                                GM_setValue(key, value);
                             }
-                            GM_setValue(key, value);
                         } else {
                             GM_setValue(key, JSON.parse(JSON.stringify(value)));
                         }
