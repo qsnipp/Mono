@@ -1,4 +1,16 @@
 mono.storageList.gm = function () {
+    var getValue = function(key) {
+        "use strict";
+        var value = GM_getValue(key, 'isMonoEmptyValue');
+        if (value !== undefined && value !== 'isMonoEmptyValue') {
+            if (typeof value !== 'object') {
+                return value;
+            } else {
+                return JSON.parse(JSON.stringify(value));
+            }
+        }
+        return;
+    };
     /**
      * GM storage
      * @type {{get: Function, set: Function, remove: Function, clear: Function}}
@@ -19,32 +31,16 @@ mono.storageList.gm = function () {
         get: function (src, cb) {
             var key, value, obj = {}, i, len;
             if (src === undefined || src === null) {
-                var nameList = GM_listValues();
-                for (i = 0, len = nameList.length; i < len; i++) {
-                    key = nameList[i];
-                    value = GM_getValue(key, 'isMonoEmptyValue');
-                    if (value !== undefined && value !== 'isMonoEmptyValue') {
-                        if (typeof value !== 'object') {
-                            obj[key] = value;
-                        } else {
-                            obj[key] = JSON.parse(JSON.stringify(value));
-                        }
-                    }
-                }
-                return cb(obj);
+                src = GM_listValues();
             }
             if (Array.isArray(src) === false) {
                 src = [src];
             }
             for (i = 0, len = src.length; i < len; i++) {
                 key = src[i];
-                value = GM_getValue(key, 'isMonoEmptyValue');
-                if (value !== undefined && value !== 'isMonoEmptyValue') {
-                    if (typeof value !== 'object') {
-                        obj[key] = value;
-                    } else {
-                        obj[key] = JSON.parse(JSON.stringify(value));
-                    }
+                value = getValue(key);
+                if (value !== undefined) {
+                    obj[key] = value;
                 }
             }
             cb(obj);
@@ -60,7 +56,7 @@ mono.storageList.gm = function () {
                 value = obj[key];
                 if (typeof value !== 'object') {
                     if (value === undefined) {
-                        GM_deleteValue(key);
+                        storage.remove([key]);
                     } else {
                         GM_setValue(key, value);
                     }
@@ -90,11 +86,7 @@ mono.storageList.gm = function () {
          * @param {function} [cb]
          */
         clear: function (cb) {
-            var nameList = GM_listValues();
-            for (var i = 0, len = nameList.length; i < len; i++) {
-                var key = nameList[i];
-                GM_deleteValue(key);
-            }
+            storage.remove(GM_listValues());
             cb && cb();
         }
     };
