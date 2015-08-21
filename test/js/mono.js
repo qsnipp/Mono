@@ -1126,18 +1126,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         //@if0 useGm=1>
         mono.storageList.gm = function() {
-            var getValue = function(key) {
-                "use strict";
-                var value = GM_getValue(key, 'isMonoEmptyValue');
-                if (value !== undefined && value !== 'isMonoEmptyValue') {
-                    if (typeof value !== 'object') {
-                        return value;
-                    } else {
-                        return JSON.parse(JSON.stringify(value));
-                    }
-                }
-                return;
-            };
             /**
              * GM storage
              * @type {{get: Function, set: Function, remove: Function, clear: Function}}
@@ -1166,9 +1154,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     }
                     for (i = 0, len = src.length; i < len; i++) {
                         key = src[i];
-                        value = getValue(key);
-                        if (value !== undefined) {
-                            obj[key] = value;
+                        value = GM_getValue(key, 'isMonoEmptyValue');
+                        if (value !== undefined && value !== 'isMonoEmptyValue') {
+                            if (typeof value !== 'object') {
+                                obj[key] = value;
+                            } else {
+                                obj[key] = JSON.parse(JSON.stringify(value));
+                            }
                         }
                     }
                     cb(obj);
