@@ -173,6 +173,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             if (navigator.userAgent.indexOf('Safari/') !== -1) {
                 // Safari bug!
                 mono.isSafari = true;
+                mono.msgType = 'safari';
                 return;
             }
             //@if1 useSafari=1<

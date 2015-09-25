@@ -59,6 +59,7 @@
     if (navigator.userAgent.indexOf('Safari/') !== -1) {
         // Safari bug!
         mono.isSafari = true;
+        mono.msgType = 'safari';
         return;
     }
     //@if useSafari=1<
