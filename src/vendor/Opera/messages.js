@@ -56,4 +56,6 @@ mono.msgList.opera = function () {
     mono.onMessage.off = operaMsg.off;
     mono.sendMessage.send = operaMsg.send;
     mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
+
+    mono.useMsgOnReady();
 };
