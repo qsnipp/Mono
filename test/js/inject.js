@@ -3,7 +3,7 @@
 // @include     https://ya.ru/*
 // ==/UserScript==
 
-(function () {
+mono.onReady(function () {
     if (mono.isSafari) {
         if (location.href.indexOf('http://ya.ru') !== 0) {
             return;
@@ -27,4 +27,4 @@
         document.addEventListener('DOMContentLoaded', onDomReady, false);
         window.addEventListener('load', onDomReady, false);
     }
-})();
+});

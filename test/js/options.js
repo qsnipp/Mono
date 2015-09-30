@@ -1,3 +1,5 @@
 console.error("Options page!");
 
-initBase('options');
+mono.onReady(function() {
+    initBase('options');
+});

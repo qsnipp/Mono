@@ -243,6 +243,7 @@ var init = function (addon) {
 
 if (mono.isModule) {
     exports.init = init;
-} else {
+} else
+mono.onReady(function() {
     init();
-}
+});

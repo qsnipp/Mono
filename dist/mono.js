@@ -12,14 +12,14 @@
 
 var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
-(function(window, factory) {
+(function(window, base, factory) {
     "use strict";
     if (mono && mono.isLoaded) {
         return;
     }
 
     if (typeof window !== "undefined") {
-        return mono = factory(null, mono);
+        return mono = base(factory.bind(null, null, factory), mono);
     }
 
     //@if0 useFf=1>
@@ -30,6 +30,31 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     //@if0 useFf=1<
 }(
     typeof window !== "undefined" ? window : undefined,
+    function base(factory, _mono) {
+        var base = {
+            onReadyStack: [],
+            onReady: function() {
+                base.onReadyStack.push([this, arguments]);
+            }
+        };
+
+        var onLoad = function() {
+            document.removeEventListener('DOMContentLoaded', onLoad, false);
+            document.removeEventListener('load', onLoad, false);
+
+            mono = factory(null, _mono);
+
+            var item;
+            while (item = base.onReadyStack.shift()) {
+                mono.onReady.apply(item[0], item[1]);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', onLoad, false);
+        document.addEventListener('load', onLoad, false);
+
+        return base;
+    },
     function initMono(_addon, _mono) {
         var require;
 
@@ -70,7 +95,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             msgType: undefined,
             storageType: undefined,
             msgList: {},
-            storageList: {}
+            storageList: {},
+            onReady: function(cb) {
+                cb();
+            }
         };
 
         //@if0 true=false>
@@ -372,71 +400,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.onMessage.off(func);
         };
 
-        //@if3 useSafari=1||useOpera=1>
-        /**
-         * Wrap msg functions, and call on page complete
-         */
-        mono.useMsgOnReady = function() {
-            "use strict";
-            var wrapFunc = function(key, type) {
-                var origFunc = mono[type][key];
-                var done = document.readyState === 'complete';
-
-                var keyStack = key + 'Stack';
-                var stack = wrapFunc[keyStack];
-                if (!stack) {
-                    stack = wrapFunc[keyStack] = [];
-                }
-
-                var execStack = function() {
-                    if (!stack.length) {
-                        return
-                    }
-
-                    var item;
-                    while (item = stack.shift()) {
-                        origFunc.apply(item[0], item[1]);
-                    }
-                };
-
-                var onLoad = function() {
-                    document.removeEventListener('DOMContentLoaded', onLoad, false);
-                    window.removeEventListener('load', onLoad, false);
-
-                    execStack();
-
-                    done = true;
-                };
-
-                return function() {
-                    stack.push([this, arguments]);
-
-                    if (!done && document.readyState === 'complete') {
-                        done = true;
-                    }
-
-                    if (!done) {
-                        document.addEventListener('DOMContentLoaded', onLoad, false);
-                        window.addEventListener('load', onLoad, false);
-                        return;
-                    }
-
-                    execStack();
-
-                    mono[type][key] = origFunc;
-                }
-            };
-            ['on', 'off'].forEach(function(key) {
-                "use strict";
-                mono.onMessage[key] = wrapFunc(key, 'onMessage');
-            });
-            ['send', 'sendToActiveTab'].forEach(function(key) {
-                "use strict";
-                mono.sendMessage[key] = wrapFunc(key, 'sendMessage');
-            });
-        };
-        //@if3 useSafari=1||useOpera=1<
-
         //@if0 useChrome=1>
         mono.msgList.chrome = function() {
             var lowLevelHook = {};
@@ -450,13 +413,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             chromeMsg.sendTo(message, sender.tab.id);
                         }
                     }
-                    //@if4 chromeUseDirectMsg=1>
+                    //@if3 chromeUseDirectMsg=1>
                     if (sender.monoDirect) {
                         return function(message) {
                             sender(mono.cloneObj(message), chromeMsg.onMessage);
                         };
                     }
-                    //@if4 chromeUseDirectMsg=1<
+                    //@if3 chromeUseDirectMsg=1<
                     return function(message) {
                         // send to extension
                         chromeMsg.send(message);
@@ -534,7 +497,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             if (chrome.runtime.hasOwnProperty('getBackgroundPage')) {
                 mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-                //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
+                //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
                 chrome.runtime.getBackgroundPage(function(bgWin) {
                     if (bgWin !== window) {
                         delete mono.isChromeBgPage;
@@ -542,7 +505,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         mono.isChromeBgPage = true;
                     }
 
-                    //@if4 chromeUseDirectMsg=1>
+                    //@if3 chromeUseDirectMsg=1>
                     if (!mono.isChromeBgPage) {
                         chromeMsg.onMessage.monoDirect = true;
                         chromeMsg.send = mono.sendMessage.send = function(message) {
@@ -554,9 +517,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             chromeMsg.onMessage(message, sender);
                         };
                     }
-                    //@if4 chromeUseDirectMsg=1<
+                    //@if3 chromeUseDirectMsg=1<
                 });
-                //@if4 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
+                //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
             }
 
             mono.onMessage.on = chromeMsg.on;
@@ -666,7 +629,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 if (chrome.runtime.getBackgroundPage !== undefined) {
                     mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
-                    //@if5 chromeForceDefineBgPage=1>
+                    //@if4 chromeForceDefineBgPage=1>
                     chrome.runtime.getBackgroundPage(function(bgWin) {
                         if (bgWin !== window) {
                             delete mono.isChromeBgPage;
@@ -674,7 +637,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                             mono.isChromeBgPage = true;
                         }
                     });
-                    //@if5 chromeForceDefineBgPage=1<
+                    //@if4 chromeForceDefineBgPage=1<
                 }
             } catch (e) {}
 
@@ -889,8 +852,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.onMessage.off = safariMsg.off;
             mono.sendMessage.send = safariMsg.send;
             mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
-
-            mono.useMsgOnReady();
         };
         //@if0 useSafari=1<
 
@@ -952,8 +913,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             mono.onMessage.off = operaMsg.off;
             mono.sendMessage.send = operaMsg.send;
             mono.sendMessage.sendToActiveTab = operaMsg.sendToActiveTab;
-
-            mono.useMsgOnReady();
         };
         //@if0 useOpera=1<
 
@@ -1007,7 +966,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         mono.msgList = undefined;
 
         (function storageDefine() {
-            //@if6 useFf=1>
+            //@if5 useFf=1>
             if (mono.isFF) {
                 if (!mono.isModule) {
                     mono.storageType = 'externalStorage';
@@ -1016,31 +975,31 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 return;
             }
-            //@if6 useFf=1<
+            //@if5 useFf=1<
 
-            //@if6 useGm=1>
+            //@if5 useGm=1>
             if (mono.isGM) {
                 mono.storageType = 'gm';
                 return;
             }
-            //@if6 useGm=1<
+            //@if5 useGm=1<
 
-            //@if6 useChrome=1>
+            //@if5 useChrome=1>
             if (mono.isChrome && chrome.hasOwnProperty('storage')) {
                 mono.storageType = 'chrome';
                 return;
             }
-            //@if6 useChrome=1<
+            //@if5 useChrome=1<
 
-            //@if6 useLocalStorage=1||useOpera=1>
+            //@if5 useLocalStorage=1||useOpera=1>
             mono.storageType = 'localStorage';
 
-            //@if6 useOpera=1>
+            //@if5 useOpera=1>
             if (typeof widget !== 'undefined') {
                 mono.storageType = 'operaPreferences';
             }
-            //@if6 useOpera=1<
-            //@if6 useLocalStorage=1||useOpera=1<
+            //@if5 useOpera=1<
+            //@if5 useLocalStorage=1||useOpera=1<
         })();
 
         //@if0 useFf=1>

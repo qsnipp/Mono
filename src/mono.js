@@ -8,14 +8,14 @@
 
 var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
-(function (window, factory) {
+(function (window, base, factory) {
     "use strict";
     if (mono && mono.isLoaded) {
         return;
     }
 
     if (typeof window !== "undefined") {
-        return mono = factory(null, mono);
+        return mono = base(factory.bind(null, null, factory), mono);
     }
 
     //@if useFf=1>
@@ -26,6 +26,31 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     //@if useFf=1<
 }(
     typeof window !== "undefined" ? window : undefined,
+    function base(factory, _mono) {
+        var base = {
+            onReadyStack: [],
+            onReady: function() {
+                base.onReadyStack.push([this, arguments]);
+            }
+        };
+
+        var onLoad = function() {
+            document.removeEventListener('DOMContentLoaded', onLoad, false);
+            document.removeEventListener('load', onLoad, false);
+
+            mono = factory(null, _mono);
+
+            var item;
+            while(item = base.onReadyStack.shift()) {
+                mono.onReady.apply(item[0], item[1]);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', onLoad, false);
+        document.addEventListener('load', onLoad, false);
+
+        return base;
+    },
     function initMono(_addon, _mono) {
         var require;
 
@@ -66,7 +91,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             msgType: undefined,
             storageType: undefined,
             msgList: {},
-            storageList: {}
+            storageList: {},
+            onReady: function(cb) {
+                cb();
+            }
         };
 
         //@if true=false>

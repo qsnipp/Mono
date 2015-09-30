@@ -101,6 +101,4 @@ mono.msgList.safari = function () {
     mono.onMessage.off = safariMsg.off;
     mono.sendMessage.send = safariMsg.send;
     mono.sendMessage.sendToActiveTab = safariMsg.sendToActiveTab;
-
-    mono.useMsgOnReady();
 };
