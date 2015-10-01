@@ -31,13 +31,19 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 }(
     typeof window !== "undefined" ? window : undefined,
     function base(factory, _mono) {
-        var base = {
+        //@if0 useGm=1>
+        if (typeof GM_getValue !== 'undefined') {
+            return factory(null, _mono);
+        }
+        //@if0 useGm=1<
+
+        var base = Object.create({
             isLoaded: true,
             onReadyStack: [],
             onReady: function() {
                 base.onReadyStack.push([this, arguments]);
             }
-        };
+        });
 
         var onLoad = function() {
             document.removeEventListener('DOMContentLoaded', onLoad, false);
@@ -45,18 +51,24 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
             mono = factory(null, _mono);
 
+            for (var key in base) {
+                if (base.hasOwnProperty(key)) {
+                    mono[key] = base[key];
+                }
+            }
+
             var item;
             while (item = base.onReadyStack.shift()) {
                 mono.onReady.apply(item[0], item[1]);
             }
         };
 
-        if (document.readyState === 'complete' || typeof GM_getValue !== 'undefined') {
-            base = factory(null, _mono);
-        } else {
-            document.addEventListener('DOMContentLoaded', onLoad, false);
-            window.addEventListener('load', onLoad, false);
+        if (document.readyState === 'complete') {
+            return factory(null, _mono);
         }
+
+        document.addEventListener('DOMContentLoaded', onLoad, false);
+        window.addEventListener('load', onLoad, false);
 
         return base;
     },
