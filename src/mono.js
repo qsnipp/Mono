@@ -155,13 +155,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/GM/messages.js
         //@if useGm=1<
 
-        var func = mono.msgList[mono.msgType];
-        if (func !== undefined) {
-            func();
+        var initFunc = mono.msgList[mono.msgType];
+        if (initFunc !== undefined) {
+            initFunc();
         } else {
             console.error('Msg transport is not defined!');
         }
-        func = undefined;
+        initFunc = undefined;
         mono.msgList = undefined;
 
         //@include components/storageDefine.js
@@ -182,13 +182,13 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         //@include vendor/Uni/storage.js
         //@if useLocalStorage=1||useOpera=1<
 
-        func = mono.storageList[mono.storageType];
-        if (func !== undefined) {
-            func();
+        initFunc = mono.storageList[mono.storageType];
+        if (initFunc !== undefined) {
+            initFunc();
         } else {
             console.error('Storage is not defined!');
         }
-        func = undefined;
+        initFunc = undefined;
         mono.storageList = undefined;
 
         //@insert
