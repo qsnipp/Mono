@@ -37,7 +37,16 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         }
         //@if0 useGm=1<
 
-        var base = Object.create({
+        var objCreate = function(o) {
+            if (typeof Object.create === 'function') {
+                return Object.create(o);
+            }
+            var a = function() {};
+            a.prototype = o;
+            return new a();
+        };
+
+        var base = objCreate({
             isLoaded: true,
             onReadyStack: [],
             onReady: function() {
