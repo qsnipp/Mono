@@ -32,6 +32,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
     typeof window !== "undefined" ? window : undefined,
     function base(factory, _mono) {
         var base = {
+            isLoaded: true,
             onReadyStack: [],
             onReady: function() {
                 base.onReadyStack.push([this, arguments]);
@@ -40,7 +41,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         var onLoad = function() {
             document.removeEventListener('DOMContentLoaded', onLoad, false);
-            document.removeEventListener('load', onLoad, false);
+            window.removeEventListener('load', onLoad, false);
 
             mono = factory(null, _mono);
 
@@ -50,8 +51,12 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             }
         };
 
-        document.addEventListener('DOMContentLoaded', onLoad, false);
-        document.addEventListener('load', onLoad, false);
+        if (document.readyState === 'complete' || typeof GM_getValue !== 'undefined') {
+            base = factory(null, _mono);
+        } else {
+            document.addEventListener('DOMContentLoaded', onLoad, false);
+            window.addEventListener('load', onLoad, false);
+        }
 
         return base;
     },
