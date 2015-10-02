@@ -72,7 +72,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             }
         };
 
-        if (document.readyState === 'complete') {
+        if (['interactive', 'complete'].indexOf(document.readyState) !== -1) {
             return factory(null, _mono);
         }
 
