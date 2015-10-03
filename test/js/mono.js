@@ -31,6 +31,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 }(
     typeof window !== "undefined" ? window : undefined,
     function base(factory, _mono) {
+        if (['interactive', 'complete'].indexOf(document.readyState) !== -1) {
+            return factory(null, _mono);
+        }
+
         //@if0 useGm=1>
         if (typeof GM_getValue !== 'undefined') {
             return factory(null, _mono);
@@ -71,10 +75,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.onReady.apply(item[0], item[1]);
             }
         };
-
-        if (['interactive', 'complete'].indexOf(document.readyState) !== -1) {
-            return factory(null, _mono);
-        }
 
         document.addEventListener('DOMContentLoaded', onLoad, false);
         window.addEventListener('load', onLoad, false);
@@ -178,11 +178,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
                 //@if1 useChromeWebApp=1>
                 if (chrome.app.hasOwnProperty('getDetails')) {
-                    mono.isChromeWebApp = chrome.app.getDetails();
-                    if (mono.isChromeWebApp && mono.isChromeWebApp.hasOwnProperty('app')) {
+                    var details = chrome.app.getDetails();
+                    if (details && details.hasOwnProperty('app')) {
                         mono.isChromeWebApp = true;
-                    } else {
-                        delete mono.isChromeWebApp;
                     }
                 }
                 //@if1 useChromeWebApp=1<
@@ -222,12 +220,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.isSafariPopup = safari.self.identifier === 'popup';
                 mono.isSafariBgPage = safari.self.addEventListener === undefined;
                 mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
-                return;
-            }
-            if (navigator.userAgent.indexOf('Safari/') !== -1) {
-                // Safari bug!
-                mono.isSafari = true;
-                mono.msgType = 'safari';
                 return;
             }
             //@if1 useSafari=1<

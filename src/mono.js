@@ -27,6 +27,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 }(
     typeof window !== "undefined" ? window : undefined,
     function base(factory, _mono) {
+        if (['interactive','complete'].indexOf(document.readyState) !== -1) {
+            return factory(null, _mono);
+        }
+
         //@if useGm=1>
         if (typeof GM_getValue !== 'undefined') {
             return factory(null, _mono);
@@ -65,10 +69,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.onReady.apply(item[0], item[1]);
             }
         };
-
-        if (['interactive','complete'].indexOf(document.readyState) !== -1) {
-            return factory(null, _mono);
-        }
 
         document.addEventListener('DOMContentLoaded', onLoad, false);
         window.addEventListener('load', onLoad, false);

@@ -25,11 +25,9 @@
 
         //@if useChromeWebApp=1>
         if (chrome.app.hasOwnProperty('getDetails')) {
-            mono.isChromeWebApp = chrome.app.getDetails();
-            if (mono.isChromeWebApp && mono.isChromeWebApp.hasOwnProperty('app')) {
+            var details = chrome.app.getDetails();
+            if (details && details.hasOwnProperty('app')) {
                 //@include browserDefine/chromeWebApp.js
-            } else {
-                delete mono.isChromeWebApp;
             }
         }
         //@if useChromeWebApp=1<
@@ -54,12 +52,6 @@
     //@if useSafari=1>
     if (window.safari !== undefined) {
         //@include browserDefine/safari.js
-        return;
-    }
-    if (navigator.userAgent.indexOf('Safari/') !== -1) {
-        // Safari bug!
-        mono.isSafari = true;
-        mono.msgType = 'safari';
         return;
     }
     //@if useSafari=1<

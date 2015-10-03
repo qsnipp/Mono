@@ -29,9 +29,6 @@ module.exports = function (grunt) {
             },
             monoLib: {
                 src: ['<%= dist %>monoLib.js']
-            },
-            one: {
-                src: ['<%= dist %>mono-*.js']
             }
         },
         copy: {
@@ -76,71 +73,37 @@ module.exports = function (grunt) {
     grunt.registerTask('monoLib', ['buildMonoLib', 'jsbeautifier:monoLib']);
     grunt.registerTask('monoLib.min', ['buildMonoLib', 'closurecompiler:monoLib']);
 
-    var target = grunt.option('target') || '';
+    var n = 0;
+    grunt.registerTask("custom", function() {
+        var params = this.args;
 
-    var oneFunc, uniFunc;
-    grunt.registerTask('one', oneFunc = function (_target) {
-        var browser = _target || target;
-        browser = browser.split(',').map(function (a) {
-            return a.trim()
-        });
-
-        var index = require('./index.js');
-        var content = index.get.mono(browser);
-
-        grunt.config('oneName', 'mono-' + browser.join('-') + '.js');
-        grunt.file.write(grunt.config('dist') + grunt.config('oneName'), content);
-
-        !_target && grunt.task.run('jsbeautifier:one');
-    });
-    grunt.registerTask('uni', uniFunc = function (_target) {
-        var params = _target || target;
-        params = params.split(',').map(function (a) {
-            return a.trim()
-        });
         var options = {};
-        params.forEach(function(item) {
-            var kv = item.split('=');
-            options[kv[0]] = kv[1];
+        var keyList = [];
+        params = params.length && params[0].split(',').map(function (a) {
+            var value = a.trim();
+            var keyValue = value.split('=');
+            options[keyValue[0]] = keyValue[1];
+            keyList.push(keyValue[0]);
+            return value;
         });
 
         var index = require('./index.js');
-        var content = index.get.uniMono(options);
+        var content = index.get.mono(options);
 
-        grunt.config('oneName', 'mono-' + params.join('-') + '.js');
-        grunt.file.write(grunt.config('dist') + grunt.config('oneName'), content);
+        var fileName = 'mono-' + keyList.join(',') + '.js';
+        var taskName = 'id' + n++;
 
-        !_target && grunt.task.run('jsbeautifier:one');
-    });
-
-    grunt.registerTask('oneList', function () {
-        var typeList = [
-            'firefox',
-            'gm',
-            'opera',
-            ['opera', 'localStorage'],
-            'safari'
-        ];
-        ['chrome', 'oldChrome'].forEach(function(type) {
-            ['', 'chromeApp', 'chromeWebApp'].forEach(function (type2) {
-                var list = [type];
-                type2 && list.push(type2);
-
-                typeList.push(list.slice(0));
-                if (type2 !== 'chromeApp') {
-                    list.push('localStorage');
-                    
-                    typeList.push(list);
-                }
-            });
+        var jsBeautifier = {};
+        jsBeautifier[taskName] = {
+            src: ['<%= dist %>' + fileName]
+        };
+        grunt.config.merge({
+            jsbeautifier: jsBeautifier
         });
-        for (var i = 0, type; type = typeList[i]; i++) {
-            if (Array.isArray(type)) {
-                type = type.join(',');
-            }
-            oneFunc(type);
-        }
-        grunt.task.run('jsbeautifier:one');
+
+        grunt.file.write(grunt.config('dist') + fileName, content);
+
+        grunt.task.run('jsbeautifier:' + taskName);
     });
 
     grunt.registerTask('uniList', function () {
@@ -153,11 +116,6 @@ module.exports = function (grunt) {
             ],
             [
                 'useChrome=1',
-                'oldChromeSupport=1',
-                'useChromeWebApp=1'
-            ],
-            [
-                'useChrome=1',
                 'useFf=1',
                 'oldChromeSupport=1'
             ],
@@ -166,17 +124,49 @@ module.exports = function (grunt) {
                 'useFf=1'
             ],
             [
-                'useChrome=1',
-                'chromeForceDefineBgPage=1'
+                'useChrome=1'
+            ],
+            [
+                'useGm=1'
+            ],
+            [
+                'useFF=1'
+            ],
+            [
+                'useOpera=1'
+            ],
+            [
+                'useOpera=1',
+                'useLocalStorage=1'
+            ],
+            [
+                'useSafari=1'
             ]
         ];
+
+        ['useChrome=1'].forEach(function(browser) {
+            var flags = ['oldChromeSupport=1', 'chromeUseDirectMsg=1', 'chromeForceDefineBgPage=1', 'useLocalStorage=1', 'useChromeApp=1', 'useChromeWebApp=1'];
+            flags.forEach(function(key, i) {
+                for (var n = i; n < flags.length; n++) {
+                    var flagList = flags.slice(i, n);
+                    if (!flagList.length) {
+                        continue;
+                    }
+                    flagList.unshift(browser);
+                    config.push(flagList);
+                }
+            });
+        });
+
+        var taskList = [];
         for (var i = 0, type; type = config[i]; i++) {
             if (Array.isArray(type)) {
                 type = type.join(',');
             }
-            uniFunc(type);
+            taskList.push('custom:' + type);
         }
-        grunt.task.run('jsbeautifier:one');
+
+        grunt.task.run(taskList);
     });
 
     grunt.registerTask('default', [
