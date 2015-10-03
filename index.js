@@ -13,6 +13,10 @@ exports.get = {
 
         var extractIncludes = require('./extractIncludes.js').extractIncludes;
 
+        if (options.useOpera) {
+            content = '//@include vendor/Opera/userScript.js\n' + content;
+        }
+
         content = extractIncludes(content, path);
 
         content = ifStrip(content, options);
