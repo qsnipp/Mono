@@ -60,7 +60,7 @@
 
     //@if useFf=1>
     //@if oneMode!=1>
-    if (navigator.userAgent.indexOf('Firefox') !== -1) {
+    if (navigator.userAgent.indexOf('Firefox') !== -1 || typeof InstallTrigger !== 'undefined') {
         //@if oneMode!=1<
         //@include browserDefine/firefoxNoModule.js
         return;

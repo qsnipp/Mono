@@ -215,7 +215,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
             //@if1 useFf=1>
             //@if1 oneMode!=1>
-            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+            if (navigator.userAgent.indexOf('Firefox') !== -1 || typeof InstallTrigger !== 'undefined') {
                 //@if1 oneMode!=1<
                 mono.isFF = true;
                 mono.msgType = 'firefox';
