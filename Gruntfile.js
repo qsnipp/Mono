@@ -124,23 +124,29 @@ module.exports = function (grunt) {
                 'useFf=1'
             ],
             [
-                'useChrome=1'
+                'useChrome=1',
+                'oneMode=1'
             ],
             [
-                'useGm=1'
+                'useGm=1',
+                'oneMode=1'
             ],
             [
-                'useFf=1'
-            ],
-            [
-                'useOpera=1'
+                'useFf=1',
+                'oneMode=1'
             ],
             [
                 'useOpera=1',
-                'useLocalStorage=1'
+                'oneMode=1'
             ],
             [
-                'useSafari=1'
+                'useOpera=1',
+                'useLocalStorage=1',
+                'oneMode=1'
+            ],
+            [
+                'useSafari=1',
+                'oneMode=1'
             ]
         ];
 
@@ -152,6 +158,7 @@ module.exports = function (grunt) {
                     if (!flagList.length) {
                         continue;
                     }
+                    flagList.unshift('oneMode=1');
                     flagList.unshift(browser);
                     config.push(flagList);
                 }

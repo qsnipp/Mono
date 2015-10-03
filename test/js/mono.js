@@ -133,18 +133,24 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         (function browserDefine() {
             //@if1 useFf=1>
+            //@if1 oneMode!=1>
             if (typeof window === 'undefined') {
+                //@if1 oneMode!=1<
                 mono.isFF = true;
                 mono.msgType = 'firefox';
                 mono.isModule = true;
                 mono.addon = _addon;
                 require = _require;
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useFf=1<
 
             //@if1 useGm=1>
+            //@if1 oneMode!=1>
             if (typeof GM_getValue !== 'undefined') {
+                //@if1 oneMode!=1<
                 mono.isGM = true;
                 mono.msgType = 'gm';
                 if (window.chrome !== undefined) {
@@ -156,11 +162,15 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     mono.isGmOnly = true;
                 }
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useGm=1<
 
             //@if1 useChrome=1>
+            //@if1 oneMode!=1>
             if (window.chrome !== undefined) {
+                //@if1 oneMode!=1<
                 mono.isChrome = true;
                 mono.isChromeInject = !chrome.hasOwnProperty('tabs');
                 mono.msgType = 'chrome';
@@ -185,20 +195,28 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 }
                 //@if1 useChromeWebApp=1<
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useChrome=1<
 
             //@if1 useOpera=1>
+            //@if1 oneMode!=1>
             if (window.opera !== undefined) {
+                //@if1 oneMode!=1<
                 mono.isOpera = true;
                 mono.msgType = 'opera';
                 mono.isOperaInject = opera.extension.broadcastMessage === undefined;
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useOpera=1<
 
             //@if1 useFf=1>
+            //@if1 oneMode!=1>
             if (navigator.userAgent.indexOf('Firefox') !== -1) {
+                //@if1 oneMode!=1<
                 mono.isFF = true;
                 mono.msgType = 'firefox';
                 if (typeof addon !== 'undefined' && addon.hasOwnProperty('port')) {
@@ -210,18 +228,24 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     mono.noAddon = true;
                 }
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useFf=1<
 
             //@if1 useSafari=1>
+            //@if1 oneMode!=1>
             if (window.safari !== undefined) {
+                //@if1 oneMode!=1<
                 mono.isSafari = true;
                 mono.msgType = 'safari';
                 mono.isSafariPopup = safari.self.identifier === 'popup';
                 mono.isSafariBgPage = safari.self.addEventListener === undefined;
                 mono.isSafariInject = !mono.isSafariPopup && safari.application === undefined;
                 return;
+                //@if1 oneMode!=1>
             }
+            //@if1 oneMode!=1<
             //@if1 useSafari=1<
 
             console.error('Mono: can\'t define browser!');

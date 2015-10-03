@@ -72,6 +72,10 @@ exports.ifStrip = function(data, options) {
             }
             var keyValue = item.split('=');
             key = keyValue[0];
+            if (key.slice(-1) === '!') {
+                key = key.slice(0, -1);
+                result = !options[key];
+            } else
             if (key[0] === '!') {
                 key = key.substr(1);
                 result = !options[key];
