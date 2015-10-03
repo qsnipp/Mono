@@ -130,7 +130,7 @@ module.exports = function (grunt) {
                 'useGm=1'
             ],
             [
-                'useFF=1'
+                'useFf=1'
             ],
             [
                 'useOpera=1'
