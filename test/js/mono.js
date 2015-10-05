@@ -133,18 +133,14 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
 
         (function browserDefine() {
             //@if1 useFf=1>
-            //@if1 oneMode!=1>
             if (typeof window === 'undefined') {
-                //@if1 oneMode!=1<
                 mono.isFF = true;
                 mono.msgType = 'firefox';
                 mono.isModule = true;
                 mono.addon = _addon;
                 require = _require;
                 return;
-                //@if1 oneMode!=1>
             }
-            //@if1 oneMode!=1<
             //@if1 useFf=1<
 
             //@if1 useGm=1>

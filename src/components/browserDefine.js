@@ -1,13 +1,9 @@
 (function browserDefine () {
     //@if useFf=1>
-    //@if oneMode!=1>
     if (typeof window === 'undefined') {
-        //@if oneMode!=1<
         //@include browserDefine/firefoxModule.js
         return;
-        //@if oneMode!=1>
     }
-    //@if oneMode!=1<
     //@if useFf=1<
 
     //@if useGm=1>
