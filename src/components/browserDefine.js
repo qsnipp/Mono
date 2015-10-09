@@ -76,5 +76,7 @@
     //@if oneMode!=1<
     //@if useSafari=1<
 
+    //@if oneMode!=1>
     console.error('Mono: can\'t define browser!');
+    //@if oneMode!=1<
 })();
