@@ -79,9 +79,9 @@ var msgTools = {
 };
 
 mono.messageStack = 50;
-mono.msgClearStack = msgTools.clearCbStack;
-mono.msgRemoveCbById = msgTools.removeCb;
-mono.msgClean = msgTools.clean;
+mono.msgClearStack = msgTools.clearCbStack.bind(msgTools);
+mono.msgRemoveCbById = msgTools.removeCb.bind(msgTools);
+mono.msgClean = msgTools.clean.bind(msgTools);
 
 /**
  * Send message if background page - to local pages, or to background page
