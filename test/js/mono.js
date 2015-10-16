@@ -843,8 +843,11 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                     safari.self.removeEventListener("message", safariMsg.onMessage, false);
                 },
                 sendToActiveTab: function(message) {
-                    var currentTab = safari.application.activeBrowserWindow.activeTab;
-                    safariMsg.sendTo(message, currentTab);
+                    var activeTab = safari.application.activeBrowserWindow && safari.application.activeBrowserWindow.activeTab;
+                    if (!activeTab) {
+                        return;
+                    }
+                    safariMsg.sendTo(message, activeTab);
                 },
                 send: mono.isSafariPopup ? function(message) {
                     safari.extension.globalPage.contentWindow.mono.safariDirectOnMessage({
