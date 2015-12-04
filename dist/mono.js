@@ -405,11 +405,11 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         mono.onMessage.count = 0;
         mono.onMessage.wrapper = {};
         mono.onMessage.wrapFunc = function(cb, index, message, response) {
-            if (message.data === undefined) {
-                return;
-            }
             if (message.responseId !== undefined) {
                 return msgTools.callCb(message);
+            }
+            if (message.data === undefined) {
+                return;
             }
             var mResponse;
             if (message.callbackId === undefined) {
