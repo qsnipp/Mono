@@ -186,6 +186,8 @@
             mPage.page.on('attach', onAttach);
         };
 
+        mPage.detach = onDetach;
+
         onAttach();
     };
 
@@ -277,6 +279,12 @@
             message.from = mPage.id;
             monoOnMessage(message);
         });
+
+        return {
+            detach: function() {
+                mPage.detach();
+            }
+        };
     };
 
     var ffSimpleStorage = (function() {
