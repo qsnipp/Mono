@@ -418,12 +418,9 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mResponse = msgTools.mkResponse.bind(msgTools, response.bind(this), message.callbackId);
             }
             if (message.hook !== undefined) {
-                if (index !== 0) {
-                    return;
-                }
                 var hookFunc = mono.sendHook[message.hook];
-                if (hookFunc !== undefined) {
-                    return hookFunc(message.data, mResponse);
+                if (hookFunc) {
+                    return index === 0 && hookFunc(message.data, mResponse);
                 }
             }
             cb.call(this, message.data, mResponse);
