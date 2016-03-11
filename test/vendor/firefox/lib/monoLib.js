@@ -193,11 +193,15 @@
 
     var sendHook = {
         activeTab: function(message) {
-            var tabs = require("sdk/tabs");
-            var currentTab = tabs.activeTab;
+            var activeWindow = require("sdk/windows").browserWindows.activeWindow;
+            var activeTab = activeWindow && activeWindow.tabs.activeTab;
+            if (!activeTab) {
+                return;
+            }
+
             var pageIdList = [];
             for (var index in map) {
-                if (map[index].page.tab === currentTab && map[index].page.tab && map[index].page.tab.url === currentTab.url) {
+                if (map[index].page.tab === activeTab) {
                     pageIdList.push(map[index].id);
                 }
             }
@@ -211,11 +215,11 @@
         },
         popupWin: function(message) {
             var self = require("sdk/self");
-            var url = 'resource://' + self.id.slice(1, -1) + '/';
+            var url = self.data.url("popup.html");
             var pageId;
             for (var index in map) {
                 var page = map[index].page;
-                if (page.isShowing !== undefined && page.tab === null && page.url.indexOf(url) === 0) {
+                if (page.isShowing !== undefined && !page.tab && page.url && page.url.indexOf(url) === 0) {
                     pageId = map[index].id;
                     break;
                 }
