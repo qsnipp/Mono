@@ -76,8 +76,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         return base;
     },
     function initMono(_addon, _mono) {
-        var require;
-
         /**
          * Mono
          * @type {{

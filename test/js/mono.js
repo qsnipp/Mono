@@ -82,8 +82,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
         return base;
     },
     function initMono(_addon, _mono) {
-        var require;
-
         /**
          * Mono
          * @type {{
@@ -138,7 +136,6 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.msgType = 'firefox';
                 mono.isModule = true;
                 mono.addon = _addon;
-                require = _require;
                 return;
             }
             //@if1 useFf=1<

@@ -1,24 +1,6 @@
 (function () {
     if (typeof window !== 'undefined') return;
-    var self = require('sdk/self');
-    mono = require('toolkit/loader').main(require('toolkit/loader').Loader({
-        paths: {
-            'data/': self.data.url('js/')
-        },
-        name: self.name,
-        prefixURI: self.data.url().match(/([^:]+:\/\/[^/]+\/)/)[1],
-        globals: {
-            console: console,
-            _require: function (path) {
-                switch (path) {
-                    case 'sdk/simple-storage':
-                        return require('sdk/simple-storage');
-                    default:
-                        console.error('Module not found!', path);
-                }
-            }
-        }
-    }), "data/mono");
+    mono = require('./../data/js/mono.js');
 
     var sdk_timers = require("sdk/timers");
     setTimeout = sdk_timers.setTimeout;
