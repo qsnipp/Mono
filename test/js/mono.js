@@ -180,8 +180,8 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 //@if1 useChromeApp=1<
 
                 //@if1 useChromeWebApp=1>
-                if (chrome.app.hasOwnProperty('getDetails')) {
-                    var details = chrome.app.getDetails();
+                if (chrome.runtime.hasOwnProperty('getManifest')) {
+                    var details = chrome.runtime.getManifest();
                     if (details && details.hasOwnProperty('app')) {
                         mono.isChromeWebApp = true;
                     }

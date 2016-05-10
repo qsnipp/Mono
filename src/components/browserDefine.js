@@ -30,8 +30,8 @@
         //@if useChromeApp=1<
 
         //@if useChromeWebApp=1>
-        if (chrome.app.hasOwnProperty('getDetails')) {
-            var details = chrome.app.getDetails();
+        if (chrome.runtime.hasOwnProperty('getManifest')) {
+            var details = chrome.runtime.getManifest();
             if (details && details.hasOwnProperty('app')) {
                 //@include browserDefine/chromeWebApp.js
             }
