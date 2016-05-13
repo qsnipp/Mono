@@ -444,7 +444,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
             var chromeMsg = {
                 cbList: [],
                 mkResponse: function(sender) {
-                    if (sender.tab) {
+                    if (sender.tab && sender.tab.id >= 0) {
                         // send to tab
                         return function(message) {
                             chromeMsg.sendTo(message, sender.tab.id);
