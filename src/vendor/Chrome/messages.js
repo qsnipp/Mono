@@ -92,7 +92,7 @@ mono.msgList.chrome = function () {
         mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
         //@if chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
-        chrome.runtime.getBackgroundPage(function (bgWin) {
+        var onGetBackgroundPage = function(bgWin) {
             if (bgWin !== window) {
                 delete mono.isChromeBgPage;
             } else {
@@ -112,7 +112,10 @@ mono.msgList.chrome = function () {
                 };
             }
             //@if chromeUseDirectMsg=1<
-        });
+        };
+        try {
+            chrome.runtime.getBackgroundPage(onGetBackgroundPage);
+        } catch (e){}
         //@if chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
     }
 

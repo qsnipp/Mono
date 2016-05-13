@@ -535,7 +535,7 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                 mono.isChromeBgPage = location.href.indexOf('_generated_background_page.html') !== -1;
 
                 //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1>
-                chrome.runtime.getBackgroundPage(function(bgWin) {
+                var onGetBackgroundPage = function(bgWin) {
                     if (bgWin !== window) {
                         delete mono.isChromeBgPage;
                     } else {
@@ -555,7 +555,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
                         };
                     }
                     //@if3 chromeUseDirectMsg=1<
-                });
+                };
+                try {
+                    chrome.runtime.getBackgroundPage(onGetBackgroundPage);
+                } catch (e) {}
                 //@if3 chromeForceDefineBgPage=1||chromeUseDirectMsg=1<
             }
 
