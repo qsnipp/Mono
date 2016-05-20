@@ -297,6 +297,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
              * @param {*} responseMessage
              */
             mkResponse: function(response, callbackId, responseMessage) {
+                if (responseMessage === undefined) {
+                    responseMessage = null;
+                }
+
                 responseMessage = {
                     data: responseMessage,
                     responseId: callbackId
@@ -351,6 +355,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
          * @returns {*|string} - callback id
          */
         mono.sendMessage = function(message, cb, hook) {
+            if (message === undefined) {
+                message = null;
+            }
+
             message = {
                 data: message,
                 hook: hook
@@ -371,6 +379,10 @@ var mono = (typeof mono !== 'undefined') ? mono : undefined;
          * @returns {*|string} - callback id
          */
         mono.sendMessageToActiveTab = function(message, cb, hook) {
+            if (message === undefined) {
+                message = null;
+            }
+
             message = {
                 data: message,
                 hook: hook

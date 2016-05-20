@@ -37,6 +37,10 @@ var msgTools = {
      * @param {*} responseMessage
      */
     mkResponse: function (response, callbackId, responseMessage) {
+        if (responseMessage === undefined) {
+            responseMessage = null;
+        }
+
         responseMessage = {
             data: responseMessage,
             responseId: callbackId
@@ -91,6 +95,10 @@ mono.msgClean = msgTools.clean.bind(msgTools);
  * @returns {*|string} - callback id
  */
 mono.sendMessage = function (message, cb, hook) {
+    if (message === undefined) {
+        message = null;
+    }
+
     message = {
         data: message,
         hook: hook
@@ -111,6 +119,10 @@ mono.sendMessage = function (message, cb, hook) {
  * @returns {*|string} - callback id
  */
 mono.sendMessageToActiveTab = function (message, cb, hook) {
+    if (message === undefined) {
+        message = null;
+    }
+    
     message = {
         data: message,
         hook: hook
